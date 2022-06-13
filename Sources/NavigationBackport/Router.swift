@@ -14,7 +14,7 @@ public struct Router<Screen, RootView: View>: View {
   }
 
   var pushedScreens: some View {
-    _Node(allScreens: $screens, index: 0)
+    Node(allScreens: $screens, index: 0)
       .environmentObject(pathHolder)
       .environmentObject(destinationBuilder)
   }

@@ -7,6 +7,9 @@ struct ContentView: View {
   var body: some View {
     NBNavigationStack(path: $path) {
       HomeView()
+        .nbNavigationDestination(for: NumberList.self, destination: { numberList in
+          NumberListView(numberList: numberList)
+        })
         .nbNavigationDestination(for: Int.self, destination: { number in
           NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
         })
@@ -20,8 +23,23 @@ struct ContentView: View {
 struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
-      NBNavigationLink(value: 1, label: { Text("Go to number one") })
+      NBNavigationLink(value: NumberList(range: 0..<100), label: { Text("Pick a number") })
     }.navigationTitle("Home")
+  }
+}
+
+struct NumberList: Hashable {
+  let range: Range<Int>
+}
+
+struct NumberListView: View {
+  let numberList: NumberList
+  var body: some View {
+    List {
+      ForEach(numberList.range, id: \.self) { number in
+        NBNavigationLink("\(number)", value: number)
+      }
+    }.navigationTitle("List")
   }
 }
 

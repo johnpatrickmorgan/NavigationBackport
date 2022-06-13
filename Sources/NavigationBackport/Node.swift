@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-struct _Node<Screen>: View {
+struct Node<Screen>: View {
   let allScreens: Binding<[Screen]>
   let screen: Screen?
   let index: Int
@@ -27,7 +27,7 @@ struct _Node<Screen>: View {
   }
 
   var next: some View {
-    _Node(allScreens: allScreens, index: index + 1)
+    Node(allScreens: allScreens, index: index + 1)
       .environmentObject(pathHolder)
       .environmentObject(destinationBuilder)
   }
