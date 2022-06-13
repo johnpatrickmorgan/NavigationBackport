@@ -14,24 +14,15 @@ public struct NBNavigationLink<P: Hashable, Label: View>: View {
   }
 
   public var body: some View {
-    //        if #available(iOS 16, *) {
-    //            NavigationLink(value: value, label: label)
-    //        } else {
-
-    //        Button(
-    //            action: {
-    //                guard let value = value else { return }
-    //                pathHolder.path.wrappedValue.append(value)
-    //            },
-    //            label: { label }
-    //        )
-
-    NavigationLink(isActive: .constant(false), destination: { EmptyView() }, label: { label })
-      .simultaneousGesture(TapGesture().onEnded {
+    // TODO: Ensure this button is styled more like a NavigationLink within a List.
+    // See: https://gist.github.com/tgrapperon/034069d6116ff69b6240265132fd9ef7
+    Button(
+      action: {
         guard let value = value else { return }
         pathHolder.path.wrappedValue.append(value)
-      })
-    //        }
+      },
+      label: { label }
+    )
   }
 }
 
