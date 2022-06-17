@@ -1,6 +1,6 @@
 # Navigation Backport
 
-This package recreates the new NavigationStack APIs introduced in WWDC22, so that you can use them on older versions of iOS, tvOS and watchOS. 
+This package uses the navigation APIs available in older SwiftUI versions (such as `NavigationView` and `NavigationLink`) to recreate the new NavigationStack APIs introduced in WWDC22, so that you can start targeting those APIs on older versions of iOS, tvOS and watchOS. 
  
 ✅ `NavigationStack` -> `NBNavigationStack`
 
@@ -10,7 +10,7 @@ This package recreates the new NavigationStack APIs introduced in WWDC22, so tha
 
 ✅ `navigationDestination` -> `nbNavigationDestination`
 
-You no longer need to wait to adopt these APIs, and when you eventually bump your deployment target to iOS 16, you can remove this library and easily migrate to its SwiftUI equivalent.
+You can migrate to these APIs now, and when you eventually bump your deployment target to iOS 16, you can remove this library and easily migrate to its SwiftUI equivalent.
 
 ## Example
 
