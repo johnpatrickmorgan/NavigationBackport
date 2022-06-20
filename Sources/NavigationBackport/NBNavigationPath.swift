@@ -6,6 +6,7 @@ public struct NBNavigationPath {
   var elements: [AnyHashable]
 
   public var count: Int { elements.count }
+  public var isEmpty: Bool { elements.isEmpty }
 
   public init(_ elements: [AnyHashable] = []) {
     self.elements = elements
