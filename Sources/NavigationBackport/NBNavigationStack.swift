@@ -30,7 +30,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     )
   }
 
-  let destinationBuilder = DestinationBuilderHolder()
+  @StateObject var destinationBuilder = DestinationBuilderHolder()
 
   public var body: some View {
     NavigationView {
