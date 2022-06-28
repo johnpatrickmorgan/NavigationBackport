@@ -14,6 +14,12 @@
 		52925EC328549A62001B9190 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52925EB128549A62001B9190 /* Assets.xcassets */; };
 		52925EC428549A62001B9190 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52925EB128549A62001B9190 /* Assets.xcassets */; };
 		52925ECF28549A84001B9190 /* NavigationBackport in Frameworks */ = {isa = PBXBuildFile; productRef = 52925ECE28549A84001B9190 /* NavigationBackport */; };
+		529673CE286BB44400C01BCF /* NBNavigationPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673CD286BB44400C01BCF /* NBNavigationPathView.swift */; };
+		529673CF286BB44400C01BCF /* NBNavigationPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673CD286BB44400C01BCF /* NBNavigationPathView.swift */; };
+		529673D1286BB50200C01BCF /* ArrayBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D0286BB50200C01BCF /* ArrayBindingView.swift */; };
+		529673D2286BB50200C01BCF /* ArrayBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D0286BB50200C01BCF /* ArrayBindingView.swift */; };
+		529673D4286BC48600C01BCF /* NoBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D3286BC48600C01BCF /* NoBindingView.swift */; };
+		529673D5286BC48600C01BCF /* NoBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D3286BC48600C01BCF /* NoBindingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +30,9 @@
 		52925EBC28549A62001B9190 /* NavigationBackportApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavigationBackportApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52925EBE28549A62001B9190 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		52925ED128549C15001B9190 /* NavigationBackport */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = NavigationBackport; path = ..; sourceTree = "<group>"; };
+		529673CD286BB44400C01BCF /* NBNavigationPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NBNavigationPathView.swift; sourceTree = "<group>"; };
+		529673D0286BB50200C01BCF /* ArrayBindingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayBindingView.swift; sourceTree = "<group>"; };
+		529673D3286BC48600C01BCF /* NoBindingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoBindingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +69,9 @@
 			children = (
 				52925EAF28549A60001B9190 /* NavigationBackportApp.swift */,
 				52925EB028549A60001B9190 /* ContentView.swift */,
+				529673D0286BB50200C01BCF /* ArrayBindingView.swift */,
+				529673D3286BC48600C01BCF /* NoBindingView.swift */,
+				529673CD286BB44400C01BCF /* NBNavigationPathView.swift */,
 				52925EB128549A62001B9190 /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -194,6 +206,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				529673CE286BB44400C01BCF /* NBNavigationPathView.swift in Sources */,
+				529673D1286BB50200C01BCF /* ArrayBindingView.swift in Sources */,
+				529673D4286BC48600C01BCF /* NoBindingView.swift in Sources */,
 				52925EC128549A62001B9190 /* ContentView.swift in Sources */,
 				52925EBF28549A62001B9190 /* NavigationBackportApp.swift in Sources */,
 			);
@@ -203,6 +218,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				529673CF286BB44400C01BCF /* NBNavigationPathView.swift in Sources */,
+				529673D2286BB50200C01BCF /* ArrayBindingView.swift in Sources */,
+				529673D5286BC48600C01BCF /* NoBindingView.swift in Sources */,
 				52925EC228549A62001B9190 /* ContentView.swift in Sources */,
 				52925EC028549A62001B9190 /* NavigationBackportApp.swift in Sources */,
 			);
