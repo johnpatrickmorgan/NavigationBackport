@@ -2,42 +2,46 @@ import Foundation
 import SwiftUI
 
 struct Node<Screen>: View {
-  let allScreens: Binding<[Screen]>
-  let screen: Screen?
+  let allScreens: [Screen]
+  let truncateToIndex: (Int) -> Void
   let index: Int
+  let screen: Screen?
 
   @EnvironmentObject var pathHolder: NavigationPathHolder
   @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
 
-  init(allScreens: Binding<[Screen]>, index: Int) {
+  init(allScreens: [Screen], truncateToIndex: @escaping (Int) -> Void, index: Int) {
     self.allScreens = allScreens
-    screen = allScreens.wrappedValue[safe: index]
+    self.truncateToIndex = truncateToIndex
     self.index = index
+    self.screen = allScreens[safe: index]
   }
 
   private var isActiveBinding: Binding<Bool> {
     return Binding(
-      get: { allScreens.wrappedValue.count != index + 1 },
+      get: { allScreens.count > index + 1 },
       set: { isShowing in
         guard !isShowing else { return }
-        guard allScreens.wrappedValue.count > index + 1 else { return }
-        allScreens.wrappedValue = Array(allScreens.wrappedValue.prefix(index + 1))
+        guard allScreens.count > index + 1 else { return }
+        truncateToIndex(index + 1)
       }
     )
   }
 
   var next: some View {
-    Node(allScreens: allScreens, index: index + 1)
+    Node(allScreens: allScreens, truncateToIndex: truncateToIndex, index: index + 1)
       .environmentObject(pathHolder)
       .environmentObject(destinationBuilder)
   }
 
   var body: some View {
-    DestinationBuilderView(data: allScreens.wrappedValue[safe: index] ?? screen)
-      .background(
-        NavigationLink(destination: next, isActive: isActiveBinding, label: EmptyView.init)
-          .hidden()
-      )
+    if let screen = allScreens[safe: index] ?? screen {
+      DestinationBuilderView(data: screen)
+        .background(
+          NavigationLink(destination: next, isActive: isActiveBinding, label: EmptyView.init)
+            .hidden()
+        )
+    }
   }
 }
 

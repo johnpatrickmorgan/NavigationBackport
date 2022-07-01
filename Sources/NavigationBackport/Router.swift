@@ -10,11 +10,11 @@ public struct Router<Screen, RootView: View>: View {
 
   public init(rootView: RootView, screens: Binding<[Screen]>) {
     self.rootView = rootView
-    _screens = screens
+    self._screens = screens
   }
 
   var pushedScreens: some View {
-    Node(allScreens: $screens, index: 0)
+    Node(allScreens: screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
       .environmentObject(pathHolder)
       .environmentObject(destinationBuilder)
   }

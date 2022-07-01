@@ -69,12 +69,17 @@ private struct NumberListView: View {
 }
 
 private struct NumberView: View {
-  let number: Int
+  @State var number: Int
   let goBackToRoot: () -> Void
 
   var body: some View {
     VStack(spacing: 8) {
-      Text("\(number)")
+      Text("\(number)").font(.title)
+      Stepper(
+        label: { Text("\(number)") },
+        onIncrement: { number += 1 },
+        onDecrement: { number -= 1 }
+      ).labelsHidden()
       NBNavigationLink(
         value: Screen.number(number + 1),
         label: { Text("Show next number") }

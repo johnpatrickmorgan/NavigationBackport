@@ -11,8 +11,6 @@ struct NumberList: Hashable {
 }
 
 struct ContentView: View {
-  @State var path = NBNavigationPath()
-
   var body: some View {
     TabView {
       NBNavigationPathView()
