@@ -98,7 +98,7 @@ struct EmojiView: View {
  
  ## Deep-linking
  
- Before the latest OS versions, such as iOS 16, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation stack. `NavigationBackport` provides an API to work around this limitation of SwiftUI: you can wrap such path changes within a call to `withDelaysIfUnsupported`, and the library will, if necessary, break down the larger update into a series of smaller updates that SwiftUI supports, with delays in between. For example, the following code will not work on iOS 15, because only the first screen will be shown:
+ Before `NavigationStack`, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation hierarchy. `NavigationBackport` provides an API to work around this limitation: you can wrap such path changes within a call to `withDelaysIfUnsupported`, and the library will, if necessary, break down the larger update into a series of smaller updates that SwiftUI supports, with delays in between. For example, the following code that tries to push three screens in one update will not work:
 
 ```swift
   path.append(Screen.orders)
@@ -106,7 +106,7 @@ struct EmojiView: View {
   path.append(Screen.confirmChanges(orderId: id))
 ```
 
-However, the following code will successfully push all three screens on iOS 15, one by one:
+However, the following code will successfully push all three screens, one after another:
 
 ```swift
 $path.withDelaysIfUnsupported {

@@ -6,7 +6,7 @@ final class NavigationBackportTests: XCTestCase {
     let start = [1]
     let end = [-1, -2, -3, -4]
 
-    let steps = NavigationBackport.calculateSteps(from: start, to: end, canPushMultiple: false)
+    let steps = NavigationBackport.calculateSteps(from: start, to: end)
 
     let expectedSteps = [
       [-1],
@@ -16,17 +16,14 @@ final class NavigationBackportTests: XCTestCase {
     ]
     XCTAssertEqual(steps, expectedSteps)
   }
+  
+  func testPopAllInOne() {
+    let start = [1, 2, 3, 4]
+    let end = [-1]
 
-  func testPushMultiple() {
-    let start = [1]
-    let end = [-1, -2, -3, -4]
+    let steps = NavigationBackport.calculateSteps(from: start, to: end)
 
-    let steps = NavigationBackport.calculateSteps(from: start, to: end, canPushMultiple: true)
-
-    let expectedSteps = [
-      [-1],
-      end,
-    ]
+    let expectedSteps = [end]
     XCTAssertEqual(steps, expectedSteps)
   }
 }

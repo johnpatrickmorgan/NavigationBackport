@@ -45,12 +45,7 @@ extension Binding {
   }
 
   func withDelaysIfUnsupported<Screen>(from start: [Screen], to end: [Screen], keyPath: WritableKeyPath<Value, [Screen]>) async {
-    let steps: [[Screen]]
-    if #available(iOS 16.0, tvOS 16.0, watchOS 9, macOS 13.0, *) {
-      steps = NavigationBackport.calculateSteps(from: start, to: end, canPushMultiple: true)
-    } else {
-      steps = NavigationBackport.calculateSteps(from: start, to: end, canPushMultiple: false)
-    }
+    let steps = NavigationBackport.calculateSteps(from: start, to: end)
 
     wrappedValue[keyPath: keyPath] = steps.first!
     await scheduleRemainingSteps(steps: Array(steps.dropFirst()), keyPath: keyPath)
