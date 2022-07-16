@@ -4,6 +4,8 @@ This package uses the navigation APIs available in older SwiftUI versions (such 
  
 ✅ `NavigationStack` -> `NBNavigationStack`
 
+✳️ `NavigationSplitView` -> `NBNavigationSplitView` (Only support double column style by now)
+
 ✅ `NavigationLink` -> `NBNavigationLink`
 
 ✅ `NavigationPath` -> `NBNavigationPath`
