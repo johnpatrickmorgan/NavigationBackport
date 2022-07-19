@@ -13,13 +13,20 @@
 		52925EC228549A62001B9190 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52925EB028549A60001B9190 /* ContentView.swift */; };
 		52925EC328549A62001B9190 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52925EB128549A62001B9190 /* Assets.xcassets */; };
 		52925EC428549A62001B9190 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52925EB128549A62001B9190 /* Assets.xcassets */; };
-		52925ECF28549A84001B9190 /* NavigationBackport in Frameworks */ = {isa = PBXBuildFile; productRef = 52925ECE28549A84001B9190 /* NavigationBackport */; };
 		529673CE286BB44400C01BCF /* NBNavigationPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673CD286BB44400C01BCF /* NBNavigationPathView.swift */; };
 		529673CF286BB44400C01BCF /* NBNavigationPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673CD286BB44400C01BCF /* NBNavigationPathView.swift */; };
 		529673D1286BB50200C01BCF /* ArrayBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D0286BB50200C01BCF /* ArrayBindingView.swift */; };
 		529673D2286BB50200C01BCF /* ArrayBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D0286BB50200C01BCF /* ArrayBindingView.swift */; };
 		529673D4286BC48600C01BCF /* NoBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D3286BC48600C01BCF /* NoBindingView.swift */; };
 		529673D5286BC48600C01BCF /* NoBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D3286BC48600C01BCF /* NoBindingView.swift */; };
+		5A70FAF42886436C001F26D1 /* NavigationBackport in Frameworks */ = {isa = PBXBuildFile; productRef = 5A70FAF32886436C001F26D1 /* NavigationBackport */; };
+		5A70FAF628864370001F26D1 /* NavigationBackport in Frameworks */ = {isa = PBXBuildFile; productRef = 5A70FAF528864370001F26D1 /* NavigationBackport */; };
+		5ABA56EB288282C500178824 /* SplitDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABA56E8288282C400178824 /* SplitDemo.swift */; };
+		5ABA56EC288282C500178824 /* SplitDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABA56E8288282C400178824 /* SplitDemo.swift */; };
+		5ABA56ED288282C500178824 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABA56E9288282C500178824 /* DetailView.swift */; };
+		5ABA56EE288282C500178824 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABA56E9288282C500178824 /* DetailView.swift */; };
+		5ABA56EF288282C500178824 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABA56EA288282C500178824 /* SidebarView.swift */; };
+		5ABA56F0288282C500178824 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABA56EA288282C500178824 /* SidebarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +40,9 @@
 		529673CD286BB44400C01BCF /* NBNavigationPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NBNavigationPathView.swift; sourceTree = "<group>"; };
 		529673D0286BB50200C01BCF /* ArrayBindingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayBindingView.swift; sourceTree = "<group>"; };
 		529673D3286BC48600C01BCF /* NoBindingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoBindingView.swift; sourceTree = "<group>"; };
+		5ABA56E8288282C400178824 /* SplitDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitDemo.swift; sourceTree = "<group>"; };
+		5ABA56E9288282C500178824 /* DetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		5ABA56EA288282C500178824 /* SidebarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52925ECF28549A84001B9190 /* NavigationBackport in Frameworks */,
+				5A70FAF42886436C001F26D1 /* NavigationBackport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A70FAF628864370001F26D1 /* NavigationBackport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,12 +72,16 @@
 				52925EAE28549A60001B9190 /* Shared */,
 				52925EBD28549A62001B9190 /* macOS */,
 				52925EB728549A62001B9190 /* Products */,
+				5A70FAF22886436C001F26D1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		52925EAE28549A60001B9190 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				5ABA56E9288282C500178824 /* DetailView.swift */,
+				5ABA56EA288282C500178824 /* SidebarView.swift */,
+				5ABA56E8288282C400178824 /* SplitDemo.swift */,
 				52925EAF28549A60001B9190 /* NavigationBackportApp.swift */,
 				52925EB028549A60001B9190 /* ContentView.swift */,
 				529673D0286BB50200C01BCF /* ArrayBindingView.swift */,
@@ -102,6 +117,13 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		5A70FAF22886436C001F26D1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -119,7 +141,7 @@
 			);
 			name = "NavigationBackportApp (iOS)";
 			packageProductDependencies = (
-				52925ECE28549A84001B9190 /* NavigationBackport */,
+				5A70FAF32886436C001F26D1 /* NavigationBackport */,
 			);
 			productName = "NavigationBackportApp (iOS)";
 			productReference = 52925EB628549A62001B9190 /* NavigationBackportApp.app */;
@@ -138,6 +160,9 @@
 			dependencies = (
 			);
 			name = "NavigationBackportApp (macOS)";
+			packageProductDependencies = (
+				5A70FAF528864370001F26D1 /* NavigationBackport */,
+			);
 			productName = "NavigationBackportApp (macOS)";
 			productReference = 52925EBC28549A62001B9190 /* NavigationBackportApp.app */;
 			productType = "com.apple.product-type.application";
@@ -170,7 +195,6 @@
 			);
 			mainGroup = 52925EA928549A60001B9190;
 			packageReferences = (
-				52925ECD28549A84001B9190 /* XCRemoteSwiftPackageReference "NavigationBackport" */,
 			);
 			productRefGroup = 52925EB728549A62001B9190 /* Products */;
 			projectDirPath = "";
@@ -207,7 +231,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				529673CE286BB44400C01BCF /* NBNavigationPathView.swift in Sources */,
+				5ABA56EF288282C500178824 /* SidebarView.swift in Sources */,
+				5ABA56EB288282C500178824 /* SplitDemo.swift in Sources */,
 				529673D1286BB50200C01BCF /* ArrayBindingView.swift in Sources */,
+				5ABA56ED288282C500178824 /* DetailView.swift in Sources */,
 				529673D4286BC48600C01BCF /* NoBindingView.swift in Sources */,
 				52925EC128549A62001B9190 /* ContentView.swift in Sources */,
 				52925EBF28549A62001B9190 /* NavigationBackportApp.swift in Sources */,
@@ -219,7 +246,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				529673CF286BB44400C01BCF /* NBNavigationPathView.swift in Sources */,
+				5ABA56F0288282C500178824 /* SidebarView.swift in Sources */,
+				5ABA56EC288282C500178824 /* SplitDemo.swift in Sources */,
 				529673D2286BB50200C01BCF /* ArrayBindingView.swift in Sources */,
+				5ABA56EE288282C500178824 /* DetailView.swift in Sources */,
 				529673D5286BC48600C01BCF /* NoBindingView.swift in Sources */,
 				52925EC228549A62001B9190 /* ContentView.swift in Sources */,
 				52925EC028549A62001B9190 /* NavigationBackportApp.swift in Sources */,
@@ -489,21 +519,13 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		52925ECD28549A84001B9190 /* XCRemoteSwiftPackageReference "NavigationBackport" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/johnpatrickmorgan/NavigationBackport";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		52925ECE28549A84001B9190 /* NavigationBackport */ = {
+		5A70FAF32886436C001F26D1 /* NavigationBackport */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 52925ECD28549A84001B9190 /* XCRemoteSwiftPackageReference "NavigationBackport" */;
+			productName = NavigationBackport;
+		};
+		5A70FAF528864370001F26D1 /* NavigationBackport */ = {
+			isa = XCSwiftPackageProductDependency;
 			productName = NavigationBackport;
 		};
 /* End XCSwiftPackageProductDependency section */
