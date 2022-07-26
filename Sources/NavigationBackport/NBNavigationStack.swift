@@ -1,11 +1,13 @@
 import Foundation
 import SwiftUI
+import SwiftUIBackports
 
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   var unownedPath: Binding<[Data]>?
   @State var ownedPath: [Data] = []
-  @StateObject var destinationBuilder = DestinationBuilderHolder()
+  @Backport.StateObject var destinationBuilder = DestinationBuilderHolder()
+
   var root: Root
   
   var path: Binding<[Data]> {
