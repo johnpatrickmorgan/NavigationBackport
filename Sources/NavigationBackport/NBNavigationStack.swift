@@ -1,6 +1,8 @@
 import Foundation
 import SwiftUI
 
+import SwiftUIBackports
+
 class PathHolder<Data>: ObservableObject {
   @Published var path: [Data]
 
@@ -12,7 +14,7 @@ class PathHolder<Data>: ObservableObject {
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @Binding var path: [Data]
-  @ObservedObject var pathHolder: PathHolder<Data>
+  @Backport.StateObject var pathHolder: PathHolder<Data>
 
   var root: Root
 
@@ -30,7 +32,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     )
   }
 
-  @StateObject var destinationBuilder = DestinationBuilderHolder()
+  @Backport.StateObject var destinationBuilder = DestinationBuilderHolder()
 
   public var body: some View {
     NavigationView {
@@ -43,7 +45,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   init(path: Binding<[Data]>, pathHolder: PathHolder<Data>, @ViewBuilder root: () -> Root) {
     _path = path
     self.root = root()
-    self.pathHolder = pathHolder
+    self._pathHolder = .init(wrappedValue: pathHolder)
   }
 
   public init(path: Binding<[Data]>, @ViewBuilder root: () -> Root) {
