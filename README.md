@@ -10,7 +10,10 @@ This package uses the navigation APIs available in older SwiftUI versions (such 
 
 ✅ `navigationDestination` -> `nbNavigationDestination`
 
-You can migrate to these APIs now, and when you eventually bump your deployment target to iOS 16, you can remove this library and easily migrate to its SwiftUI equivalent. You can initialise `NBNavigationStack` with a binding to an `Array`, a `NBNavigationPath` binding, or neither.
+✅ `NavigationPath.CodableRepresentation` -> `NBNavigationPath.CodableRepresentation`
+
+
+You can migrate to these APIs now, and when you eventually bump your deployment target to iOS 16, you can remove this library and easily migrate to its SwiftUI equivalent. `NavigationStack`'s full API is replicated, so you can initialise an `NBNavigationStack` with a binding to an `Array`, with a binding to a `NBNavigationPath` binding, or with no binding at all.
 
 ## Example
 
@@ -97,7 +100,6 @@ struct EmojiView: View {
       .navigationTitle("Visualise \(visualisation.count)")
   }
 }
-
 ```
  
  ## Deep-linking
@@ -110,7 +112,7 @@ struct EmojiView: View {
   path.append(Screen.confirmChanges(orderId: id))
 ```
 
-However, the following code will successfully push all three screens, one after another:
+However, the amended code below will successfully push all three screens, one after another:
 
 ```swift
 $path.withDelaysIfUnsupported {
@@ -121,12 +123,3 @@ $path.withDelaysIfUnsupported {
 ```
 
 You can make any changes to the path passed into the `withDelaysIfUnsupported` closure, and the library will calculate the minimal number of state updates required to successfully update the UI.
-
-## To do
-
-The package is not yet fully complete. Here are some outstanding tasks: 
-  
- - [ ] Codable support for NavigationPath
- - [ ] Codable support for NavigationLink
- - [ ] Backport NavigationSplitView
- - [ ] Conditionally use SwiftUI Navigation API if available?
