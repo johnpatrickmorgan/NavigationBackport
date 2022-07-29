@@ -9,6 +9,7 @@ struct NBNavigationPathView: View {
     VStack {
       HStack {
         Button("Encode", action: encodePath)
+          .disabled(try! encodedPathData == JSONEncoder().encode(path.codable))
         Button("Decode", action: decodePath)
           .disabled(encodedPathData == nil)
       }
