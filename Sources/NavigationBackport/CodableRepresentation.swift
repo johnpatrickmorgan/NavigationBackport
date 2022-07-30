@@ -94,7 +94,7 @@ extension NBNavigationPath.CodableRepresentation: Decodable {
         }
         let value = try decodeExistential(type: codableType)
       #else
-        let value = try Self.decoder.decode(type, from: data)
+        let value = try Self.decoder.decode(codableType, from: data)
       #endif
       self.elements.insert(value, at: 0)
     }
