@@ -9,7 +9,8 @@ public extension NBNavigationPath {
   }
   
   var codable: CodableRepresentation? {
-    if #available(iOS 14.0, *) {      let codableElements = elements.compactMap { $0 as? Codable }
+    if #available(iOS 14.0, *) {
+      let codableElements = elements.compactMap { $0 as? Codable }
       guard codableElements.count == elements.count else {
         return nil
       }
@@ -21,7 +22,7 @@ public extension NBNavigationPath {
   }
   
   init(_ codable: CodableRepresentation) {
-    self.init(codable.elements)
+    self.init(codable.elements.map { $0 as! AnyHashable })
   }
 }
 
@@ -54,7 +55,7 @@ extension NBNavigationPath.CodableRepresentation: Encodable {
         )
       }
       #if swift(<5.7)
-      let data = try Self.encodeExistential(element)
+        let data = try Self.encodeExistential(element)
         let string = String(decoding: data, as: UTF8.self)
         try container.encode(string)
       #else

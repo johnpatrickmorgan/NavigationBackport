@@ -16,13 +16,13 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
 
   var root: Root
 
-  var erasedPath: Binding<[Any]> {
+  var erasedPath: Binding<[AnyHashable]> {
     Binding(
-      get: { path.map { $0 } },
+      get: { path.map(AnyHashable.init) },
       set: { newValue in
-        path = newValue.map { any in
-          guard let data = any as? Data else {
-            fatalError("Cannot add \(type(of: any)) to stack of \(Data.self)")
+        path = newValue.map { anyHashable in
+          guard let data = anyHashable.base as? Data else {
+            fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
           }
           return data
         }
@@ -64,8 +64,8 @@ public extension NBNavigationStack where Data == AnyHashable {
 
 public extension NBNavigationStack where Data == AnyHashable {
   init(path: Binding<NBNavigationPath>, @ViewBuilder root: () -> Root) {
-    let path: Binding<[Data]> = Binding(
-      get: { path.wrappedValue.elements.map { $0 as! AnyHashable } },
+    let path = Binding(
+      get: { path.wrappedValue.elements },
       set: { path.wrappedValue.elements = $0 }
     )
     self.init(path: path, root: root)
