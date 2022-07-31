@@ -1,26 +1,22 @@
 import Foundation
 import SwiftUI
 
-class PathHolder<Data>: ObservableObject {
-  @Published var path: [Data]
-
-  init(path: [Data] = []) {
-    self.path = path
-  }
-}
-
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
-  @Binding var path: [Data]
-  @ObservedObject var pathHolder: PathHolder<Data>
-
+  var unownedPath: Binding<[Data]>?
+  @State var ownedPath: [Data] = []
+  @StateObject var destinationBuilder = DestinationBuilderHolder()
   var root: Root
+  
+  var path: Binding<[Data]> {
+    unownedPath ?? $ownedPath
+  }
 
   var erasedPath: Binding<[AnyHashable]> {
-    Binding(
-      get: { path.map(AnyHashable.init) },
+    return Binding(
+      get: { path.wrappedValue.map(AnyHashable.init) },
       set: { newValue in
-        path = newValue.map { anyHashable in
+        path.wrappedValue = newValue.map { anyHashable in
           guard let data = anyHashable.base as? Data else {
             fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
           }
@@ -30,35 +26,23 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     )
   }
 
-  @StateObject var destinationBuilder = DestinationBuilderHolder()
-
   public var body: some View {
     NavigationView {
-      Router(rootView: root, screens: $path)
+      Router(rootView: root, screens: path)
         .environmentObject(NavigationPathHolder(erasedPath))
         .environmentObject(destinationBuilder)
     }.navigationViewStyle(supportedNavigationViewStyle)
   }
 
-  init(path: Binding<[Data]>, pathHolder: PathHolder<Data>, @ViewBuilder root: () -> Root) {
-    _path = path
+  public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {
+    self.unownedPath = path
     self.root = root()
-    self.pathHolder = pathHolder
-  }
-
-  public init(path: Binding<[Data]>, @ViewBuilder root: () -> Root) {
-    self.init(path: path, pathHolder: .init(), root: root)
   }
 }
 
 public extension NBNavigationStack where Data == AnyHashable {
   init(@ViewBuilder root: () -> Root) {
-    let pathHolder = PathHolder<Data>()
-    let path = Binding(
-      get: { pathHolder.path },
-      set: { pathHolder.path = $0 }
-    )
-    self.init(path: path, pathHolder: pathHolder, root: root)
+    self.init(path: nil, root: root)
   }
 }
 
