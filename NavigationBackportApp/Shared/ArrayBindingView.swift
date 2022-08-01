@@ -8,21 +8,41 @@ enum Screen: Hashable {
 }
 
 struct ArrayBindingView: View {
+  @State var savedPath: [Screen]?
   @State var path: [Screen] = []
 
   var body: some View {
-    NBNavigationStack(path: $path) {
-      HomeView(show99RedBalloons: show99RedBalloons)
-        .nbNavigationDestination(for: Screen.self, destination: { screen in
-          switch screen {
-          case .numberList(let numberList):
-            NumberListView(numberList: numberList)
-          case .number(let number):
-            NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
-          case .visualisation(let visualisation):
-            EmojiView(visualisation: visualisation)
-          }
-        })
+    VStack {
+      HStack {
+        Button("Save", action: savePath)
+          .disabled(savedPath == path)
+        Button("Restore", action: restorePath)
+          .disabled(savedPath == nil)
+      }
+      NBNavigationStack(path: $path) {
+        HomeView(show99RedBalloons: show99RedBalloons)
+          .nbNavigationDestination(for: Screen.self, destination: { screen in
+            switch screen {
+            case .numberList(let numberList):
+              NumberListView(numberList: numberList)
+            case .number(let number):
+              NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
+            case .visualisation(let visualisation):
+              EmojiView(visualisation: visualisation)
+            }
+          })
+      }
+    }
+  }
+  
+  func savePath() {
+    savedPath = path
+  }
+    
+  func restorePath() {
+    guard let savedPath = savedPath else { return }
+    $path.withDelaysIfUnsupported {
+      $0 = savedPath
     }
   }
 
@@ -97,7 +117,7 @@ private struct EmojiView: View {
   let visualisation: EmojiVisualisation
 
   var body: some View {
-    Text(String(Array(repeating: visualisation.emoji, count: visualisation.count)))
+    Text(visualisation.text)
       .navigationTitle("Visualise \(visualisation.count)")
   }
 }

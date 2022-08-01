@@ -66,7 +66,7 @@ private struct EmojiView: View {
   let visualisation: EmojiVisualisation
 
   var body: some View {
-    Text(String(Array(repeating: visualisation.emoji, count: visualisation.count)))
+    Text(visualisation.text)
       .navigationTitle("Visualise \(visualisation.count)")
   }
 }

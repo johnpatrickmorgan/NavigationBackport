@@ -20,6 +20,7 @@
 		529673D2286BB50200C01BCF /* ArrayBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D0286BB50200C01BCF /* ArrayBindingView.swift */; };
 		529673D4286BC48600C01BCF /* NoBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D3286BC48600C01BCF /* NoBindingView.swift */; };
 		529673D5286BC48600C01BCF /* NoBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D3286BC48600C01BCF /* NoBindingView.swift */; };
+		52DD85F82895C984004B5344 /* NavigationBackport in Frameworks */ = {isa = PBXBuildFile; productRef = 52DD85F72895C984004B5344 /* NavigationBackport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52DD85F82895C984004B5344 /* NavigationBackport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +63,7 @@
 				52925EAE28549A60001B9190 /* Shared */,
 				52925EBD28549A62001B9190 /* macOS */,
 				52925EB728549A62001B9190 /* Products */,
+				52DD85F62895C984004B5344 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,6 +105,13 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		52DD85F62895C984004B5344 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -138,6 +148,9 @@
 			dependencies = (
 			);
 			name = "NavigationBackportApp (macOS)";
+			packageProductDependencies = (
+				52DD85F72895C984004B5344 /* NavigationBackport */,
+			);
 			productName = "NavigationBackportApp (macOS)";
 			productReference = 52925EBC28549A62001B9190 /* NavigationBackportApp.app */;
 			productType = "com.apple.product-type.application";
@@ -347,7 +360,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QJAU94J65Z;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -377,7 +390,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QJAU94J65Z;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -407,10 +420,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QJAU94J65Z;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -435,10 +449,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QJAU94J65Z;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -504,6 +519,10 @@
 		52925ECE28549A84001B9190 /* NavigationBackport */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 52925ECD28549A84001B9190 /* XCRemoteSwiftPackageReference "NavigationBackport" */;
+			productName = NavigationBackport;
+		};
+		52DD85F72895C984004B5344 /* NavigationBackport */ = {
+			isa = XCSwiftPackageProductDependency;
 			productName = NavigationBackport;
 		};
 /* End XCSwiftPackageProductDependency section */

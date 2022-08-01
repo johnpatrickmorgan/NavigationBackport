@@ -2,20 +2,46 @@ import NavigationBackport
 import SwiftUI
 
 struct NBNavigationPathView: View {
+  @State var encodedPathData: Data?
   @State var path = NBNavigationPath()
 
   var body: some View {
-    NBNavigationStack(path: $path) {
-      HomeView(show99RedBalloons: show99RedBalloons)
-        .nbNavigationDestination(for: NumberList.self, destination: { numberList in
-          NumberListView(numberList: numberList)
-        })
-        .nbNavigationDestination(for: Int.self, destination: { number in
-          NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
-        })
-        .nbNavigationDestination(for: EmojiVisualisation.self, destination: { visualisation in
-          EmojiView(visualisation: visualisation)
-        })
+    VStack {
+      HStack {
+        Button("Encode", action: encodePath)
+          .disabled(try! encodedPathData == JSONEncoder().encode(path.codable))
+        Button("Decode", action: decodePath)
+          .disabled(encodedPathData == nil)
+      }
+      NBNavigationStack(path: $path) {
+        HomeView(show99RedBalloons: show99RedBalloons)
+          .nbNavigationDestination(for: NumberList.self, destination: { numberList in
+            NumberListView(numberList: numberList)
+          })
+          .nbNavigationDestination(for: Int.self, destination: { number in
+            NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
+          })
+          .nbNavigationDestination(for: EmojiVisualisation.self, destination: { visualisation in
+            EmojiView(visualisation: visualisation)
+          })
+      }
+    }
+  }
+  
+  func encodePath() {
+    guard let codable = path.codable else {
+      return
+    }
+    encodedPathData = try! JSONEncoder().encode(codable)
+  }
+    
+  func decodePath() {
+    guard let encodedPathData = encodedPathData else {
+      return
+    }
+    let codable = try! JSONDecoder().decode(NBNavigationPath.CodableRepresentation.self, from: encodedPathData)
+    $path.withDelaysIfUnsupported {
+      $0 = NBNavigationPath(codable)
     }
   }
 
@@ -90,7 +116,7 @@ private struct EmojiView: View {
   let visualisation: EmojiVisualisation
 
   var body: some View {
-    Text(String(Array(repeating: visualisation.emoji, count: visualisation.count)))
+    Text(visualisation.text)
       .navigationTitle("Visualise \(visualisation.count)")
   }
 }

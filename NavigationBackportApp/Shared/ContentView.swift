@@ -1,12 +1,16 @@
 import NavigationBackport
 import SwiftUI
 
-struct EmojiVisualisation: Hashable {
-  let emoji: Character
+struct EmojiVisualisation: Hashable, Codable {
+  let emoji: String
   let count: Int
+  
+  var text: String {
+    Array(repeating: emoji, count: count).joined()
+  }
 }
 
-struct NumberList: Hashable {
+struct NumberList: Hashable, Codable {
   let range: Range<Int>
 }
 
