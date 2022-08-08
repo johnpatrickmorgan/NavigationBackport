@@ -16,13 +16,15 @@ public extension NBNavigationPath {
       }
       return CodableRepresentation(elements: codableElements)
     } else {
-      // Encoding does not work on iOS < 14.o as it relies on '_mangledTypeName'.
+      // Encoding does not work on iOS < 14.0 as it relies on '_mangledTypeName'.
       return nil
     }
   }
   
   init(_ codable: CodableRepresentation) {
-    self.init(codable.elements.map { $0 as! AnyHashable })
+    // NOTE: Casting to Any first prevents the compiler from flagging the cast to AnyHashable as one that
+    // always fails (which it isn't, thanks to the compiler magic around AnyHashable).
+    self.init(codable.elements.map { ($0 as Any) as! AnyHashable })
   }
 }
 
