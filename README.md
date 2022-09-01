@@ -123,3 +123,7 @@ $path.withDelaysIfUnsupported {
 ```
 
 You can make any changes to the path passed into the `withDelaysIfUnsupported` closure, and the library will calculate the minimal number of state updates required to successfully update the UI.
+
+## Support for iOS/tvOS 13
+
+This library targets iOS/tvOS versions 14 and above, since it uses `StateObject`, which is unavailable on iOS/tvOS 13. However, there is an `ios13` branch, which uses [SwiftUIBackports](https://github.com/shaps80/SwiftUIBackports)' backported StateObject, so that it works on iOS/tvOS 13 too.
