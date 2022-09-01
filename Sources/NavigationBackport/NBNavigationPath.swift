@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
-public struct NBNavigationPath {
+public struct NBNavigationPath: Equatable {
   var elements: [AnyHashable]
 
   public var count: Int { elements.count }

@@ -26,4 +26,20 @@ final class NavigationBackportTests: XCTestCase {
     let expectedSteps = [end]
     XCTAssertEqual(steps, expectedSteps)
   }
+    
+  func testEquatableEquals() {
+    let path = [1, 2, 3]
+    let lhs = NBNavigationPath(path)
+    let rhs = NBNavigationPath(path)
+
+    XCTAssertEqual(lhs, rhs)
+  }
+
+  func testEquatableNotEquals() {
+    let lhs = NBNavigationPath([1, 2, 3])
+    let rhs = NBNavigationPath([1, 2])
+
+    XCTAssertNotEqual(lhs, rhs)
+  }
+
 }
