@@ -7,10 +7,9 @@ struct DestinationBuilderModifier<TypedData>: ViewModifier {
   @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
 
   func body(content: Content) -> some View {
-    content
+    destinationBuilder.appendBuilder(typedDestinationBuilder)
+    
+    return content
       .environmentObject(destinationBuilder)
-      .onAppear {
-        destinationBuilder.appendBuilder(typedDestinationBuilder)
-      }
   }
 }
