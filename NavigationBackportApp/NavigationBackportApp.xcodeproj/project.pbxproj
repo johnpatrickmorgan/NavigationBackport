@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		526365A028EE44F60007F331 /* Issue19View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5263659F28EE44F60007F331 /* Issue19View.swift */; };
+		526365A128EE44F60007F331 /* Issue19View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5263659F28EE44F60007F331 /* Issue19View.swift */; };
 		52925EBF28549A62001B9190 /* NavigationBackportApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52925EAF28549A60001B9190 /* NavigationBackportApp.swift */; };
 		52925EC028549A62001B9190 /* NavigationBackportApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52925EAF28549A60001B9190 /* NavigationBackportApp.swift */; };
 		52925EC128549A62001B9190 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52925EB028549A60001B9190 /* ContentView.swift */; };
@@ -24,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5263659F28EE44F60007F331 /* Issue19View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issue19View.swift; sourceTree = "<group>"; };
 		52925EAF28549A60001B9190 /* NavigationBackportApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBackportApp.swift; sourceTree = "<group>"; };
 		52925EB028549A60001B9190 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		52925EB128549A62001B9190 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -75,6 +78,7 @@
 				529673D0286BB50200C01BCF /* ArrayBindingView.swift */,
 				529673D3286BC48600C01BCF /* NoBindingView.swift */,
 				529673CD286BB44400C01BCF /* NBNavigationPathView.swift */,
+				5263659F28EE44F60007F331 /* Issue19View.swift */,
 				52925EB128549A62001B9190 /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -219,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				526365A028EE44F60007F331 /* Issue19View.swift in Sources */,
 				529673CE286BB44400C01BCF /* NBNavigationPathView.swift in Sources */,
 				529673D1286BB50200C01BCF /* ArrayBindingView.swift in Sources */,
 				529673D4286BC48600C01BCF /* NoBindingView.swift in Sources */,
@@ -231,6 +236,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				526365A128EE44F60007F331 /* Issue19View.swift in Sources */,
 				529673CF286BB44400C01BCF /* NBNavigationPathView.swift in Sources */,
 				529673D2286BB50200C01BCF /* ArrayBindingView.swift in Sources */,
 				529673D5286BC48600C01BCF /* NoBindingView.swift in Sources */,
