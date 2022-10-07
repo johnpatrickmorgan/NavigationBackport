@@ -2,17 +2,12 @@ import SwiftUI
 import NavigationBackport
 
 struct Issue19View: View {
-  
   enum Item {
       case one, two
   }
   
-  // App will crash on iOS 15.5 if showGreen is initially true and the path is not empty,
-  // because the view builder has not yet been added to the environment.
   @State var showGreen = true
   @State var path: [Item] = [.one]
-
-  // For similar reasons, the navigationDestination closure may have a stale version of counter.
   @State var counter = 0
 
   var body: some View {

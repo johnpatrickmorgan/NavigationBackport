@@ -16,14 +16,15 @@ struct NumberList: Hashable, Codable {
 
 struct ContentView: View {
   var body: some View {
-    Issue19View()
-//    TabView {
-//      NBNavigationPathView()
-//        .tabItem { Text("NBNavigationPath") }
-//      ArrayBindingView()
-//        .tabItem { Text("ArrayBinding") }
-//      NoBindingView()
-//        .tabItem { Text("NoBinding") }
-//    }
+    TabView {
+      NBNavigationPathView()
+        .tabItem { Text("NBNavigationPath") }
+      ArrayBindingView()
+        .tabItem { Text("ArrayBinding") }
+      NoBindingView()
+        .tabItem { Text("NoBinding") }
+      Issue19View()
+        .tabItem { Text("#19") }
+    }
   }
 }
