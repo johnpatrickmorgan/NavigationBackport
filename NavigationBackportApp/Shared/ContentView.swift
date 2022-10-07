@@ -23,6 +23,8 @@ struct ContentView: View {
         .tabItem { Text("ArrayBinding") }
       NoBindingView()
         .tabItem { Text("NoBinding") }
+      Issue19View()
+        .tabItem { Text("#19") }
     }
   }
 }
