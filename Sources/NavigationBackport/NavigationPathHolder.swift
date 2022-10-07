@@ -1,10 +1,10 @@
 import Foundation
 import SwiftUI
 
-class NavigationPathHolder: ObservableObject {
-  var path: Binding<[AnyHashable]>
+public class NavigationPathHolder: ObservableObject {
+  public var path: Binding<[AnyHashable]>
 
-  init(_ path: Binding<[AnyHashable]>) {
+  public init(_ path: Binding<[AnyHashable]>) {
     self.path = path
   }
 }
