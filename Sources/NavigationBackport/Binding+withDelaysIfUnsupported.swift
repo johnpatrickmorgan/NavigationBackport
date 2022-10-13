@@ -2,6 +2,9 @@ import Foundation
 import SwiftUI
 
 public extension Binding where Value: Collection {
+  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// changes are not supported within a single update by SwiftUI, the changes will be
+  /// applied in stages.
   @_disfavoredOverload
   func withDelaysIfUnsupported<Screen>(_ transform: (inout [Screen]) -> Void, onCompletion: (() -> Void)? = nil) where Value == [Screen] {
     let start = wrappedValue
@@ -12,7 +15,10 @@ public extension Binding where Value: Collection {
     }
   }
 
-  func withDelaysIfUnsupported<Screen>(_ transform: (inout Value) -> Void) async where Value == [Screen] {
+  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// changes are not supported within a single update by SwiftUI, the changes will be
+  /// applied in stages.
+  func withDelaysIfUnsupported<Screen>(_ transform: (inout [Screen]) -> Void) async where Value == [Screen] {
     let start = wrappedValue
     let end = apply(transform, to: start)
     await withDelaysIfUnsupported(from: start, to: end, keyPath: \.self)
@@ -20,6 +26,9 @@ public extension Binding where Value: Collection {
 }
 
 public extension Binding where Value == NBNavigationPath {
+  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// changes are not supported within a single update by SwiftUI, the changes will be
+  /// applied in stages.
   @_disfavoredOverload
   func withDelaysIfUnsupported(_ transform: (inout NBNavigationPath) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = wrappedValue
@@ -30,6 +39,9 @@ public extension Binding where Value == NBNavigationPath {
     }
   }
 
+  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// changes are not supported within a single update by SwiftUI, the changes will be
+  /// applied in stages.
   func withDelaysIfUnsupported(_ transform: (inout Value) -> Void) async {
     let start = wrappedValue
     let end = apply(transform, to: start)
@@ -38,12 +50,6 @@ public extension Binding where Value == NBNavigationPath {
 }
 
 extension Binding {
-  func withDelaysIfUnsupported<Screen>(_ transform: (inout [Screen]) -> Void, keyPath: WritableKeyPath<Value, [Screen]>) async {
-    let start = wrappedValue[keyPath: keyPath]
-    let end = apply(transform, to: start)
-    await withDelaysIfUnsupported(from: start, to: end, keyPath: keyPath)
-  }
-
   func withDelaysIfUnsupported<Screen>(from start: [Screen], to end: [Screen], keyPath: WritableKeyPath<Value, [Screen]>) async {
     let steps = NavigationBackport.calculateSteps(from: start, to: end)
 
@@ -62,10 +68,4 @@ extension Binding {
       await scheduleRemainingSteps(steps: Array(steps.dropFirst()), keyPath: keyPath)
     } catch {}
   }
-}
-
-func apply<T>(_ transform: (inout T) -> Void, to input: T) -> T {
-  var transformed = input
-  transform(&transformed)
-  return transformed
 }

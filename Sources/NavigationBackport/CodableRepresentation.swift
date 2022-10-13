@@ -4,10 +4,10 @@ public extension NBNavigationPath {
   struct CodableRepresentation {
     static let encoder = JSONEncoder()
     static let decoder = JSONDecoder()
-    
+
     var elements: [Codable]
   }
-  
+
   var codable: CodableRepresentation? {
     if #available(iOS 14.0, *) {
       let codableElements = elements.compactMap { $0 as? Codable }
@@ -20,7 +20,7 @@ public extension NBNavigationPath {
       return nil
     }
   }
-  
+
   init(_ codable: CodableRepresentation) {
     // NOTE: Casting to Any first prevents the compiler from flagging the cast to AnyHashable as one that
     // always fails (which it isn't, thanks to the compiler magic around AnyHashable).
@@ -38,9 +38,9 @@ extension NBNavigationPath.CodableRepresentation: Encodable {
     func encodeOpened<A: Encodable>(_ element: A) throws -> Data {
       try NBNavigationPath.CodableRepresentation.encoder.encode(element)
     }
-    return try _openExistential(element, do: encodeOpened(_: ))
+    return try _openExistential(element, do: encodeOpened(_:))
   }
-  
+
   public func encode(to encoder: Encoder) throws {
     var container = encoder.unkeyedContainer()
     for element in elements.reversed() {
@@ -71,7 +71,7 @@ extension NBNavigationPath.CodableRepresentation: Encodable {
 extension NBNavigationPath.CodableRepresentation: Decodable {
   public init(from decoder: Decoder) throws {
     var container = try decoder.unkeyedContainer()
-    self.elements = []
+    elements = []
     while !container.isAtEnd {
       let typeName = try container.decode(String.self)
       guard let type = _typeByName(typeName) else {
@@ -90,7 +90,7 @@ extension NBNavigationPath.CodableRepresentation: Decodable {
       let data = Data(encodedValue.utf8)
       #if swift(<5.7)
         func decodeExistential(type: Codable.Type) throws -> Codable {
-          func decodeOpened<A: Codable>(type: A.Type) throws -> A {
+          func decodeOpened<A: Codable>(type _: A.Type) throws -> A {
             try NBNavigationPath.CodableRepresentation.decoder.decode(A.self, from: data)
           }
           return try _openExistential(type, do: decodeOpened)
@@ -99,13 +99,12 @@ extension NBNavigationPath.CodableRepresentation: Decodable {
       #else
         let value = try Self.decoder.decode(codableType, from: data)
       #endif
-      self.elements.insert(value, at: 0)
+      elements.insert(value, at: 0)
     }
   }
 }
 
 extension NBNavigationPath.CodableRepresentation: Equatable {
-
   public static func == (lhs: Self, rhs: Self) -> Bool {
     do {
       let encodedLhs = try encodeExistential(lhs)

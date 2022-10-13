@@ -1,22 +1,24 @@
 import Foundation
 import SwiftUI
 
-public struct Router<Screen, RootView: View>: View {
+struct Router<Screen, RootView: View>: View {
   let rootView: RootView
 
   @Binding var screens: [Screen]
+  @EnvironmentObject var navigator: Navigator<Screen>
   @EnvironmentObject var pathHolder: NavigationPathHolder
   @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
 
-  public init(rootView: RootView, screens: Binding<[Screen]>) {
+  init(rootView: RootView, screens: Binding<[Screen]>) {
     self.rootView = rootView
-    self._screens = screens
+    _screens = screens
   }
 
   var pushedScreens: some View {
     Node(allScreens: screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
       .environmentObject(pathHolder)
       .environmentObject(destinationBuilder)
+      .environmentObject(navigator)
   }
 
   private var isActiveBinding: Binding<Bool> {
@@ -30,7 +32,7 @@ public struct Router<Screen, RootView: View>: View {
     )
   }
 
-  public var body: some View {
+  var body: some View {
     rootView
       .background(
         NavigationLink(destination: pushedScreens, isActive: isActiveBinding, label: EmptyView.init)

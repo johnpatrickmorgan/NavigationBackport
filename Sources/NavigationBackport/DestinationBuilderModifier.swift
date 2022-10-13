@@ -8,7 +8,7 @@ struct DestinationBuilderModifier<TypedData>: ViewModifier {
 
   func body(content: Content) -> some View {
     destinationBuilder.appendBuilder(typedDestinationBuilder)
-    
+
     return content
       .environmentObject(destinationBuilder)
   }

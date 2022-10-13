@@ -8,13 +8,14 @@ struct Node<Screen>: View {
   let screen: Screen?
 
   @EnvironmentObject var pathHolder: NavigationPathHolder
+  @EnvironmentObject var navigator: Navigator<Screen>
   @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
 
   init(allScreens: [Screen], truncateToIndex: @escaping (Int) -> Void, index: Int) {
     self.allScreens = allScreens
     self.truncateToIndex = truncateToIndex
     self.index = index
-    self.screen = allScreens[safe: index]
+    screen = allScreens[safe: index]
   }
 
   private var isActiveBinding: Binding<Bool> {
@@ -32,6 +33,7 @@ struct Node<Screen>: View {
     Node(allScreens: allScreens, truncateToIndex: truncateToIndex, index: index + 1)
       .environmentObject(pathHolder)
       .environmentObject(destinationBuilder)
+      .environmentObject(navigator)
   }
 
   var body: some View {

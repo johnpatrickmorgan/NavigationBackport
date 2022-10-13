@@ -14,12 +14,12 @@ struct NBNavigationPathView: View {
           .disabled(encodedPathData == nil)
       }
       NBNavigationStack(path: $path) {
-        HomeView(show99RedBalloons: show99RedBalloons)
+        HomeView()
           .nbNavigationDestination(for: NumberList.self, destination: { numberList in
             NumberListView(numberList: numberList)
           })
           .nbNavigationDestination(for: Int.self, destination: { number in
-            NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
+            NumberView(number: number)
           })
           .nbNavigationDestination(for: EmojiVisualisation.self, destination: { visualisation in
             EmojiView(visualisation: visualisation)
@@ -44,35 +44,23 @@ struct NBNavigationPathView: View {
       $0 = NBNavigationPath(codable)
     }
   }
-
-  func show99RedBalloons() {
-    /*
-     NOTE: Pushing two screens in one update doesn't work in older versions of SwiftUI.
-     The second screen would not be pushed onto the stack, leaving the data and UI out of sync.
-     E.g., this would not work:
-       path.append(99)
-       path.append(EmojiVisualisation(emoji: "🎈", count: 99))
-     But if you make those changes to the path argument of the `withDelaysIfUnsupported` closure,
-     NavigationBackport will break your changes down into a series of smaller changes, which will
-     then be applied one at a time, with delays in between. In this case, the first screen will be
-     pushed after which the second will be pushed. On newer versions of SwiftUI the changes will be
-     made in a single update.
-    */
-    $path.withDelaysIfUnsupported {
-      $0.append(99)
-      $0.append(EmojiVisualisation(emoji: "🎈", count: 99))
-    }
-  }
 }
 
 private struct HomeView: View {
-  let show99RedBalloons: () -> Void
+  @EnvironmentObject var navigator: PathNavigator
 
   var body: some View {
     VStack(spacing: 8) {
       NBNavigationLink(value: NumberList(range: 0 ..< 100), label: { Text("Pick a number") })
       Button("99 Red balloons", action: show99RedBalloons)
     }.navigationTitle("Home")
+  }
+  
+  func show99RedBalloons() {
+    navigator.withDelaysIfUnsupported {
+      $0.append(99)
+      $0.append(EmojiVisualisation(emoji: "🎈", count: 99))
+    }
   }
 }
 
@@ -88,8 +76,8 @@ private struct NumberListView: View {
 }
 
 private struct NumberView: View {
+  @EnvironmentObject var navigator: PathNavigator
   @State var number: Int
-  let goBackToRoot: () -> Void
 
   var body: some View {
     VStack(spacing: 8) {
@@ -107,7 +95,7 @@ private struct NumberView: View {
         value: EmojiVisualisation(emoji: "🐑", count: number),
         label: { Text("Visualise with sheep") }
       )
-      Button("Go back to root", action: goBackToRoot)
+      Button("Go back to root", action: { navigator.popToRoot() })
     }.navigationTitle("\(number)")
   }
 }

@@ -20,11 +20,20 @@ struct NoBindingView: View {
 }
 
 private struct HomeView: View {
+  @EnvironmentObject var navigator: PathNavigator
 
   var body: some View {
     VStack(spacing: 8) {
       NBNavigationLink(value: NumberList(range: 0 ..< 100), label: { Text("Pick a number") })
+      Button("99 Red balloons", action: show99RedBalloons)
     }.navigationTitle("Home")
+  }
+  
+  func show99RedBalloons() {
+    navigator.withDelaysIfUnsupported {
+      $0.append(99)
+      $0.append(EmojiVisualisation(emoji: "🎈", count: 99))
+    }
   }
 }
 
@@ -40,6 +49,7 @@ private struct NumberListView: View {
 }
 
 private struct NumberView: View {
+  @EnvironmentObject var navigator: PathNavigator
   @State var number: Int
 
   var body: some View {
@@ -58,6 +68,9 @@ private struct NumberView: View {
         value: EmojiVisualisation(emoji: "🐑", count: number),
         label: { Text("Visualise with sheep") }
       )
+      Button("Pop to root") {
+        navigator.popToRoot()
+      }
     }.navigationTitle("\(number)")
   }
 }

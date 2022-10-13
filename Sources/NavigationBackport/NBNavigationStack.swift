@@ -7,7 +7,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @State var ownedPath: [Data] = []
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   var root: Root
-  
+
   var path: Binding<[Data]> {
     unownedPath ?? $ownedPath
   }
@@ -31,11 +31,12 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       Router(rootView: root, screens: path)
         .environmentObject(NavigationPathHolder(erasedPath))
         .environmentObject(destinationBuilder)
+        .environmentObject(Navigator(path))
     }.navigationViewStyle(supportedNavigationViewStyle)
   }
 
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {
-    self.unownedPath = path
+    unownedPath = path
     self.root = root()
   }
 }

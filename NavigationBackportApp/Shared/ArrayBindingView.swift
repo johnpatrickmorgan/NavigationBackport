@@ -1,7 +1,7 @@
 import NavigationBackport
 import SwiftUI
 
-enum Screen: Hashable {
+enum Screen: NBScreen {
   case number(Int)
   case numberList(NumberList)
   case visualisation(EmojiVisualisation)
@@ -20,13 +20,13 @@ struct ArrayBindingView: View {
           .disabled(savedPath == nil)
       }
       NBNavigationStack(path: $path) {
-        HomeView(show99RedBalloons: show99RedBalloons)
+        HomeView()
           .nbNavigationDestination(for: Screen.self, destination: { screen in
             switch screen {
             case .numberList(let numberList):
               NumberListView(numberList: numberList)
             case .number(let number):
-              NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
+              NumberView(number: number)
             case .visualisation(let visualisation):
               EmojiView(visualisation: visualisation)
             }
@@ -45,7 +45,18 @@ struct ArrayBindingView: View {
       $0 = savedPath
     }
   }
+}
 
+private struct HomeView: View {
+  @EnvironmentObject var navigator: Navigator<Screen>
+
+  var body: some View {
+    VStack(spacing: 8) {
+      NBNavigationLink(value: Screen.numberList(NumberList(range: 0 ..< 100)), label: { Text("Pick a number") })
+      Button("99 Red balloons", action: show99RedBalloons)
+    }.navigationTitle("Home")
+  }
+  
   func show99RedBalloons() {
     /*
      NOTE: Pushing two screens in one update doesn't work in older versions of SwiftUI.
@@ -59,21 +70,10 @@ struct ArrayBindingView: View {
      pushed after which the second will be pushed. On newer versions of SwiftUI the changes will be
      made in a single update.
     */
-    $path.withDelaysIfUnsupported {
-      $0.append(.number(99))
-      $0.append(.visualisation(EmojiVisualisation(emoji: "🎈", count: 99)))
+    navigator.withDelaysIfUnsupported {
+      $0.push(.number(99))
+      $0.push(.visualisation(EmojiVisualisation(emoji: "🎈", count: 99)))
     }
-  }
-}
-
-private struct HomeView: View {
-  let show99RedBalloons: () -> Void
-
-  var body: some View {
-    VStack(spacing: 8) {
-      NBNavigationLink(value: Screen.numberList(NumberList(range: 0 ..< 100)), label: { Text("Pick a number") })
-      Button("99 Red balloons", action: show99RedBalloons)
-    }.navigationTitle("Home")
   }
 }
 
@@ -89,8 +89,8 @@ private struct NumberListView: View {
 }
 
 private struct NumberView: View {
+  @EnvironmentObject var navigator: Navigator<Screen>
   @State var number: Int
-  let goBackToRoot: () -> Void
 
   var body: some View {
     VStack(spacing: 8) {
@@ -108,7 +108,7 @@ private struct NumberView: View {
         value: Screen.visualisation(.init(emoji: "🐑", count: number)),
         label: { Text("Visualise with sheep") }
       )
-      Button("Go back to root", action: goBackToRoot)
+      Button("Go back to root", action: { navigator.popToRoot() })
     }.navigationTitle("\(number)")
   }
 }
