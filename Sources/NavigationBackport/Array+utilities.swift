@@ -27,7 +27,7 @@ public extension Array where Element: NBScreen {
   /// will be index.
   /// - Parameter index: The index that should become the Array's endIndex.
   mutating func popTo(index: Int) {
-    let popCount = count - index
+    let popCount = count - 1 - index
     pop(popCount)
   }
 

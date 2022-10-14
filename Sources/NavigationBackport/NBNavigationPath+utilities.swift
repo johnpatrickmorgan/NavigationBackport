@@ -47,4 +47,13 @@ public extension NBNavigationPath {
   mutating func popTo(_ screen: AnyHashable) -> Bool {
     return elements.popTo(screen)
   }
+  /// Pops to the topmost (most recently pushed) screen in the stack
+  /// equal to the given screen. If no screens are found,
+  /// the screens array will be unchanged.
+  /// - Parameter screen: The predicate indicating which screen to go back to.
+  /// - Returns: A `Bool` indicating whether a matching screen was found.
+  @discardableResult
+  mutating func popTo<T: Hashable>(_ screenType: T.Type) -> Bool {
+    return popTo(where: { $0 is T })
+  }
 }

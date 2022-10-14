@@ -59,3 +59,14 @@ public extension Navigator where Screen: NBScreen & Identifiable {
     path.popTo(id: id)
   }
 }
+
+public extension Navigator where Screen == AnyHashable {
+  /// Pops to the topmost (most recently pushed) identifiable screen in the stack
+  /// with the given ID. If no screens are found, the screens array will be unchanged.
+  /// - Parameter id: The id of the screen to goBack to.
+  /// - Returns: A `Bool` indicating whether a matching screen was found.
+  @discardableResult
+  func popTo<T: Hashable>(_ screenType: T.Type) -> Bool {
+    popTo(where: { $0 is T })
+  }
+}
