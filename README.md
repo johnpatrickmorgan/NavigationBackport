@@ -101,8 +101,40 @@ struct EmojiView: View {
   }
 }
 ```
- 
- ## Deep-linking
+
+## Additional features
+
+As well as replicating the standard features of the new `NavigationStack` APIs, some helpful utilities have also been added. 
+
+### Navigator
+
+A `Navigator` object is available through the environment, giving access to the current navigation path. The navigator can be accessed via the environment, e.g. for a NBNavigationPath-backed stack:
+
+```swift
+@EnvironmentObject var navigator: PathNavigator
+```
+
+Or for a stack backed by an Array, e.g. `[ScreenType]`:
+
+```swift
+@EnvironmentObject var navigator: Navigator<ScreenType>
+```
+
+### Navigation functions
+
+Whether interacting with an `Array`, an `NBNavigationPath`, or a `Navigator`, a number of utility functions are available for easier navigation, such as:
+
+```swift
+path.push(Profile(name: "John"))
+
+path.pop()
+
+path.popToRoot()
+
+path.popTo(Profile.self)
+```
+
+## Deep-linking
  
  Before `NavigationStack`, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation hierarchy. `NavigationBackport` provides an API to work around this limitation: you can wrap such path changes within a call to `withDelaysIfUnsupported`, and the library will, if necessary, break down the larger update into a series of smaller updates that SwiftUI supports, with delays in between. For example, the following code that tries to push three screens in one update will not work:
 
