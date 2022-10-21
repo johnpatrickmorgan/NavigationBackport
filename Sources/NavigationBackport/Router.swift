@@ -5,9 +5,6 @@ struct Router<Screen, RootView: View>: View {
   let rootView: RootView
 
   @Binding var screens: [Screen]
-  @EnvironmentObject var navigator: Navigator<Screen>
-  @EnvironmentObject var pathHolder: NavigationPathHolder
-  @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
 
   init(rootView: RootView, screens: Binding<[Screen]>) {
     self.rootView = rootView
@@ -16,9 +13,6 @@ struct Router<Screen, RootView: View>: View {
 
   var pushedScreens: some View {
     Node(allScreens: screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
-      .environmentObject(pathHolder)
-      .environmentObject(destinationBuilder)
-      .environmentObject(navigator)
   }
 
   private var isActiveBinding: Binding<Bool> {

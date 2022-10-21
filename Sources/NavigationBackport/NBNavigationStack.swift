@@ -29,10 +29,11 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   public var body: some View {
     NavigationView {
       Router(rootView: root, screens: path)
-        .environmentObject(NavigationPathHolder(erasedPath))
-        .environmentObject(destinationBuilder)
-        .environmentObject(Navigator(path))
-    }.navigationViewStyle(supportedNavigationViewStyle)
+    }
+    .navigationViewStyle(supportedNavigationViewStyle)
+    .environmentObject(NavigationPathHolder(erasedPath))
+    .environmentObject(destinationBuilder)
+    .environmentObject(Navigator(path))
   }
 
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {

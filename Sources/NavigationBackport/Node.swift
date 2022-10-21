@@ -7,10 +7,6 @@ struct Node<Screen>: View {
   let index: Int
   let screen: Screen?
 
-  @EnvironmentObject var pathHolder: NavigationPathHolder
-  @EnvironmentObject var navigator: Navigator<Screen>
-  @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
-
   init(allScreens: [Screen], truncateToIndex: @escaping (Int) -> Void, index: Int) {
     self.allScreens = allScreens
     self.truncateToIndex = truncateToIndex
@@ -31,9 +27,6 @@ struct Node<Screen>: View {
 
   var next: some View {
     Node(allScreens: allScreens, truncateToIndex: truncateToIndex, index: index + 1)
-      .environmentObject(pathHolder)
-      .environmentObject(destinationBuilder)
-      .environmentObject(navigator)
   }
 
   var body: some View {
