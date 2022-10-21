@@ -17,6 +17,9 @@ You can migrate to these APIs now, and when you eventually bump your deployment 
 
 ## Example
 
+<details>
+  <summary>Click to expand an example</summary>
+
 ```swift
 import NavigationBackport
 import SwiftUI
@@ -87,7 +90,7 @@ struct EmojiVisualisation: Hashable {
   let emoji: String
   let count: Int
   
-  var description: String {
+  var text: String {
     Array(repeating: emoji, count: count).joined()
   }
 }
@@ -101,6 +104,8 @@ struct EmojiView: View {
   }
 }
 ```
+
+</details>
 
 ## Additional features
 
@@ -133,6 +138,8 @@ path.popToRoot()
 
 path.popTo(Profile.self)
 ```
+
+Note that, if you want to use these methods on an `Array`, ensure the `Array`'s `Element` conforms to `NBScreen`, a protocol that inherits from Hashable without adding any additional requirements. This avoids polluting all arrays with APIs specific to navigation.
 
 ## Deep-linking
  
