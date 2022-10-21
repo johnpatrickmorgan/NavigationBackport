@@ -31,10 +31,10 @@ public extension Array where Element: NBScreen {
     pop(popCount)
   }
 
-  /// Pops to the root screen (index 0). The resulting screen count
-  /// will be 0.
+  /// Pops to the root screen. The resulting screen count will be 0.
   mutating func popToRoot() {
-    popTo(index: 0)
+    // Popping to index -1 ensures the resulting array is empty.
+    popTo(index: -1)
   }
 
   /// Pops to the topmost (most recently pushed) screen in the stack
