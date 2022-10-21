@@ -6,6 +6,7 @@ public extension ObservableObject {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages. An async version of this function is also available.
   @_disfavoredOverload
+  @MainActor
   func withDelaysIfUnsupported<Screen>(_ keyPath: WritableKeyPath<Self, [Screen]>, transform: (inout [Screen]) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = self[keyPath: keyPath]
     let end = apply(transform, to: start)
@@ -29,6 +30,7 @@ public extension ObservableObject {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages. An async version of this function is also available.
   @_disfavoredOverload
+  @MainActor
   func withDelaysIfUnsupported(_ keyPath: WritableKeyPath<Self, NBNavigationPath>, transform: (inout NBNavigationPath) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = self[keyPath: keyPath]
     let end = apply(transform, to: start)
