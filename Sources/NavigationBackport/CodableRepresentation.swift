@@ -9,16 +9,11 @@ public extension NBNavigationPath {
   }
 
   var codable: CodableRepresentation? {
-    if #available(iOS 14.0, *) {
-      let codableElements = elements.compactMap { $0 as? Codable }
-      guard codableElements.count == elements.count else {
-        return nil
-      }
-      return CodableRepresentation(elements: codableElements)
-    } else {
-      // Encoding does not work on iOS < 14.0 as it relies on '_mangledTypeName'.
+    let codableElements = elements.compactMap { $0 as? Codable }
+    guard codableElements.count == elements.count else {
       return nil
     }
+    return CodableRepresentation(elements: codableElements)
   }
 
   init(_ codable: CodableRepresentation) {
@@ -44,18 +39,12 @@ extension NBNavigationPath.CodableRepresentation: Encodable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.unkeyedContainer()
     for element in elements.reversed() {
-      if #available(iOS 14.0, *) {
-        guard let typeName = _mangledTypeName(type(of: element)) else {
-          throw generalEncodingError(
-            "Unable to create '_mangledTypeName' from \(String(describing: type(of: element)))"
-          )
-        }
-        try container.encode(typeName)
-      } else {
+      guard let typeName = _mangledTypeName(type(of: element)) else {
         throw generalEncodingError(
-          "Encoding does not work on iOS 14 as it relies on '_mangledTypeName'"
+          "Unable to create '_mangledTypeName' from \(String(describing: type(of: element)))"
         )
       }
+      try container.encode(typeName)
       #if swift(<5.7)
         let data = try Self.encodeExistential(element)
         let string = String(decoding: data, as: UTF8.self)

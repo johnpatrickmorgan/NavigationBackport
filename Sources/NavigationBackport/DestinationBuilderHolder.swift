@@ -23,10 +23,25 @@ class DestinationBuilderHolder: ObservableObject {
     }
   }
 
+  func appendLocalBuilder(identifier: LocalDestinationID, _ builder: @escaping () -> AnyView) {
+    let key = identifier.rawValue.uuidString
+    builders[key] = { _ in builder() }
+  }
+
+  func removeLocalBuilder(identifier: LocalDestinationID) {
+    let key = identifier.rawValue.uuidString
+    builders[key] = nil
+  }
+
   func build<T>(_ typedData: T) -> AnyView {
     let base = (typedData as? AnyHashable)?.base
     let type = type(of: base ?? typedData)
-    let key = Self.identifier(for: type)
+    let key: String
+    if let identifier = (base ?? typedData) as? LocalDestinationID {
+      key = identifier.rawValue.uuidString
+    } else {
+      key = Self.identifier(for: type)
+    }
 
     if let builder = builders[key], let output = builder(typedData) {
       return output

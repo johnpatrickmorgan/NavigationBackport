@@ -6,7 +6,7 @@ public extension Navigator where Screen: NBScreen {
   func push(_ screen: Screen) {
     path.push(screen)
   }
-  
+
   /// Pops a given number of screens off the stack.
   /// - Parameter count: The number of screens to go back. Defaults to 1.
   func pop(_ count: Int = 1) {

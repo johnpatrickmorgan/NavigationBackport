@@ -34,11 +34,11 @@ struct ArrayBindingView: View {
       }
     }
   }
-  
+
   func savePath() {
     savedPath = path
   }
-    
+
   func restorePath() {
     guard let savedPath = savedPath else { return }
     $path.withDelaysIfUnsupported {
@@ -48,28 +48,40 @@ struct ArrayBindingView: View {
 }
 
 private struct HomeView: View {
+  @State var isPushing = false
   @EnvironmentObject var navigator: Navigator<Screen>
 
   var body: some View {
     VStack(spacing: 8) {
+      // Push via NBNavigationLink
       NBNavigationLink(value: Screen.numberList(NumberList(range: 0 ..< 100)), label: { Text("Pick a number") })
+      // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
+      // Push via Bool binding
+      VStack {
+        Text("Push local destination")
+        Toggle(isOn: $isPushing, label: { EmptyView() })
+          .labelsHidden()
+      }.padding()
     }.navigationTitle("Home")
+      .nbNavigationDestination(isPresented: $isPushing) {
+        Text("Local destination")
+      }
   }
-  
+
   func show99RedBalloons() {
     /*
-     NOTE: Pushing two screens in one update doesn't work in older versions of SwiftUI.
-     The second screen would not be pushed onto the stack, leaving the data and UI out of sync.
-     E.g., this would not work:
-       path.append(99)
-       path.append(EmojiVisualisation(emoji: "🎈", count: 99))
-     But if you make those changes to the path argument of the `withDelaysIfUnsupported` closure,
-     NavigationBackport will break your changes down into a series of smaller changes, which will
-     then be applied one at a time, with delays in between. In this case, the first screen will be
-     pushed after which the second will be pushed. On newer versions of SwiftUI the changes will be
-     made in a single update.
-    */
+      NOTE: Pushing two screens in one update doesn't work in older versions of SwiftUI.
+      The second screen would not be pushed onto the stack, leaving the data and UI out of sync.
+      E.g., this would not work:
+        path.append(99)
+        path.append(EmojiVisualisation(emoji: "🎈", count: 99))
+      But if you make those changes to the path argument of the `withDelaysIfUnsupported` closure,
+      NavigationBackport will break your changes down into a series of smaller changes, which will
+      then be applied one at a time, with delays in between. In this case, the first screen will be
+      pushed after which the second will be pushed. On newer versions of SwiftUI the changes will be
+      made in a single update.
+     */
     navigator.withDelaysIfUnsupported {
       $0.push(.number(99))
       $0.push(.visualisation(EmojiVisualisation(emoji: "🎈", count: 99)))
@@ -115,9 +127,26 @@ private struct NumberView: View {
 
 private struct EmojiView: View {
   let visualisation: EmojiVisualisation
+  @State var isPushing = false
 
   var body: some View {
-    Text(visualisation.text)
-      .navigationTitle("Visualise \(visualisation.count)")
+    VStack {
+      Text(visualisation.text)
+      Toggle(isOn: $isPushing, label: { Text("Push") }).labelsHidden()
+    }
+    .nbNavigationDestination(isPresented: $isPushing, destination: {
+      TestView()
+    })
+    .navigationTitle("Visualise \(visualisation.count)")
+  }
+}
+
+struct TestView: View {
+  @Environment(\.presentationMode) var presentationMode
+
+  var body: some View {
+    Button("Back") {
+      presentationMode.wrappedValue.dismiss()
+    }
   }
 }

@@ -4,36 +4,56 @@ import SwiftUI
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   var unownedPath: Binding<[Data]>?
-  @State var ownedPath: [Data] = []
+  @StateObject var ownedPath = NavigationPathHolder()
+  @StateObject var pathAppender = PathAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   var root: Root
 
-  var path: Binding<[Data]> {
-    unownedPath ?? $ownedPath
+  var typedPath: Binding<[Data]> {
+    if let unownedPath {
+      return unownedPath
+    } else {
+      return Binding {
+        ownedPath.path.map { $0 as! Data }
+      } set: {
+        ownedPath.path = $0
+      }
+    }
   }
 
-  var erasedPath: Binding<[AnyHashable]> {
-    return Binding(
-      get: { path.wrappedValue.map(AnyHashable.init) },
-      set: { newValue in
-        path.wrappedValue = newValue.map { anyHashable in
-          guard let data = anyHashable.base as? Data else {
-            fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
-          }
-          return data
-        }
-      }
-    )
+  var content: some View {
+    pathAppender.append = { [weak ownedPath] newElement in
+      ownedPath?.path.append(newElement)
+    }
+    return NavigationView {
+      Router(rootView: root, screens: $ownedPath.path)
+    }
+    .navigationViewStyle(supportedNavigationViewStyle)
+    .environmentObject(ownedPath)
+    .environmentObject(pathAppender)
+    .environmentObject(destinationBuilder)
+    .environmentObject(Navigator(typedPath))
   }
 
   public var body: some View {
-    NavigationView {
-      Router(rootView: root, screens: path)
+    if let unownedPath {
+      content
+        .onChange(of: unownedPath.wrappedValue) {
+          ownedPath.path = $0
+        }
+        .onChange(of: ownedPath.path) {
+          unownedPath.wrappedValue = $0.compactMap { anyHashable in
+            if let data = anyHashable.base as? Data {
+              return data
+            } else if anyHashable.base is LocalDestinationID {
+              return nil
+            }
+            fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
+          }
+        }
+    } else {
+      content
     }
-    .navigationViewStyle(supportedNavigationViewStyle)
-    .environmentObject(NavigationPathHolder(erasedPath))
-    .environmentObject(destinationBuilder)
-    .environmentObject(Navigator(path))
   }
 
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {

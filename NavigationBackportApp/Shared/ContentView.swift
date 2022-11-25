@@ -4,7 +4,7 @@ import SwiftUI
 struct EmojiVisualisation: Hashable, Codable {
   let emoji: String
   let count: Int
-  
+
   var text: String {
     Array(repeating: emoji, count: count).joined()
   }

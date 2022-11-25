@@ -27,14 +27,14 @@ struct NBNavigationPathView: View {
       }
     }
   }
-  
+
   func encodePath() {
     guard let codable = path.codable else {
       return
     }
     encodedPathData = try! JSONEncoder().encode(codable)
   }
-    
+
   func decodePath() {
     guard let encodedPathData = encodedPathData else {
       return
@@ -48,15 +48,29 @@ struct NBNavigationPathView: View {
 
 private struct HomeView: View {
   @EnvironmentObject var navigator: PathNavigator
+  @State var isPushing = false
 
   var body: some View {
     VStack(spacing: 8) {
+      // Push via link
       NBNavigationLink(value: NumberList(range: 0 ..< 100), label: { Text("Pick a number") })
+      // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
-    }.navigationTitle("Home")
+      // Push via Bool binding
+      VStack {
+        Text("Push local destination")
+        Toggle(isOn: $isPushing, label: { EmptyView() })
+          .labelsHidden()
+      }.padding()
+    }
+    .nbNavigationDestination(isPresented: $isPushing, destination: {
+      Text("Local destination")
+    })
+    .navigationTitle("Home")
   }
-  
+
   func show99RedBalloons() {
+    // `withDelaysIfUnsupported` pushes screens one at a time to overcome SwiftUI limitations.
     navigator.withDelaysIfUnsupported {
       $0.append(99)
       $0.append(EmojiVisualisation(emoji: "🎈", count: 99))

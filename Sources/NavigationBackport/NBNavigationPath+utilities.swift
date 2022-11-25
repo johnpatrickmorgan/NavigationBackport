@@ -6,7 +6,7 @@ public extension NBNavigationPath {
   mutating func push(_ screen: AnyHashable) {
     elements.push(screen)
   }
-  
+
   /// Pops a given number of screens off the stack.
   /// - Parameter count: The number of screens to go back. Defaults to 1.
   mutating func pop(_ count: Int = 1) {
@@ -47,6 +47,7 @@ public extension NBNavigationPath {
   mutating func popTo(_ screen: AnyHashable) -> Bool {
     return elements.popTo(screen)
   }
+
   /// Pops to the topmost (most recently pushed) screen in the stack
   /// equal to the given screen. If no screens are found,
   /// the screens array will be unchanged.
