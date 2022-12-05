@@ -13,7 +13,7 @@ public struct NBNavigationPath: Equatable {
   }
 
   public init<S: Sequence>(_ elements: S) where S.Element: Hashable {
-    self.init(elements.map { $0 })
+    self.init(elements.map { $0 as AnyHashable })
   }
 
   public mutating func append<V: Hashable>(_ value: V) {
