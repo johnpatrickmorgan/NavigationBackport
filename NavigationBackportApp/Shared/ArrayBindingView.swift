@@ -127,26 +127,9 @@ private struct NumberView: View {
 
 private struct EmojiView: View {
   let visualisation: EmojiVisualisation
-  @State var isPushing = false
 
   var body: some View {
-    VStack {
-      Text(visualisation.text)
-      Toggle(isOn: $isPushing, label: { Text("Push") }).labelsHidden()
-    }
-    .nbNavigationDestination(isPresented: $isPushing, destination: {
-      TestView()
-    })
-    .navigationTitle("Visualise \(visualisation.count)")
-  }
-}
-
-struct TestView: View {
-  @Environment(\.presentationMode) var presentationMode
-
-  var body: some View {
-    Button("Back") {
-      presentationMode.wrappedValue.dismiss()
-    }
+    Text(visualisation.text)
+      .navigationTitle("Visualise \(visualisation.count)")
   }
 }

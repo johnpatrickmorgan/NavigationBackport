@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
+/// A replacement for SwiftUI's `NavigationStack` that's available on older OS versions.
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   var unownedPath: Binding<[Data]>?
   @StateObject var ownedPath = NavigationPathHolder()

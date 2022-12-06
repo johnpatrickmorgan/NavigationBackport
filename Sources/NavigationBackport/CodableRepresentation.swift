@@ -1,6 +1,7 @@
 import Foundation
 
 public extension NBNavigationPath {
+  /// A codable representation of a navigation path.
   struct CodableRepresentation {
     static let encoder = JSONEncoder()
     static let decoder = JSONDecoder()
@@ -36,6 +37,8 @@ extension NBNavigationPath.CodableRepresentation: Encodable {
     return try _openExistential(element, do: encodeOpened(_:))
   }
 
+  /// Encodes the representation into the encoder's unkeyed container.
+  /// - Parameter encoder: The encoder to use.
   public func encode(to encoder: Encoder) throws {
     var container = encoder.unkeyedContainer()
     for element in elements.reversed() {

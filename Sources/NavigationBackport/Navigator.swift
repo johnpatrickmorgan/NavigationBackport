@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// A navigator to use when the `NBNavigationStack` is initialized with a `NBNavigationPath` binding or no binding.`
 public typealias PathNavigator = Navigator<AnyHashable>
 
 /// An object available via the environment that gives access to the current path.

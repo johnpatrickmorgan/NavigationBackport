@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 
+/// Keeps hold of the destination builder closures for a given type or local destination ID.
 class DestinationBuilderHolder: ObservableObject {
   static func identifier(for type: Any.Type) -> String {
     String(reflecting: type)

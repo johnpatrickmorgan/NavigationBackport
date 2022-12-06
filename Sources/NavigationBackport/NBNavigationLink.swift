@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
+/// When value is non-nil, shows the destination associated with its type.
 public struct NBNavigationLink<P: Hashable, Label: View>: View {
   var value: P?
   var label: Label
