@@ -48,6 +48,6 @@ class DestinationBuilderHolder: ObservableObject {
       return output
     }
     assertionFailure("No view builder found for key \(key)")
-    return AnyView(Image(systemName: "exclamationmark.triangle"))
+    return AnyView(ErrorView(text: "No view builder found for key \(key)"))
   }
 }

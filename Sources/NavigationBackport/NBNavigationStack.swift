@@ -8,6 +8,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @StateObject var ownedPath = NavigationPathHolder()
   @StateObject var pathAppender = PathAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
+  @Environment(\.splitViewPane) var splitViewPane
   var root: Root
 
   var typedPath: Binding<[Data]> {
@@ -22,21 +23,26 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     }
   }
 
+  @ViewBuilder
   var content: some View {
-    pathAppender.append = { [weak ownedPath] newElement in
-      ownedPath?.path.append(newElement)
+    if splitViewPane == .detail {
+      Router(rootView: root, screens: $ownedPath.path, screenType: Data.self)
+    } else {
+      if let splitViewPane {
+        let _ = assertionFailure("""
+          NBNavigationStack should only be embedded in the detail pane of an NBNavigationSplitView, not the \(splitViewPane) pane.
+          """
+        )
+      }
+      NavigationView {
+        Router(rootView: root, screens: $ownedPath.path, screenType: Data.self)
+      }
+      .navigationViewStyle(supportedNavigationViewStyle)
     }
-    return NavigationView {
-      Router(rootView: root, screens: $ownedPath.path)
-    }
-    .navigationViewStyle(supportedNavigationViewStyle)
-    .environmentObject(ownedPath)
-    .environmentObject(pathAppender)
-    .environmentObject(destinationBuilder)
-    .environmentObject(Navigator(typedPath))
   }
 
-  public var body: some View {
+  @ViewBuilder
+  public var stateSyncingContent: some View {
     if let unownedPath {
       content
         .onChange(of: unownedPath.wrappedValue) {
@@ -55,6 +61,17 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     } else {
       content
     }
+  }
+
+  public var body: some View {
+    pathAppender.append = { [weak ownedPath] newElement in
+      ownedPath?.path.append(newElement)
+    }
+    return stateSyncingContent
+      .environmentObject(ownedPath)
+      .environmentObject(pathAppender)
+      .environmentObject(destinationBuilder)
+      .environmentObject(Navigator(typedPath))
   }
 
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {

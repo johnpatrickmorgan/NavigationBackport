@@ -2,12 +2,17 @@ import Foundation
 import SwiftUI
 
 struct Node<Screen>: View {
-  let allScreens: [Screen]
+  let allScreens: [AnyHashable]
   let truncateToIndex: (Int) -> Void
   let index: Int
-  let screen: Screen?
+  let screen: AnyHashable?
 
-  init(allScreens: [Screen], truncateToIndex: @escaping (Int) -> Void, index: Int) {
+  @EnvironmentObject var pathHolder: NavigationPathHolder
+  @EnvironmentObject var navigator: Navigator<Screen>
+  @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
+  @EnvironmentObject var pathAppender: PathAppender
+
+  init(allScreens: [AnyHashable], truncateToIndex: @escaping (Int) -> Void, index: Int) {
     self.allScreens = allScreens
     self.truncateToIndex = truncateToIndex
     self.index = index
@@ -26,7 +31,11 @@ struct Node<Screen>: View {
   }
 
   var next: some View {
-    Node(allScreens: allScreens, truncateToIndex: truncateToIndex, index: index + 1)
+    Node<Screen>(allScreens: allScreens, truncateToIndex: truncateToIndex, index: index + 1)
+      .environmentObject(pathHolder)
+      .environmentObject(destinationBuilder)
+      .environmentObject(navigator)
+      .environmentObject(pathAppender)
   }
 
   var body: some View {

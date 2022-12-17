@@ -4,15 +4,23 @@ import SwiftUI
 struct Router<Screen, RootView: View>: View {
   let rootView: RootView
 
-  @Binding var screens: [Screen]
+  @Binding var screens: [AnyHashable]
+  @EnvironmentObject var navigator: Navigator<Screen>
+  @EnvironmentObject var pathHolder: NavigationPathHolder
+  @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
+  @EnvironmentObject var pathAppender: PathAppender
 
-  init(rootView: RootView, screens: Binding<[Screen]>) {
+  init(rootView: RootView, screens: Binding<[AnyHashable]>, screenType: Screen.Type) {
     self.rootView = rootView
     _screens = screens
   }
 
   var pushedScreens: some View {
-    Node(allScreens: screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
+    Node<Screen>(allScreens: screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
+      .environmentObject(pathHolder)
+      .environmentObject(destinationBuilder)
+      .environmentObject(navigator)
+      .environmentObject(pathAppender)
   }
 
   private var isActiveBinding: Binding<Bool> {

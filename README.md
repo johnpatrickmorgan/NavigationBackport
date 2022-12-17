@@ -12,6 +12,8 @@ This package uses the navigation APIs available in older SwiftUI versions (such 
 
 ✅ `NavigationPath.CodableRepresentation` -> `NBNavigationPath.CodableRepresentation`
 
+✳️ `NavigationSplitView` -> `NBNavigationSplitView` ([with limitations](#limitations-of-nbnavigationsplitview)
+
 
 You can migrate to these APIs now, and when you eventually bump your deployment target to iOS 16, you can remove this library and easily migrate to its SwiftUI equivalent. `NavigationStack`'s full API is replicated, so you can initialise an `NBNavigationStack` with a binding to an `Array`, with a binding to a `NBNavigationPath` binding, or with no binding at all.
 
@@ -166,3 +168,7 @@ You can make any changes to the path passed into the `withDelaysIfUnsupported` c
 ## Support for iOS/tvOS 13
 
 This library targets iOS/tvOS versions 14 and above, since it uses `StateObject`, which is unavailable on iOS/tvOS 13. However, there is an `ios13` branch, which uses [SwiftUIBackports](https://github.com/shaps80/SwiftUIBackports)' backported StateObject, so that it works on iOS/tvOS 13 too.
+
+## Limitations of NBNavigationSplitView
+
+Some APIs related to column customisation are not available as they are not possible to backport using SwiftUI's older navigation APIs: e.g., `columnVisibility`, `navigationSplitViewColumnWidth` and `navigationSplitViewStyle`. Additionally, while it's possible to nest an `NBNavigationStack` within a `NBNavigationSplitView`, it should only be nested within the detail pane of the split view. Otherwise, sidebar and content screens might leak into the next pane.
