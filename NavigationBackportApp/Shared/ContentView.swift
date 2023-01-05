@@ -23,10 +23,15 @@ struct ContentView: View {
         .tabItem { Text("ArrayBinding") }
       NoBindingView()
         .tabItem { Text("NoBinding") }
-      if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac {
+      #if os(macOS)
         SplitDemo()
           .tabItem { Text("SplitDemo") }
-      }
+      #else
+        if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac {
+          SplitDemo()
+            .tabItem { Text("SplitDemo") }
+        }
+      #endif
     }
   }
 }
