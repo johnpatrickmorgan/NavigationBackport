@@ -30,7 +30,8 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     } else {
       if let splitViewPane {
         let _ = assertionFailure("""
-          NBNavigationStack should only be embedded in the detail pane of an NBNavigationSplitView, not the \(splitViewPane) pane.
+          NBNavigationStack should only be embedded in the detail pane of an NBNavigationSplitView, not the \
+          \(splitViewPane) pane. This is a limitation of NBNavigationSplitView compared to NavigationSplitView.
           """
         )
       }
