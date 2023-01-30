@@ -6,6 +6,8 @@ struct Node<Screen>: View {
   let truncateToIndex: (Int) -> Void
   let index: Int
   let screen: Screen?
+  
+  @State var isAppeared = false
 
   init(allScreens: [Screen], truncateToIndex: @escaping (Int) -> Void, index: Int) {
     self.allScreens = allScreens
@@ -20,6 +22,7 @@ struct Node<Screen>: View {
       set: { isShowing in
         guard !isShowing else { return }
         guard allScreens.count > index + 1 else { return }
+        guard isAppeared else { return }
         truncateToIndex(index + 1)
       }
     )
@@ -36,6 +39,8 @@ struct Node<Screen>: View {
           NavigationLink(destination: next, isActive: isActiveBinding, label: EmptyView.init)
             .hidden()
         )
+        .onAppear { isAppeared = true }
+        .onDisappear { isAppeared = false }
     }
   }
 }
