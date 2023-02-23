@@ -14,6 +14,9 @@ struct NoBindingView: View {
         .nbNavigationDestination(for: EmojiVisualisation.self, destination: { visualisation in
           EmojiView(visualisation: visualisation)
         })
+        .nbNavigationDestination(for: ClassDestination.self, destination: { destination in
+          ClassDestinationView(destination: destination)
+        })
     }
   }
 }
@@ -28,6 +31,8 @@ private struct HomeView: View {
       NBNavigationLink(value: NumberList(range: 0 ..< 100), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
+      // Push child class via navigator
+      Button("Show ClassDestination", action: showClassDestination)
       // Push via Bool binding
       VStack {
         Text("Push local destination")
@@ -45,6 +50,10 @@ private struct HomeView: View {
       $0.append(99)
       $0.append(EmojiVisualisation(emoji: "🎈", count: 99))
     }
+  }
+
+  func showClassDestination() {
+    navigator.push(SampleClassDestination())
   }
 }
 
@@ -92,5 +101,14 @@ private struct EmojiView: View {
   var body: some View {
     Text(visualisation.text)
       .navigationTitle("Visualise \(visualisation.count)")
+  }
+}
+
+private struct ClassDestinationView: View {
+  let destination: ClassDestination
+
+  var body: some View {
+    Text(destination.data)
+      .navigationTitle("A ClassDestination")
   }
 }
