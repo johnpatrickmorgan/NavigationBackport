@@ -43,14 +43,14 @@ class DestinationBuilderHolder: ObservableObject {
       }
       assertionFailure("No view builder found for type \(key)")
     } else {
-      var mirror: Mirror? = Mirror(reflecting: base ?? typedData)
-      while mirror != nil {
-        let key = Self.identifier(for: mirror!.subjectType)
+      var possibleMirror: Mirror? = Mirror(reflecting: base ?? typedData)
+      while let mirror = possibleMirror {
+        let key = Self.identifier(for: mirror.subjectType)
 
         if let builder = builders[key], let output = builder(typedData) {
           return output
         }
-        mirror = mirror!.superclassMirror
+        possibleMirror = mirror.superclassMirror
       }
       assertionFailure("No view builder found for type \(type(of: base ?? typedData))")
     }
