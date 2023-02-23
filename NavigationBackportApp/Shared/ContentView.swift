@@ -14,6 +14,28 @@ struct NumberList: Hashable, Codable {
   let range: Range<Int>
 }
 
+class ClassDestination {
+    let data: String
+
+    init(data: String) {
+        self.data = data
+    }
+}
+
+extension ClassDestination: Hashable {
+  static func == (lhs: ClassDestination, rhs: ClassDestination) -> Bool {
+    lhs.data == rhs.data
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(data)
+  }
+}
+
+class SampleClassDestination: ClassDestination {
+    init() { super.init(data: "sample data") }
+}
+
 struct ContentView: View {
   var body: some View {
     TabView {
