@@ -3,7 +3,7 @@ import SwiftUI
 
 struct NBNavigationPathView: View {
   @State var encodedPathData: Data?
-  @State var path = NBNavigationPath()
+  @State var path = NBNavigationPath([42])
 
   var body: some View {
     VStack {

@@ -39,6 +39,12 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   public var body: some View {
     if let unownedPath {
       content
+        .onAppear {
+          guard ownedPath.path != unownedPath.wrappedValue.map({ $0 }) else { return }
+          ownedPath.withDelaysIfUnsupported(\.path) {
+            $0 = unownedPath.wrappedValue
+          }
+        }
         .onChange(of: unownedPath.wrappedValue) {
           ownedPath.path = $0
         }
