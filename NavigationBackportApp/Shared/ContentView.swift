@@ -45,6 +45,66 @@ struct ContentView: View {
         .tabItem { Text("ArrayBinding") }
       NoBindingView()
         .tabItem { Text("NoBinding") }
+      Issue33View()
+        .tabItem { Text("Issue 33") }
+    }
+  }
+}
+
+struct Issue33View: View {
+  @StateObject var viewModel = TabViewModel()
+
+  var body: some View {
+    VStack {
+      viewModel.currentView
+      HStack {
+        Button("Home") {
+          viewModel.selectedTab = .myHome
+        }
+        Button("NavStack") {
+          viewModel.selectedTab = .navStack
+        }
+      }
+    }
+  }
+}
+
+enum Tab {
+  case myHome, navStack
+}
+
+class TabViewModel: ObservableObject {
+  @Published var selectedTab: Tab {
+    didSet {
+      switch selectedTab {
+      case .myHome:
+        currentView = AnyView(MyHomeView())
+      case .navStack:
+        currentView = AnyView(ArrayBindingView())
+      }
+    }
+  }
+
+  var currentView: AnyView
+
+  let myHomeView: AnyView
+  let navStackView: AnyView
+
+  init() {
+    self.myHomeView = AnyView(MyHomeView())
+    self.navStackView = AnyView(ArrayBindingView())
+    self.selectedTab = .myHome
+    self.currentView = myHomeView
+  }
+}
+
+struct MyHomeView: View {
+  @State var isOn = false
+
+  var body: some View {
+    VStack {
+      Text("MyHomeView")
+      Toggle("Toggle", isOn: $isOn)
     }
   }
 }
