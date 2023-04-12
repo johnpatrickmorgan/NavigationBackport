@@ -43,9 +43,7 @@ struct NBNavigationPathView: View {
       return
     }
     let codable = try! JSONDecoder().decode(NBNavigationPath.CodableRepresentation.self, from: encodedPathData)
-    $path.withDelaysIfUnsupported {
-      $0 = NBNavigationPath(codable)
-    }
+    path = NBNavigationPath(codable)
   }
 }
 
@@ -75,11 +73,8 @@ private struct HomeView: View {
   }
 
   func show99RedBalloons() {
-    // `withDelaysIfUnsupported` pushes screens one at a time to overcome SwiftUI limitations.
-    navigator.withDelaysIfUnsupported {
-      $0.append(99)
-      $0.append(EmojiVisualisation(emoji: "🎈", count: 99))
-    }
+    navigator.push(99)
+    navigator.push(EmojiVisualisation(emoji: "🎈", count: 99))
   }
 
   func showClassDestination() {

@@ -18,5 +18,4 @@ public class Navigator<Screen>: ObservableObject {
   init(_ pathBinding: Binding<[Screen]>) {
     self.pathBinding = pathBinding
   }
-
 }

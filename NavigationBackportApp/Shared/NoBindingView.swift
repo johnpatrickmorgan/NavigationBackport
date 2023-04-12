@@ -46,10 +46,8 @@ private struct HomeView: View {
   }
 
   func show99RedBalloons() {
-    navigator.withDelaysIfUnsupported {
-      $0.append(99)
-      $0.append(EmojiVisualisation(emoji: "🎈", count: 99))
-    }
+    navigator.push(99)
+    navigator.push(EmojiVisualisation(emoji: "🎈", count: 99))
   }
 
   func showClassDestination() {
