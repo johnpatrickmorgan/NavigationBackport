@@ -9,7 +9,7 @@ enum Screen: NBScreen {
 
 struct ArrayBindingView: View {
   @State var savedPath: [Screen]?
-  @State var path: [Screen] = [.number(42)]
+  @State var path: [Screen] = []
 
   var body: some View {
     VStack {

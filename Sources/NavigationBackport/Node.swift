@@ -2,18 +2,18 @@ import Foundation
 import SwiftUI
 
 struct Node<Screen>: View {
-  let allScreens: [Screen]
+  @Binding var allScreens: [Screen]
   let truncateToIndex: (Int) -> Void
   let index: Int
   let screen: Screen?
   
   @State var isAppeared = false
 
-  init(allScreens: [Screen], truncateToIndex: @escaping (Int) -> Void, index: Int) {
-    self.allScreens = allScreens
+  init(allScreens: Binding<[Screen]>, truncateToIndex: @escaping (Int) -> Void, index: Int) {
+    self._allScreens = allScreens
     self.truncateToIndex = truncateToIndex
     self.index = index
-    screen = allScreens[safe: index]
+    screen = allScreens.wrappedValue[safe: index]
   }
 
   private var isActiveBinding: Binding<Bool> {
@@ -21,7 +21,7 @@ struct Node<Screen>: View {
       get: { allScreens.count > index + 1 },
       set: { isShowing in
         guard !isShowing else { return }
-        guard allScreens.count > index + 1 else { return }
+//        guard allScreens.count > index + 1 else { return }
         guard isAppeared else { return }
         truncateToIndex(index + 1)
       }
@@ -29,18 +29,29 @@ struct Node<Screen>: View {
   }
 
   var next: some View {
-    Node(allScreens: allScreens, truncateToIndex: truncateToIndex, index: index + 1)
+    Node(allScreens: $allScreens, truncateToIndex: truncateToIndex, index: index + 1)
   }
 
   var body: some View {
     if let screen = allScreens[safe: index] ?? screen {
-      DestinationBuilderView(data: screen)
-        .background(
-          NavigationLink(destination: next, isActive: isActiveBinding, label: EmptyView.init)
-            .hidden()
+    if #available(iOS 16.0, *) {
+       AnyView(
+          DestinationBuilderView(data: screen)
+            .navigationDestination(isPresented: isActiveBinding, destination: { next })
+            .onAppear { isAppeared = true }
+            .onDisappear { isAppeared = false }
         )
-        .onAppear { isAppeared = true }
-        .onDisappear { isAppeared = false }
+    } else {
+      AnyView(
+        DestinationBuilderView(data: screen)
+          .background(
+            NavigationLink(destination: next, isActive: isActiveBinding, label: EmptyView.init)
+              .hidden()
+          )
+          .onAppear { isAppeared = true }
+          .onDisappear { isAppeared = false }
+      )
+    }
     }
   }
 }
@@ -51,3 +62,4 @@ extension Collection {
     return indices.contains(index) ? self[index] : nil
   }
 }
+

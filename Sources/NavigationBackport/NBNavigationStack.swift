@@ -26,14 +26,25 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     pathAppender.append = { [weak ownedPath] newElement in
       ownedPath?.path.append(newElement)
     }
-    return NavigationView {
-      Router(rootView: root, screens: $ownedPath.path)
+    if #available(iOS 16.0, *) {
+      return AnyView(
+        NavigationStack {
+          Router(rootView: root, screens: $ownedPath.path)
+      })
+      .environmentObject(ownedPath)
+      .environmentObject(pathAppender)
+      .environmentObject(destinationBuilder)
+      .environmentObject(Navigator(typedPath))
+    } else {
+      return AnyView(NavigationView {
+        Router(rootView: root, screens: $ownedPath.path)
+      }
+      .navigationViewStyle(supportedNavigationViewStyle))
+      .environmentObject(ownedPath)
+      .environmentObject(pathAppender)
+      .environmentObject(destinationBuilder)
+      .environmentObject(Navigator(typedPath))
     }
-    .navigationViewStyle(supportedNavigationViewStyle)
-    .environmentObject(ownedPath)
-    .environmentObject(pathAppender)
-    .environmentObject(destinationBuilder)
-    .environmentObject(Navigator(typedPath))
   }
 
   public var body: some View {

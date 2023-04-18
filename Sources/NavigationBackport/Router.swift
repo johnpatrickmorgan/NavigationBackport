@@ -12,11 +12,11 @@ struct Router<Screen, RootView: View>: View {
   }
 
   var pushedScreens: some View {
-    Node(allScreens: screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
+    Node(allScreens: $screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
   }
 
   private var isActiveBinding: Binding<Bool> {
-    screens.isEmpty ? .constant(false) : Binding(
+    Binding(
       get: { !screens.isEmpty },
       set: { isShowing in
         guard !isShowing else { return }
@@ -27,10 +27,20 @@ struct Router<Screen, RootView: View>: View {
   }
 
   var body: some View {
-    rootView
-      .background(
-        NavigationLink(destination: pushedScreens, isActive: isActiveBinding, label: EmptyView.init)
-          .hidden()
+    
+    if #available(iOS 16.0, *) {
+      return AnyView(
+        rootView
+          .navigationDestination(isPresented: isActiveBinding, destination: { pushedScreens })
       )
+    } else {
+      return AnyView(
+        rootView
+          .background(
+            NavigationLink(destination: pushedScreens, isActive: isActiveBinding, label: EmptyView.init)
+              .hidden()
+          )
+        )
+    }
   }
 }
