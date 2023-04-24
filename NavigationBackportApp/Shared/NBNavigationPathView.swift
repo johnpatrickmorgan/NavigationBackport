@@ -27,7 +27,7 @@ struct NBNavigationPathView: View {
           .nbNavigationDestination(for: ClassDestination.self, destination: { destination in
             ClassDestinationView(destination: destination)
           })
-      }
+      }.usingNavigationStackWhenPossible(true)
     }
   }
 

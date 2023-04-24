@@ -44,24 +44,34 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
           }
         }
         .onChange(of: ownedPath.path) { ownedPath in
-          guard ownedPath != unownedPath.map({ $0 }) else { return }
-          
-          unownedPath = ownedPath.compactMap { anyHashable in
-              if let data = anyHashable.base as? Data {
-                return data
-              } else if anyHashable.base is LocalDestinationID {
-                return nil
+          if useHiddenPath {
+            guard ownedPath != hiddenPath.map({ $0 }) else { return }
+            hiddenPath = ownedPath.compactMap { anyHashable in
+                if let data = anyHashable.base as? Data {
+                  return data
+                } else if anyHashable.base is LocalDestinationID {
+                  return nil
+                }
+                fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
               }
-              fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
-            }
+          } else {
+            guard ownedPath != unownedPath.map({ $0 }) else { return }
+            unownedPath = ownedPath.compactMap { anyHashable in
+                if let data = anyHashable.base as? Data {
+                  return data
+                } else if anyHashable.base is LocalDestinationID {
+                  return nil
+                }
+                fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
+              }
+          }
         }
   }
 
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {
-    self._unownedPath = .constant([])
+    self._unownedPath = path ?? .constant([])
     self.root = root()
     self.useHiddenPath = path == nil
-    _unownedPath = path ?? $hiddenPath
   }
 }
 
