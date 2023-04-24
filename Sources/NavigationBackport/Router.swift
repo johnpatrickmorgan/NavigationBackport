@@ -27,20 +27,7 @@ struct Router<Screen, RootView: View>: View {
   }
 
   var body: some View {
-    
-    if #available(iOS 16.0, *) {
-      return AnyView(
-        rootView
-          .navigationDestination(isPresented: isActiveBinding, destination: { pushedScreens })
-      )
-    } else {
-      return AnyView(
-        rootView
-          .background(
-            NavigationLink(destination: pushedScreens, isActive: isActiveBinding, label: EmptyView.init)
-              .hidden()
-          )
-        )
-    }
+    rootView
+      ._navigationDestination(isActive: isActiveBinding, destination: pushedScreens)
   }
 }

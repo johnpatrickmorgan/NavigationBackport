@@ -31,7 +31,7 @@ struct ArrayBindingView: View {
               EmojiView(visualisation: visualisation)
             }
           })
-      }
+      }.usingNavigationStackWhenPossible(true)
     }
   }
 

@@ -34,24 +34,10 @@ struct Node<Screen>: View {
 
   var body: some View {
     if let screen = allScreens[safe: index] ?? screen {
-    if #available(iOS 16.0, *) {
-       AnyView(
-          DestinationBuilderView(data: screen)
-            .navigationDestination(isPresented: isActiveBinding, destination: { next })
-            .onAppear { isAppeared = true }
-            .onDisappear { isAppeared = false }
-        )
-    } else {
-      AnyView(
-        DestinationBuilderView(data: screen)
-          .background(
-            NavigationLink(destination: next, isActive: isActiveBinding, label: EmptyView.init)
-              .hidden()
-          )
-          .onAppear { isAppeared = true }
-          .onDisappear { isAppeared = false }
-      )
-    }
+      DestinationBuilderView(data: screen)
+        ._navigationDestination(isActive: isActiveBinding, destination: next)
+        .onAppear { isAppeared = true }
+        .onDisappear { isAppeared = false }
     }
   }
 }
@@ -63,3 +49,32 @@ extension Collection {
   }
 }
 
+struct NavigationLinkModifier<Destination: View>: ViewModifier {
+  var isActiveBinding: Binding<Bool>
+  var destination: Destination
+  @Environment(\.useNavigationStack) var useNavigationStack
+  
+  func body(content: Content) -> some View {
+    if #available(iOS 16.0, *), useNavigationStack {
+       AnyView(
+          content
+            .navigationDestination(isPresented: isActiveBinding, destination: { destination })
+        )
+    } else {
+      AnyView(
+        content
+          .background(
+            NavigationLink(destination: destination, isActive: isActiveBinding, label: EmptyView.init)
+              .hidden()
+          )
+      )
+    }
+  }
+}
+
+extension View {
+  
+  func _navigationDestination<Destination: View>(isActive: Binding<Bool>, destination: Destination) -> some View {
+    return self.modifier(NavigationLinkModifier(isActiveBinding: isActive, destination: destination))
+  }
+}

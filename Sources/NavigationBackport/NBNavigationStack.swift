@@ -8,6 +8,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @StateObject var ownedPath = NavigationPathHolder()
   @StateObject var pathAppender = PathAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
+  @Environment(\.useNavigationStack) var useNavigationStack
   var root: Root
 
   var typedPath: Binding<[Data]> {
@@ -26,25 +27,13 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     pathAppender.append = { [weak ownedPath] newElement in
       ownedPath?.path.append(newElement)
     }
-    if #available(iOS 16.0, *) {
-      return AnyView(
-        NavigationStack {
-          Router(rootView: root, screens: $ownedPath.path)
-      })
-      .environmentObject(ownedPath)
-      .environmentObject(pathAppender)
-      .environmentObject(destinationBuilder)
-      .environmentObject(Navigator(typedPath))
-    } else {
-      return AnyView(NavigationView {
+    return NavigationWrapper {
         Router(rootView: root, screens: $ownedPath.path)
       }
-      .navigationViewStyle(supportedNavigationViewStyle))
       .environmentObject(ownedPath)
       .environmentObject(pathAppender)
       .environmentObject(destinationBuilder)
       .environmentObject(Navigator(typedPath))
-    }
   }
 
   public var body: some View {
@@ -96,10 +85,45 @@ public extension NBNavigationStack where Data == AnyHashable {
   }
 }
 
+struct NavigationWrapper<Content: View>: View {
+  var content: Content
+  @Environment(\.useNavigationStack) var useNavigationStack
+  
+  var body: some View {
+    if #available(iOS 16.0, *), useNavigationStack {
+      return AnyView(NavigationStack { content })
+    } else {
+      return AnyView(NavigationView { content }
+        .navigationViewStyle(supportedNavigationViewStyle))
+    }
+  }
+                     
+  init(content: () -> Content) {
+    self.content = content()
+  }
+}
+
+public extension NBNavigationStack  {
+  func usingNavigationStackWhenPossible(_ useNavigationStack: Bool) -> some View {
+    self.environment(\.useNavigationStack, useNavigationStack)
+  }
+}
+
 private var supportedNavigationViewStyle: some NavigationViewStyle {
   #if os(macOS)
     .automatic
   #else
     .stack
   #endif
+}
+
+struct UseNavigationStackKey: EnvironmentKey {
+  static let defaultValue = false
+}
+
+extension EnvironmentValues {
+  var useNavigationStack: Bool {
+    get { self[UseNavigationStackKey.self] }
+    set { self[UseNavigationStackKey.self] = newValue }
+  }
 }
