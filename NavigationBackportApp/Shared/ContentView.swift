@@ -15,11 +15,11 @@ struct NumberList: Hashable, Codable {
 }
 
 class ClassDestination {
-    let data: String
+  let data: String
 
-    init(data: String) {
-        self.data = data
-    }
+  init(data: String) {
+    self.data = data
+  }
 }
 
 extension ClassDestination: Hashable {
@@ -33,7 +33,7 @@ extension ClassDestination: Hashable {
 }
 
 class SampleClassDestination: ClassDestination {
-    init() { super.init(data: "sample data") }
+  init() { super.init(data: "Sample data") }
 }
 
 struct ContentView: View {

@@ -23,11 +23,11 @@ struct ArrayBindingView: View {
         HomeView()
           .nbNavigationDestination(for: Screen.self, destination: { screen in
             switch screen {
-            case .numberList(let numberList):
+            case let .numberList(numberList):
               NumberListView(numberList: numberList)
-            case .number(let number):
+            case let .number(number):
               NumberView(number: number)
-            case .visualisation(let visualisation):
+            case let .visualisation(visualisation):
               EmojiView(visualisation: visualisation)
             }
           })
@@ -56,11 +56,7 @@ private struct HomeView: View {
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push via Bool binding
-      VStack {
-        Text("Push local destination")
-        Toggle(isOn: $isPushing, label: { EmptyView() })
-          .labelsHidden()
-      }.padding()
+      Toggle(isOn: $isPushing, label: { Text("Push local destination") }).padding()
     }.navigationTitle("Home")
       .nbNavigationDestination(isPresented: $isPushing) {
         Text("Local destination")

@@ -38,6 +38,17 @@
                ReferencedContainer = "container:..">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "52B3F15E2A01BE4200EC5EA9"
+               BuildableName = "NavigationBackportUITests.xctest"
+               BlueprintName = "NavigationBackportUITests"
+               ReferencedContainer = "container:NavigationBackportApp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

@@ -32,13 +32,9 @@ private struct HomeView: View {
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push child class via navigator
-      Button("Show ClassDestination", action: showClassDestination)
+      Button("Show Class Destination", action: showClassDestination)
       // Push via Bool binding
-      VStack {
-        Text("Push local destination")
-        Toggle(isOn: $isPushing, label: { EmptyView() })
-          .labelsHidden()
-      }.padding()
+      Toggle(isOn: $isPushing, label: { Text("Push local destination") }).padding()
     }.navigationTitle("Home")
       .nbNavigationDestination(isPresented: $isPushing, destination: {
         Text("Local destination")
@@ -86,7 +82,7 @@ private struct NumberView: View {
         value: EmojiVisualisation(emoji: "🐑", count: number),
         label: { Text("Visualise with sheep") }
       )
-      Button("Pop to root") {
+      Button("Go back to root") {
         navigator.popToRoot()
       }
     }.navigationTitle("\(number)")
