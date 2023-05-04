@@ -6,11 +6,11 @@ struct Node<Screen>: View {
   let truncateToIndex: (Int) -> Void
   let index: Int
   let screen: Screen?
-  
+
   @State var isAppeared = false
 
   init(allScreens: Binding<[Screen]>, truncateToIndex: @escaping (Int) -> Void, index: Int) {
-    self._allScreens = allScreens
+    _allScreens = allScreens
     self.truncateToIndex = truncateToIndex
     self.index = index
     screen = allScreens.wrappedValue[safe: index]
@@ -52,14 +52,14 @@ extension Collection {
 struct NavigationLinkModifier<Destination: View>: ViewModifier {
   var isActiveBinding: Binding<Bool>
   var destination: Destination
-  @Environment(\.useNavigationStack) var useNavigationStack
-  
+  @Environment(\.isWithinNavigationStack) var isWithinNavigationStack
+
   func body(content: Content) -> some View {
-    if #available(iOS 16.0, *), useNavigationStack {
-       AnyView(
-          content
-            .navigationDestination(isPresented: isActiveBinding, destination: { destination })
-        )
+    if #available(iOS 16.0, *), isWithinNavigationStack {
+      AnyView(
+        content
+          .navigationDestination(isPresented: isActiveBinding, destination: { destination })
+      )
     } else {
       AnyView(
         content
@@ -73,8 +73,7 @@ struct NavigationLinkModifier<Destination: View>: ViewModifier {
 }
 
 extension View {
-  
   func _navigationDestination<Destination: View>(isActive: Binding<Bool>, destination: Destination) -> some View {
-    return self.modifier(NavigationLinkModifier(isActiveBinding: isActive, destination: destination))
+    return modifier(NavigationLinkModifier(isActiveBinding: isActive, destination: destination))
   }
 }

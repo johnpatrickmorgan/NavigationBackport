@@ -5,19 +5,32 @@ final class NavigationBackportUITests: XCTestCase {
     continueAfterFailure = false
   }
 
-  func testNavigation() throws {
+  let tabTitles = ["NBNavigationPath", "ArrayBinding", "NoBinding"]
+  let navigationTimeout = 0.8
+
+  func testNavigationWithNBNavigationStack() throws {
     let app = XCUIApplication()
     app.launch()
 
-    XCTAssertTrue(app.tabBars.buttons["NBNavigationPath"].waitForExistence(timeout: 3))
-
-    for tabTitle in ["NBNavigationPath", "ArrayBinding", "NoBinding"] {
+    for tabTitle in tabTitles {
       try runNavigationTests(tabTitle: tabTitle, app: app)
     }
   }
 
+  func testNavigationWithNavigationStack() throws {
+    if #available(iOS 16.0, *) {
+      let app = XCUIApplication()
+      app.launchArguments = ["USE_NAVIGATIONSTACK"]
+      app.launch()
+
+      for tabTitle in tabTitles {
+        try runNavigationTests(tabTitle: tabTitle, app: app)
+      }
+    }
+  }
+
   func runNavigationTests(tabTitle: String, app: XCUIApplication) throws {
-    let navigationTimeout = 0.8
+    XCTAssertTrue(app.tabBars.buttons[tabTitle].waitForExistence(timeout: 3))
     app.tabBars.buttons[tabTitle].tap()
 
     XCTAssertTrue(app.navigationBars["Home"].waitForExistence(timeout: 2))

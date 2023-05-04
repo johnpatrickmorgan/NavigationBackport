@@ -9,7 +9,6 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @StateObject var ownedPath = NavigationPathHolder()
   @StateObject var pathAppender = PathAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
-  @Environment(\.useNavigationStack) var useNavigationStack
   var root: Root
   var useHiddenPath: Bool
 
@@ -18,60 +17,60 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       ownedPath?.path.append(newElement)
     }
     return NavigationWrapper {
-        Router(rootView: root, screens: $ownedPath.path)
-      }
-      .environmentObject(ownedPath)
-      .environmentObject(pathAppender)
-      .environmentObject(destinationBuilder)
-      .environmentObject(Navigator(useHiddenPath ? $hiddenPath : $unownedPath))
+      Router(rootView: root, screens: $ownedPath.path)
+    }
+    .environmentObject(ownedPath)
+    .environmentObject(pathAppender)
+    .environmentObject(destinationBuilder)
+    .environmentObject(Navigator(useHiddenPath ? $hiddenPath : $unownedPath))
   }
 
   public var body: some View {
-      content
-        .onFirstAppear {
-          ownedPath.withDelaysIfUnsupported(\.path) {
-            $0 = unownedPath
+    content
+      .onFirstAppear {
+        ownedPath.withDelaysIfUnsupported(\.path) {
+          $0 = unownedPath
+        }
+      }
+      .onChange(of: unownedPath) { unownedPath in
+        ownedPath.withDelaysIfUnsupported(\.path) {
+          $0 = unownedPath
+        }
+      }
+      .onChange(of: hiddenPath) { hiddenPath in
+        ownedPath.withDelaysIfUnsupported(\.path) {
+          $0 = hiddenPath
+        }
+      }
+      .onChange(of: ownedPath.path) { ownedPath in
+        if useHiddenPath {
+          guard ownedPath != hiddenPath.map({ $0 }) else { return }
+          hiddenPath = ownedPath.compactMap { anyHashable in
+            if let data = anyHashable.base as? Data {
+              return data
+            } else if anyHashable.base is LocalDestinationID {
+              return nil
+            }
+            fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
+          }
+        } else {
+          guard ownedPath != unownedPath.map({ $0 }) else { return }
+          unownedPath = ownedPath.compactMap { anyHashable in
+            if let data = anyHashable.base as? Data {
+              return data
+            } else if anyHashable.base is LocalDestinationID {
+              return nil
+            }
+            fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
           }
         }
-        .onChange(of: unownedPath) { unownedPath in
-          ownedPath.withDelaysIfUnsupported(\.path) {
-            $0 = unownedPath
-          }
-        }
-        .onChange(of: hiddenPath) { hiddenPath in
-          ownedPath.withDelaysIfUnsupported(\.path) {
-            $0 = hiddenPath
-          }
-        }
-        .onChange(of: ownedPath.path) { ownedPath in
-          if useHiddenPath {
-            guard ownedPath != hiddenPath.map({ $0 }) else { return }
-            hiddenPath = ownedPath.compactMap { anyHashable in
-                if let data = anyHashable.base as? Data {
-                  return data
-                } else if anyHashable.base is LocalDestinationID {
-                  return nil
-                }
-                fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
-              }
-          } else {
-            guard ownedPath != unownedPath.map({ $0 }) else { return }
-            unownedPath = ownedPath.compactMap { anyHashable in
-                if let data = anyHashable.base as? Data {
-                  return data
-                } else if anyHashable.base is LocalDestinationID {
-                  return nil
-                }
-                fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
-              }
-          }
-        }
+      }
   }
 
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {
-    self._unownedPath = path ?? .constant([])
+    _unownedPath = path ?? .constant([])
     self.root = root()
-    self.useHiddenPath = path == nil
+    useHiddenPath = path == nil
   }
 }
 
@@ -94,24 +93,31 @@ public extension NBNavigationStack where Data == AnyHashable {
 struct NavigationWrapper<Content: View>: View {
   var content: Content
   @Environment(\.useNavigationStack) var useNavigationStack
-  
+
   var body: some View {
-    if #available(iOS 16.0, *), useNavigationStack {
+    if #available(iOS 16.0, *), useNavigationStack == .whenPossible {
       return AnyView(NavigationStack { content })
+        .environment(\.isWithinNavigationStack, true)
     } else {
       return AnyView(NavigationView { content }
         .navigationViewStyle(supportedNavigationViewStyle))
+        .environment(\.isWithinNavigationStack, false)
     }
   }
-                     
+
   init(content: () -> Content) {
     self.content = content()
   }
 }
 
-public extension NBNavigationStack  {
-  func usingNavigationStackWhenPossible(_ useNavigationStack: Bool) -> some View {
-    self.environment(\.useNavigationStack, useNavigationStack)
+public enum UseNavigationStackPolicy {
+  case whenPossible
+  case never
+}
+
+public extension View {
+  func nbUseNavigationStack(_ policy: UseNavigationStackPolicy) -> some View {
+    environment(\.useNavigationStack, policy)
   }
 }
 
@@ -123,13 +129,22 @@ private var supportedNavigationViewStyle: some NavigationViewStyle {
   #endif
 }
 
-struct UseNavigationStackKey: EnvironmentKey {
+struct UseNavigationStackPolicyKey: EnvironmentKey {
+  static let defaultValue = UseNavigationStackPolicy.never
+}
+
+struct IsWithinNavigationStackKey: EnvironmentKey {
   static let defaultValue = false
 }
 
 extension EnvironmentValues {
-  var useNavigationStack: Bool {
-    get { self[UseNavigationStackKey.self] }
-    set { self[UseNavigationStackKey.self] = newValue }
+  var useNavigationStack: UseNavigationStackPolicy {
+    get { self[UseNavigationStackPolicyKey.self] }
+    set { self[UseNavigationStackPolicyKey.self] = newValue }
+  }
+
+  var isWithinNavigationStack: Bool {
+    get { self[IsWithinNavigationStackKey.self] }
+    set { self[IsWithinNavigationStackKey.self] = newValue }
   }
 }

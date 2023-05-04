@@ -22,7 +22,7 @@ enum NavigationBackport {
 
     return steps
   }
-  
+
   static func canSynchronouslyUpdate<Screen>(from start: [Screen], to end: [Screen]) -> Bool {
     // If there are less than 3 steps, the transformation can be applied in one update.
     let steps = calculateSteps(from: start, to: end)
