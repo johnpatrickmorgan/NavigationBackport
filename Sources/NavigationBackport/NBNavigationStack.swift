@@ -95,7 +95,7 @@ struct NavigationWrapper<Content: View>: View {
   @Environment(\.useNavigationStack) var useNavigationStack
 
   var body: some View {
-    if #available(iOS 16.0, *), useNavigationStack == .whenPossible {
+    if #available(iOS 16.0, *), useNavigationStack == .whenAvailable {
       return AnyView(NavigationStack { content })
         .environment(\.isWithinNavigationStack, true)
     } else {
@@ -111,7 +111,7 @@ struct NavigationWrapper<Content: View>: View {
 }
 
 public enum UseNavigationStackPolicy {
-  case whenPossible
+  case whenAvailable
   case never
 }
 

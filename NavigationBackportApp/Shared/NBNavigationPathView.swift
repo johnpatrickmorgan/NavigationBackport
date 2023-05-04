@@ -54,13 +54,13 @@ private struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
       // Push via link
-      NBNavigationLink(value: NumberList(range: 0 ..< 100), label: { Text("Pick a number") })
+      NBNavigationLink(value: NumberList(range: 0 ..< 10), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push child class via navigator
       Button("Show Class Destination", action: showClassDestination)
       // Push via Bool binding
-      Toggle(isOn: $isPushing, label: { Text("Push local destination") }).padding()
+      Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
     }
     .nbNavigationDestination(isPresented: $isPushing, destination: {
       Text("Local destination")
