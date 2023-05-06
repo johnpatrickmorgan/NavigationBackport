@@ -9,7 +9,7 @@ enum Screen: NBScreen {
 
 struct ArrayBindingView: View {
   @State var savedPath: [Screen]?
-  @State var path: [Screen] = [.number(42)]
+  @State var path: [Screen] = []
 
   var body: some View {
     VStack {
@@ -41,9 +41,7 @@ struct ArrayBindingView: View {
 
   func restorePath() {
     guard let savedPath = savedPath else { return }
-    $path.withDelaysIfUnsupported {
-      $0 = savedPath
-    }
+    path = savedPath
   }
 }
 
@@ -54,15 +52,11 @@ private struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
       // Push via NBNavigationLink
-      NBNavigationLink(value: Screen.numberList(NumberList(range: 0 ..< 100)), label: { Text("Pick a number") })
+      NBNavigationLink(value: Screen.numberList(NumberList(range: 0 ..< 10)), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push via Bool binding
-      VStack {
-        Text("Push local destination")
-        Toggle(isOn: $isPushing, label: { EmptyView() })
-          .labelsHidden()
-      }.padding()
+      Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
     }.navigationTitle("Home")
       .nbNavigationDestination(isPresented: $isPushing) {
         Text("Local destination")
@@ -70,22 +64,8 @@ private struct HomeView: View {
   }
 
   func show99RedBalloons() {
-    /*
-      NOTE: Pushing two screens in one update doesn't work in older versions of SwiftUI.
-      The second screen would not be pushed onto the stack, leaving the data and UI out of sync.
-      E.g., this would not work:
-        path.append(99)
-        path.append(EmojiVisualisation(emoji: "🎈", count: 99))
-      But if you make those changes to the path argument of the `withDelaysIfUnsupported` closure,
-      NavigationBackport will break your changes down into a series of smaller changes, which will
-      then be applied one at a time, with delays in between. In this case, the first screen will be
-      pushed after which the second will be pushed. On newer versions of SwiftUI the changes will be
-      made in a single update.
-     */
-    navigator.withDelaysIfUnsupported {
-      $0.push(.number(99))
-      $0.push(.visualisation(EmojiVisualisation(emoji: "🎈", count: 99)))
-    }
+    navigator.push(.number(99))
+    navigator.push(.visualisation(EmojiVisualisation(emoji: "🎈", count: 99)))
   }
 }
 

@@ -16,7 +16,7 @@ final class NavigationBackportTests: XCTestCase {
     ]
     XCTAssertEqual(steps, expectedSteps)
   }
-  
+
   func testPopAllInOne() {
     let start = [1, 2, 3, 4]
     let end = [-1]
@@ -26,7 +26,7 @@ final class NavigationBackportTests: XCTestCase {
     let expectedSteps = [end]
     XCTAssertEqual(steps, expectedSteps)
   }
-    
+
   func testEquatableEquals() {
     let path = [1, 2, 3]
     let lhs = NBNavigationPath(path)
@@ -41,5 +41,4 @@ final class NavigationBackportTests: XCTestCase {
 
     XCTAssertNotEqual(lhs, rhs)
   }
-
 }

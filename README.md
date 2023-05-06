@@ -143,7 +143,7 @@ Note that, if you want to use these methods on an `Array`, ensure the `Array`'s 
 
 ## Deep-linking
  
- Before `NavigationStack`, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation hierarchy. `NavigationBackport` provides an API to work around this limitation: you can wrap such path changes within a call to `withDelaysIfUnsupported`, and the library will, if necessary, break down the larger update into a series of smaller updates that SwiftUI supports, with delays in between. For example, the following code that tries to push three screens in one update will not work:
+ Before `NavigationStack`, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation hierarchy. `NavigationBackport` works around this limitation: you can make any such path changes, and the library will, behind the scenes, break down the larger update into a series of smaller updates that SwiftUI supports if necessary, with delays in between. For example, the following code that pushes three screens in one state update will push the screens one by one:
 
 ```swift
   path.append(Screen.orders)
@@ -151,18 +151,17 @@ Note that, if you want to use these methods on an `Array`, ensure the `Array`'s 
   path.append(Screen.confirmChanges(orderId: id))
 ```
 
-However, the amended code below will successfully push all three screens, one after another:
-
-```swift
-$path.withDelaysIfUnsupported {
-  $0.append(Screen.orders)
-  $0.append(Screen.editOrder(id: id))
-  $0.append(Screen.confirmChanges(orderId: id))
-}
-```
-
-You can make any changes to the path passed into the `withDelaysIfUnsupported` closure, and the library will calculate the minimal number of state updates required to successfully update the UI.
-
 ## Support for iOS/tvOS 13
 
 This library targets iOS/tvOS versions 14 and above, since it uses `StateObject`, which is unavailable on iOS/tvOS 13. However, there is an `ios13` branch, which uses [SwiftUIBackports](https://github.com/shaps80/SwiftUIBackports)' backported StateObject, so that it works on iOS/tvOS 13 too.
+
+## Using NavigationStack when available
+
+By default, `NavigationView` is used under the hood, even on SwiftUI versions that support `NavigationStack`. If you prefer to use `NavigationStack` when available, apply the following modifier anywhere above the `NBNavigationStack`:
+
+```swift
+MyApp()
+  .nbUseNavigationStack(.whenAvailable)
+```
+
+It should not make any discernible difference, but you might find that using `NavigationStack` prevents some spurious warnings being logged by SwiftUI. 

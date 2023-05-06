@@ -2,18 +2,18 @@ import Foundation
 import SwiftUI
 
 struct Node<Screen>: View {
-  let allScreens: [Screen]
+  @Binding var allScreens: [Screen]
   let truncateToIndex: (Int) -> Void
   let index: Int
   let screen: Screen?
-  
+
   @State var isAppeared = false
 
-  init(allScreens: [Screen], truncateToIndex: @escaping (Int) -> Void, index: Int) {
-    self.allScreens = allScreens
+  init(allScreens: Binding<[Screen]>, truncateToIndex: @escaping (Int) -> Void, index: Int) {
+    _allScreens = allScreens
     self.truncateToIndex = truncateToIndex
     self.index = index
-    screen = allScreens[safe: index]
+    screen = allScreens.wrappedValue[safe: index]
   }
 
   private var isActiveBinding: Binding<Bool> {
@@ -29,16 +29,13 @@ struct Node<Screen>: View {
   }
 
   var next: some View {
-    Node(allScreens: allScreens, truncateToIndex: truncateToIndex, index: index + 1)
+    Node(allScreens: $allScreens, truncateToIndex: truncateToIndex, index: index + 1)
   }
 
   var body: some View {
     if let screen = allScreens[safe: index] ?? screen {
       DestinationBuilderView(data: screen)
-        .background(
-          NavigationLink(destination: next, isActive: isActiveBinding, label: EmptyView.init)
-            .hidden()
-        )
+        ._navigationDestination(isActive: isActiveBinding, destination: next)
         .onAppear { isAppeared = true }
         .onDisappear { isAppeared = false }
     }

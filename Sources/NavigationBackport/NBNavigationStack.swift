@@ -4,52 +4,58 @@ import SwiftUI
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 /// A replacement for SwiftUI's `NavigationStack` that's available on older OS versions.
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
-  var unownedPath: Binding<[Data]>?
-  @StateObject var ownedPath = NavigationPathHolder()
+  @Binding var externalTypedPath: [Data]
+  @State var internalTypedPath: [Data] = []
+  @StateObject var path = NavigationPathHolder()
   @StateObject var pathAppender = PathAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   var root: Root
-
-  var typedPath: Binding<[Data]> {
-    if let unownedPath {
-      return unownedPath
-    } else {
-      return Binding {
-        ownedPath.path.map { $0 as! Data }
-      } set: {
-        ownedPath.path = $0
-      }
-    }
-  }
+  var useInternalTypedPath: Bool
 
   var content: some View {
-    pathAppender.append = { [weak ownedPath] newElement in
-      ownedPath?.path.append(newElement)
+    pathAppender.append = { [weak path] newElement in
+      path?.path.append(newElement)
     }
-    return NavigationView {
-      Router(rootView: root, screens: $ownedPath.path)
+    return NavigationWrapper {
+      Router(rootView: root, screens: $path.path)
     }
-    .navigationViewStyle(supportedNavigationViewStyle)
-    .environmentObject(ownedPath)
+    .environmentObject(path)
     .environmentObject(pathAppender)
     .environmentObject(destinationBuilder)
-    .environmentObject(Navigator(typedPath))
+    .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
   }
 
   public var body: some View {
-    if let unownedPath {
-      content
-        .onFirstAppear {
-          guard ownedPath.path != unownedPath.wrappedValue.map({ $0 }) else { return }
-          ownedPath.withDelaysIfUnsupported(\.path) {
-            $0 = unownedPath.wrappedValue
+    content
+      .onFirstAppear {
+        path.withDelaysIfUnsupported(\.path) {
+          $0 = externalTypedPath
+        }
+      }
+      .onChange(of: externalTypedPath) { externalTypedPath in
+        path.withDelaysIfUnsupported(\.path) {
+          $0 = externalTypedPath
+        }
+      }
+      .onChange(of: internalTypedPath) { internalTypedPath in
+        path.withDelaysIfUnsupported(\.path) {
+          $0 = internalTypedPath
+        }
+      }
+      .onChange(of: path.path) { path in
+        if useInternalTypedPath {
+          guard path != internalTypedPath.map({ $0 }) else { return }
+          internalTypedPath = path.compactMap { anyHashable in
+            if let data = anyHashable.base as? Data {
+              return data
+            } else if anyHashable.base is LocalDestinationID {
+              return nil
+            }
+            fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
           }
-        }
-        .onChange(of: unownedPath.wrappedValue) {
-          ownedPath.path = $0
-        }
-        .onChange(of: ownedPath.path) {
-          unownedPath.wrappedValue = $0.compactMap { anyHashable in
+        } else {
+          guard path != externalTypedPath.map({ $0 }) else { return }
+          externalTypedPath = path.compactMap { anyHashable in
             if let data = anyHashable.base as? Data {
               return data
             } else if anyHashable.base is LocalDestinationID {
@@ -58,14 +64,13 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
             fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
           }
         }
-    } else {
-      content
-    }
+      }
   }
 
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {
-    unownedPath = path
+    _externalTypedPath = path ?? .constant([])
     self.root = root()
+    useInternalTypedPath = path == nil
   }
 }
 
@@ -83,12 +88,4 @@ public extension NBNavigationStack where Data == AnyHashable {
     )
     self.init(path: path, root: root)
   }
-}
-
-private var supportedNavigationViewStyle: some NavigationViewStyle {
-  #if os(macOS)
-    .automatic
-  #else
-    .stack
-  #endif
 }

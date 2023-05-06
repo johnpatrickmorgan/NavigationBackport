@@ -66,7 +66,7 @@ public extension Navigator where Screen == AnyHashable {
   /// - Parameter id: The id of the screen to goBack to.
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
-  func popTo<T: Hashable>(_ screenType: T.Type) -> Bool {
+  func popTo<T: Hashable>(_: T.Type) -> Bool {
     popTo(where: { $0 is T })
   }
 }

@@ -54,7 +54,7 @@ public extension NBNavigationPath {
   /// - Parameter screen: The predicate indicating which screen to go back to.
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
-  mutating func popTo<T: Hashable>(_ screenType: T.Type) -> Bool {
+  mutating func popTo<T: Hashable>(_: T.Type) -> Bool {
     return popTo(where: { $0 is T })
   }
 }
