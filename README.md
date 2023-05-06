@@ -157,9 +157,11 @@ This library targets iOS/tvOS versions 14 and above, since it uses `StateObject`
 
 ## Using NavigationStack when available
 
-By default, `NavigationView` is used even on SwiftUI versions that support `NavigationStack`. If you prefer to use NavigationStack` when available, apply the following modifier anywhere above the `NBNavigationStack`:
+By default, `NavigationView` is used under the hood, even on SwiftUI versions that support `NavigationStack`. If you prefer to use `NavigationStack` when available, apply the following modifier anywhere above the `NBNavigationStack`:
 
 ```swift
 MyApp()
   .nbUseNavigationStack(.whenAvailable)
 ```
+
+It should not make any discernible difference, but you might find that using `NavigationStack` prevents some spurious warnings being logged by SwiftUI. 

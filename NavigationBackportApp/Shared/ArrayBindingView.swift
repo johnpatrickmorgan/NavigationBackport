@@ -23,11 +23,11 @@ struct ArrayBindingView: View {
         HomeView()
           .nbNavigationDestination(for: Screen.self, destination: { screen in
             switch screen {
-            case let .numberList(numberList):
+            case .numberList(let numberList):
               NumberListView(numberList: numberList)
-            case let .number(number):
+            case .number(let number):
               NumberView(number: number)
-            case let .visualisation(visualisation):
+            case .visualisation(let visualisation):
               EmojiView(visualisation: visualisation)
             }
           })

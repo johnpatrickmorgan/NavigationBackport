@@ -5,46 +5,36 @@ final class NavigationBackportUITests: XCTestCase {
     continueAfterFailure = false
   }
 
-  func testNavigationViaPathWithNBNavigationStack() throws {
-    let app = XCUIApplication()
-    app.launch()
-    try runNavigationTests(tabTitle: "NBNavigationPath", app: app)
+  func testNavigationViaPathWithNBNavigationStack() {
+    launchAndRunNavigationTests(tabTitle: "NBNavigationPath", useNavigationStack: false, app: XCUIApplication())
   }
 
-  func testNavigationViaArrayWithNBNavigationStack() throws {
-    let app = XCUIApplication()
-    app.launch()
-    try runNavigationTests(tabTitle: "ArrayBinding", app: app)
+  func testNavigationViaArrayWithNBNavigationStack() {
+    launchAndRunNavigationTests(tabTitle: "ArrayBinding", useNavigationStack: false, app: XCUIApplication())
   }
 
-  func testNavigationViaNoneWithNBNavigationStack() throws {
-    let app = XCUIApplication()
-    app.launch()
-    try runNavigationTests(tabTitle: "NoBinding", app: app)
+  func testNavigationViaNoneWithNBNavigationStack() {
+    launchAndRunNavigationTests(tabTitle: "NoBinding", useNavigationStack: false, app: XCUIApplication())
   }
 
-  func testNavigationViaPathWithNavigationStack() throws {
-    let app = XCUIApplication()
-    app.launchArguments = ["USE_NAVIGATIONSTACK"]
-    app.launch()
-    try runNavigationTests(tabTitle: "NBNavigationPath", app: app)
+  func testNavigationViaPathWithNavigationStack() {
+    launchAndRunNavigationTests(tabTitle: "NBNavigationPath", useNavigationStack: true, app: XCUIApplication())
   }
 
-  func testNavigationViaArrayWithNavigationStack() throws {
-    let app = XCUIApplication()
-    app.launchArguments = ["USE_NAVIGATIONSTACK"]
-    app.launch()
-    try runNavigationTests(tabTitle: "ArrayBinding", app: app)
+  func testNavigationViaArrayWithNavigationStack() {
+    launchAndRunNavigationTests(tabTitle: "ArrayBinding", useNavigationStack: true, app: XCUIApplication())
   }
 
-  func testNavigationViaNoneWithNavigationStack() throws {
-    let app = XCUIApplication()
-    app.launchArguments = ["USE_NAVIGATIONSTACK"]
-    app.launch()
-    try runNavigationTests(tabTitle: "NoBinding", app: app)
+  func testNavigationViaNoneWithNavigationStack() {
+    launchAndRunNavigationTests(tabTitle: "NoBinding", useNavigationStack: true, app: XCUIApplication())
   }
 
-  func runNavigationTests(tabTitle: String, app: XCUIApplication) throws {
+  func launchAndRunNavigationTests(tabTitle: String, useNavigationStack: Bool, app: XCUIApplication) {
+    if useNavigationStack {
+      app.launchArguments = ["USE_NAVIGATIONSTACK"]
+    }
+    app.launch()
+
     let navigationTimeout = 0.8
 
     XCTAssertTrue(app.tabBars.buttons[tabTitle].waitForExistence(timeout: 3))
