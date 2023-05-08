@@ -27,7 +27,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     }
     if #available(iOS 16.0, *), useNavigationStack == .whenAvailable {
       return AnyView(
-        NavigationStack(path: useInternalTypedPath ? $internalTypedPath : $externalTypedPath) {
+        NavigationStack(path: $path.path) {
           root
             .navigationDestination(for: AnyHashable.self, destination: { destinationBuilder.build($0) })
             .navigationDestination(for: LocalDestinationID.self, destination: { destinationBuilder.build($0) })

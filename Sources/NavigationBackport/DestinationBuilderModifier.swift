@@ -13,7 +13,6 @@ struct DestinationBuilderModifier<TypedData: Hashable>: ViewModifier {
     if #available(iOS 16.0, *), useNavigationStack == .whenAvailable {
       return AnyView(
         content
-          .navigationDestination(for: TypedData.self, destination: { typedDestinationBuilder($0) })
       )
     } else {
       return AnyView(
