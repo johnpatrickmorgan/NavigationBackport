@@ -5,7 +5,7 @@ struct NavigationWrapper<Content: View>: View {
   @Environment(\.useNavigationStack) var useNavigationStack
 
   var body: some View {
-    if #available(iOS 16.0, *), useNavigationStack == .whenAvailable {
+      if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 14.0, *), useNavigationStack == .whenAvailable {
       return AnyView(NavigationStack { content })
         .environment(\.isWithinNavigationStack, true)
     } else {
