@@ -31,11 +31,16 @@ struct Node<Screen>: View {
   var next: some View {
     Node(allRoutes: $allRoutes, truncateToIndex: truncateToIndex, index: index + 1)
   }
+  
+  var nextRouteStyle: RouteStyle? {
+    allRoutes[safe: index + 1]?.style
+  }
 
   var body: some View {
     if let route = allRoutes[safe: index] ?? route {
       DestinationBuilderView(data: route.screen)
-        ._navigationDestination(isActive: isActiveBinding, destination: next)
+        .show(isActive: isActiveBinding, routeStyle: nextRouteStyle, destination: next)
+        .modifier(EmbedModifier(embedInNavigationView: route.embedInNavigationView))
         .onAppear { isAppeared = true }
         .onDisappear { isAppeared = false }
     }

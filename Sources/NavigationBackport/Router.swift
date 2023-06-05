@@ -25,9 +25,13 @@ struct Router<Screen, RootView: View>: View {
       }
     )
   }
+  
+  var nextRouteStyle: RouteStyle? {
+    screens.first?.style
+  }
 
   var body: some View {
     rootView
-      ._navigationDestination(isActive: isActiveBinding, destination: pushedScreens)
+      .show(isActive: isActiveBinding, routeStyle: nextRouteStyle, destination: pushedScreens)
   }
 }

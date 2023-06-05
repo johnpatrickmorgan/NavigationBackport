@@ -3,31 +3,31 @@ import Foundation
 public extension Navigator {
   
   func presentSheet(_ screen: Screen, embedInNavigationView: Bool) {
-    path.presentSheet(screen, embedInNavigationView: embedInNavigationView)
+    routes.presentSheet(screen, embedInNavigationView: embedInNavigationView)
   }
   /// Pushes a new screen via a push navigation.
   /// - Parameter screen: The screen to push.
   func push(_ screen: Screen) {
-    path.push(screen)
+    routes.push(screen)
   }
 
   /// Pops a given number of screens off the stack.
   /// - Parameter count: The number of screens to go back. Defaults to 1.
   func pop(_ count: Int = 1) {
-    path.pop(count)
+    routes.pop(count)
   }
 
   /// Pops to a given index in the array of screens. The resulting screen count
   /// will be index.
   /// - Parameter index: The index that should become top of the stack.
   func popTo(index: Int) {
-    path.popTo(index: index)
+    routes.popTo(index: index)
   }
 
   /// Pops to the root screen (index 0). The resulting screen count
   /// will be 1.
   func popToRoot() {
-    path.popToRoot()
+    routes.popToRoot()
   }
 
   /// Pops to the topmost (most recently pushed) screen in the stack
@@ -37,7 +37,7 @@ public extension Navigator {
   /// - Returns: A `Bool` indicating whether a screen was found.
   @discardableResult
   func popTo(where condition: (Screen) -> Bool) -> Bool {
-    path.popTo(where: { condition($0.screen) })
+    routes.popTo(where: { condition($0.screen) })
   }
 }
 
@@ -49,7 +49,7 @@ public extension Navigator where Screen: Equatable {
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
   func popTo(_ screen: Screen) -> Bool {
-    return path.popTo(screen)
+    return routes.popTo(screen)
   }
 }
 
@@ -60,7 +60,7 @@ public extension Navigator where Screen: Identifiable {
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
   func popTo(id: Screen.ID) -> Bool {
-    path.popTo(id: id)
+    routes.popTo(id: id)
   }
 }
 

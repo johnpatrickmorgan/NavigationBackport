@@ -6,14 +6,14 @@ public extension Navigator {
   /// applied in stages.
   @_disfavoredOverload
   func withDelaysIfUnsupported(transform: (inout [Route<Screen>]) -> Void, onCompletion: (() -> Void)? = nil) {
-    let start = path
+    let start = routes
     let end = apply(transform, to: start)
 
     let didUpdateSynchronously = synchronouslyUpdateIfSupported(from: start, to: end)
     guard !didUpdateSynchronously else { return }
 
     Task { @MainActor in
-      await pathBinding.withDelaysIfUnsupported(from: start, to: end, keyPath: \.self)
+      await routesBinding.withDelaysIfUnsupported(from: start, to: end, keyPath: \.self)
       onCompletion?()
     }
   }
@@ -23,20 +23,20 @@ public extension Navigator {
   /// applied in stages.
   @MainActor
   func withDelaysIfUnsupported(transform: (inout [Route<Screen>]) -> Void) async {
-    let start = path
+    let start = routes
     let end = apply(transform, to: start)
 
     let didUpdateSynchronously = synchronouslyUpdateIfSupported(from: start, to: end)
     guard !didUpdateSynchronously else { return }
 
-    await pathBinding.withDelaysIfUnsupported(transform)
+    await routesBinding.withDelaysIfUnsupported(transform)
   }
 
   fileprivate func synchronouslyUpdateIfSupported(from start: [Route<Screen>], to end: [Route<Screen>]) -> Bool {
     guard NavigationBackport.canSynchronouslyUpdate(from: start, to: end) else {
       return false
     }
-    path = end
+    routes = end
     return true
   }
 }

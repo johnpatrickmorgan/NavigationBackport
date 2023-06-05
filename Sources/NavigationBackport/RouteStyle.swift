@@ -22,6 +22,15 @@ public enum RouteStyle: Hashable {
       return false
     }
   }
+  
+  public var isPush: Bool {
+    switch self {
+    case .push:
+      return true
+    case .sheet, .cover:
+      return false
+    }
+  }
 }
 
 public extension Route {

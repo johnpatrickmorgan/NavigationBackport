@@ -64,7 +64,7 @@ private struct HomeView: View {
   }
 
   func show99RedBalloons() {
-    navigator.presentSheet(.number(99), embedInNavigationView: true)
+    navigator.push(.number(99))
     navigator.push(.visualisation(EmojiVisualisation(emoji: "🎈", count: 99)))
   }
 }
@@ -74,7 +74,7 @@ private struct NumberListView: View {
   var body: some View {
     List {
       ForEach(numberList.range, id: \.self) { number in
-        NBNavigationLink("\(number)", value: .push(Screen.number(number)))
+        NBNavigationLink("\(number)", value: .cover(Screen.number(number), embedInNavigationView: true))
       }
     }.navigationTitle("List")
   }

@@ -6,15 +6,15 @@ public typealias PathNavigator = Navigator<AnyHashable>
 /// An object available via the environment that gives access to the current path.
 @MainActor
 public class Navigator<Screen>: ObservableObject {
-  let pathBinding: Binding<[Route<Screen>]>
+  let routesBinding: Binding<[Route<Screen>]>
 
   /// The current navigation path.
-  public var path: [Route<Screen>] {
-    get { pathBinding.wrappedValue }
-    set { pathBinding.wrappedValue = newValue }
+  public var routes: [Route<Screen>] {
+    get { routesBinding.wrappedValue }
+    set { routesBinding.wrappedValue = newValue }
   }
 
-  init(_ pathBinding: Binding<[Route<Screen>]>) {
-    self.pathBinding = pathBinding
+  init(_ routesBinding: Binding<[Route<Screen>]>) {
+    self.routesBinding = routesBinding
   }
 }
