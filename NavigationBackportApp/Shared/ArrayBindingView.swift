@@ -1,24 +1,24 @@
 import NavigationBackport
 import SwiftUI
 
-enum Screen: NBScreen {
+enum Screen: Hashable {
   case number(Int)
   case numberList(NumberList)
   case visualisation(EmojiVisualisation)
 }
 
 struct ArrayBindingView: View {
-  @State var savedPath: [Screen]?
-  @State var path: [Screen] = []
+//  @State var savedPath: [Screen]?
+  @State var path: [Route<Screen>] = []
 
   var body: some View {
-    VStack {
-      HStack {
-        Button("Save", action: savePath)
-          .disabled(savedPath == path)
-        Button("Restore", action: restorePath)
-          .disabled(savedPath == nil)
-      }
+//    VStack {
+//      HStack {
+//        Button("Save", action: savePath)
+//          .disabled(savedPath == path)
+//        Button("Restore", action: restorePath)
+//          .disabled(savedPath == nil)
+//      }
       NBNavigationStack(path: $path) {
         HomeView()
           .nbNavigationDestination(for: Screen.self, destination: { screen in
@@ -32,17 +32,17 @@ struct ArrayBindingView: View {
             }
           })
       }
-    }
+//    }
   }
 
-  func savePath() {
-    savedPath = path
-  }
-
-  func restorePath() {
-    guard let savedPath = savedPath else { return }
-    path = savedPath
-  }
+//  func savePath() {
+//    savedPath = path
+//  }
+//
+//  func restorePath() {
+//    guard let savedPath = savedPath else { return }
+//    path = savedPath
+//  }
 }
 
 private struct HomeView: View {
@@ -52,19 +52,19 @@ private struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
       // Push via NBNavigationLink
-      NBNavigationLink(value: Screen.numberList(NumberList(range: 0 ..< 10)), label: { Text("Pick a number") })
+      NBNavigationLink(value: .push(Screen.numberList(NumberList(range: 0 ..< 10))), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push via Bool binding
       Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
     }.navigationTitle("Home")
-      .nbNavigationDestination(isPresented: $isPushing) {
+      .nbNavigationDestination(isPresented: $isPushing, style: .push) {
         Text("Local destination")
       }
   }
 
   func show99RedBalloons() {
-    navigator.push(.number(99))
+    navigator.presentSheet(.number(99), embedInNavigationView: true)
     navigator.push(.visualisation(EmojiVisualisation(emoji: "🎈", count: 99)))
   }
 }
@@ -74,7 +74,7 @@ private struct NumberListView: View {
   var body: some View {
     List {
       ForEach(numberList.range, id: \.self) { number in
-        NBNavigationLink("\(number)", value: Screen.number(number))
+        NBNavigationLink("\(number)", value: .push(Screen.number(number)))
       }
     }.navigationTitle("List")
   }
@@ -93,11 +93,11 @@ private struct NumberView: View {
         onDecrement: { number -= 1 }
       ).labelsHidden()
       NBNavigationLink(
-        value: Screen.number(number + 1),
+        value: .push(Screen.number(number + 1)),
         label: { Text("Show next number") }
       )
       NBNavigationLink(
-        value: Screen.visualisation(.init(emoji: "🐑", count: number)),
+        value: .push(Screen.visualisation(.init(emoji: "🐑", count: number))),
         label: { Text("Visualise with sheep") }
       )
       Button("Go back to root", action: { navigator.popToRoot() })

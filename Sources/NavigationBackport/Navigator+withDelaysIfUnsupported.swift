@@ -5,7 +5,7 @@ public extension Navigator {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @_disfavoredOverload
-  func withDelaysIfUnsupported(transform: (inout [Screen]) -> Void, onCompletion: (() -> Void)? = nil) {
+  func withDelaysIfUnsupported(transform: (inout [Route<Screen>]) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = path
     let end = apply(transform, to: start)
 
@@ -22,7 +22,7 @@ public extension Navigator {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @MainActor
-  func withDelaysIfUnsupported(transform: (inout [Screen]) -> Void) async {
+  func withDelaysIfUnsupported(transform: (inout [Route<Screen>]) -> Void) async {
     let start = path
     let end = apply(transform, to: start)
 
@@ -32,7 +32,7 @@ public extension Navigator {
     await pathBinding.withDelaysIfUnsupported(transform)
   }
 
-  fileprivate func synchronouslyUpdateIfSupported(from start: [Screen], to end: [Screen]) -> Bool {
+  fileprivate func synchronouslyUpdateIfSupported(from start: [Route<Screen>], to end: [Route<Screen>]) -> Bool {
     guard NavigationBackport.canSynchronouslyUpdate(from: start, to: end) else {
       return false
     }

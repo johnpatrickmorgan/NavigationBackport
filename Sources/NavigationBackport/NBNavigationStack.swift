@@ -4,8 +4,8 @@ import SwiftUI
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 /// A replacement for SwiftUI's `NavigationStack` that's available on older OS versions.
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
-  @Binding var externalTypedPath: [Data]
-  @State var internalTypedPath: [Data] = []
+  @Binding var externalTypedPath: [Route<Data>]
+  @State var internalTypedPath: [Route<Data>] = []
   @StateObject var path = NavigationPathHolder()
   @StateObject var pathAppender = PathAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
@@ -29,45 +29,45 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     content
       .onFirstAppear {
         path.withDelaysIfUnsupported(\.path) {
-          $0 = externalTypedPath
+          $0 = externalTypedPath.map { $0.erased() }
         }
       }
       .onChange(of: externalTypedPath) { externalTypedPath in
         path.withDelaysIfUnsupported(\.path) {
-          $0 = externalTypedPath
+          $0 = externalTypedPath.map { $0.erased() }
         }
       }
       .onChange(of: internalTypedPath) { internalTypedPath in
         path.withDelaysIfUnsupported(\.path) {
-          $0 = internalTypedPath
+          $0 = internalTypedPath.map { $0.erased() }
         }
       }
       .onChange(of: path.path) { path in
         if useInternalTypedPath {
-          guard path != internalTypedPath.map({ $0 }) else { return }
-          internalTypedPath = path.compactMap { anyHashable in
-            if let data = anyHashable.base as? Data {
-              return data
-            } else if anyHashable.base is LocalDestinationID {
+          guard path != internalTypedPath.map({ $0.erased() }) else { return }
+          internalTypedPath = path.compactMap { route in
+            if let data = route.screen.base as? Data {
+              return route.map { _ in data }
+            } else if route.screen.base is LocalDestinationID {
               return nil
             }
-            fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
+            fatalError("Cannot add \(type(of: route.screen.base)) to stack of \(Data.self)")
           }
         } else {
-          guard path != externalTypedPath.map({ $0 }) else { return }
-          externalTypedPath = path.compactMap { anyHashable in
-            if let data = anyHashable.base as? Data {
-              return data
-            } else if anyHashable.base is LocalDestinationID {
+          guard path != externalTypedPath.map({ $0.erased() }) else { return }
+          externalTypedPath = path.compactMap { route in
+            if let data = route.screen.base as? Data {
+              return route.map { _ in data }
+            } else if route.screen.base is LocalDestinationID {
               return nil
             }
-            fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
+            fatalError("Cannot add \(type(of: route.screen.base)) to stack of \(Data.self)")
           }
         }
       }
   }
 
-  public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {
+  public init(path: Binding<[Route<Data>]>?, @ViewBuilder root: () -> Root) {
     _externalTypedPath = path ?? .constant([])
     self.root = root()
     useInternalTypedPath = path == nil

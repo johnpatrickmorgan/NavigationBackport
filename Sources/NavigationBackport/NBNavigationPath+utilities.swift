@@ -33,7 +33,7 @@ public extension NBNavigationPath {
   /// - Returns: A `Bool` indicating whether a screen was found.
   @discardableResult
   mutating func popTo(where condition: (AnyHashable) -> Bool) -> Bool {
-    elements.popTo(where: condition)
+    elements.popTo(where: { condition($0.screen) })
   }
 }
 

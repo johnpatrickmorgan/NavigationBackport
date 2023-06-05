@@ -7,7 +7,7 @@ public extension ObservableObject {
   /// applied in stages. An async version of this function is also available.
   @_disfavoredOverload
   @MainActor
-  func withDelaysIfUnsupported<Screen>(_ keyPath: WritableKeyPath<Self, [Screen]>, transform: (inout [Screen]) -> Void, onCompletion: (() -> Void)? = nil) {
+  func withDelaysIfUnsupported<Screen>(_ keyPath: WritableKeyPath<Self, [Route<Screen>]>, transform: (inout [Route<Screen>]) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = self[keyPath: keyPath]
     let end = apply(transform, to: start)
 
@@ -24,7 +24,7 @@ public extension ObservableObject {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @MainActor
-  func withDelaysIfUnsupported<Screen>(_ keyPath: WritableKeyPath<Self, [Screen]>, transform: (inout [Screen]) -> Void) async {
+  func withDelaysIfUnsupported<Screen>(_ keyPath: WritableKeyPath<Self, [Route<Screen>]>, transform: (inout [Route<Screen>]) -> Void) async {
     let start = self[keyPath: keyPath]
     let end = apply(transform, to: start)
 
@@ -67,7 +67,7 @@ public extension ObservableObject {
   }
 
   @MainActor
-  fileprivate func withDelaysIfUnsupported<Screen>(_ keyPath: WritableKeyPath<Self, [Screen]>, from start: [Screen], to end: [Screen]) async {
+  fileprivate func withDelaysIfUnsupported<Screen>(_ keyPath: WritableKeyPath<Self, [Route<Screen>]>, from start: [Route<Screen>], to end: [Route<Screen>]) async {
     let binding = Binding(
       get: { [weak self] in self?[keyPath: keyPath] ?? [] },
       set: { [weak self] in self?[keyPath: keyPath] = $0 }
@@ -75,7 +75,7 @@ public extension ObservableObject {
     await binding.withDelaysIfUnsupported(from: start, to: end, keyPath: \.self)
   }
 
-  fileprivate func synchronouslyUpdateIfSupported<Screen>(_ keyPath: WritableKeyPath<Self, [Screen]>, from start: [Screen], to end: [Screen]) -> Bool {
+  fileprivate func synchronouslyUpdateIfSupported<Screen>(_ keyPath: WritableKeyPath<Self, [Route<Screen>]>, from start: [Route<Screen>], to end: [Route<Screen>]) -> Bool {
     guard NavigationBackport.canSynchronouslyUpdate(from: start, to: end) else {
       return false
     }

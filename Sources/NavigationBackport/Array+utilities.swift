@@ -1,11 +1,16 @@
 import Foundation
 
 /// Various utilities for pushing and popping.
-public extension Array where Element: NBScreen {
+public extension Array where Element: RouteProtocol {
+  
+  mutating func presentSheet(_ screen: Element.Screen, embedInNavigationView: Bool) {
+    append(.sheet(screen, embedInNavigationView: embedInNavigationView))
+  }
+  
   /// Pushes a new screen.
   /// - Parameter screen: The screen to push.
-  mutating func push(_ screen: Element) {
-    append(screen)
+  mutating func push(_ screen: Element.Screen) {
+    append(.push(screen))
   }
 
   /// Pops a given number of screens off the stack.
@@ -52,25 +57,25 @@ public extension Array where Element: NBScreen {
   }
 }
 
-public extension Array where Element: NBScreen & Equatable {
+public extension Array where Element: RouteProtocol, Element.Screen: Equatable {
   /// Pops to the topmost (most recently pushed) screen in the stack
   /// equal to the given screen. If no screens are found,
   /// the screens array will be unchanged.
   /// - Parameter screen: The predicate indicating which screen to go back to.
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
-  mutating func popTo(_ screen: Element) -> Bool {
-    popTo(where: { $0 == screen })
+  mutating func popTo(_ screen: Element.Screen) -> Bool {
+    popTo(where: { $0.screen == screen })
   }
 }
 
-public extension Array where Element: NBScreen & Identifiable {
+public extension Array where Element: RouteProtocol, Element.Screen: Identifiable {
   /// Pops to the topmost (most recently pushed) identifiable screen in the stack
   /// with the given ID. If no screens are found, the screens array will be unchanged.
   /// - Parameter id: The id of the screen to goBack to.
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
-  mutating func popTo(id: Element.ID) -> Bool {
-    popTo(where: { $0.id == id })
+  mutating func popTo(id: Element.Screen.ID) -> Bool {
+    popTo(where: { $0.screen.id == id })
   }
 }

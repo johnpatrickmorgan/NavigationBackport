@@ -39,12 +39,14 @@ class SampleClassDestination: ClassDestination {
 struct ContentView: View {
   var body: some View {
     TabView {
-      NBNavigationPathView()
-        .tabItem { Text("NBNavigationPath") }
+//      RehostingView()
+//        .tabItem { Text("Rehosting") }
+//      NBNavigationPathView()
+//        .tabItem { Text("NBNavigationPath") }
       ArrayBindingView()
         .tabItem { Text("ArrayBinding") }
-      NoBindingView()
-        .tabItem { Text("NoBinding") }
+//      NoBindingView()
+//        .tabItem { Text("NoBinding") }
     }
   }
 }

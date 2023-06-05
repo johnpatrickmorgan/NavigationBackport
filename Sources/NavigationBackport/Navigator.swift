@@ -4,18 +4,17 @@ import SwiftUI
 public typealias PathNavigator = Navigator<AnyHashable>
 
 /// An object available via the environment that gives access to the current path.
-/// Supports push and pop operations when `Screen` conforms to `NBScreen`.
 @MainActor
 public class Navigator<Screen>: ObservableObject {
-  let pathBinding: Binding<[Screen]>
+  let pathBinding: Binding<[Route<Screen>]>
 
   /// The current navigation path.
-  public var path: [Screen] {
+  public var path: [Route<Screen>] {
     get { pathBinding.wrappedValue }
     set { pathBinding.wrappedValue = newValue }
   }
 
-  init(_ pathBinding: Binding<[Screen]>) {
+  init(_ pathBinding: Binding<[Route<Screen>]>) {
     self.pathBinding = pathBinding
   }
 }

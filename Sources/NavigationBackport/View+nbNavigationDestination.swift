@@ -46,11 +46,12 @@ public extension View {
   ///   - isPresented: A binding to a Boolean value that indicates whether
   ///     `destination` is currently presented.
   ///   - destination: A view to present.
-  func nbNavigationDestination<V>(isPresented: Binding<Bool>, @ViewBuilder destination: () -> V) -> some View where V: View {
+  func nbNavigationDestination<V>(isPresented: Binding<Bool>, style: RouteStyle, @ViewBuilder destination: () -> V) -> some View where V: View {
     let builtDestination = AnyView(destination())
     return modifier(
       LocalDestinationBuilderModifier(
         isPresented: isPresented,
+        routeStyle: style,
         builder: { builtDestination }
       )
     )

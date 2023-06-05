@@ -4,12 +4,12 @@ import SwiftUI
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 /// When value is non-nil, shows the destination associated with its type.
 public struct NBNavigationLink<P: Hashable, Label: View>: View {
-  var value: P?
+  var value: Route<P>?
   var label: Label
 
   @EnvironmentObject var pathAppender: PathAppender
 
-  public init(value: P?, @ViewBuilder label: () -> Label) {
+  public init(value: Route<P>?, @ViewBuilder label: () -> Label) {
     self.value = value
     self.label = label()
   }
@@ -20,7 +20,7 @@ public struct NBNavigationLink<P: Hashable, Label: View>: View {
     Button(
       action: {
         guard let value = value else { return }
-        pathAppender.append?(value)
+        pathAppender.append?(value.erased())
       },
       label: { label }
     )
@@ -28,11 +28,11 @@ public struct NBNavigationLink<P: Hashable, Label: View>: View {
 }
 
 public extension NBNavigationLink where Label == Text {
-  init(_ titleKey: LocalizedStringKey, value: P?) {
+  init(_ titleKey: LocalizedStringKey, value: Route<P>?) {
     self.init(value: value) { Text(titleKey) }
   }
 
-  init<S>(_ title: S, value: P?) where S: StringProtocol {
+  init<S>(_ title: S, value: Route<P>?) where S: StringProtocol {
     self.init(value: value) { Text(title) }
   }
 }

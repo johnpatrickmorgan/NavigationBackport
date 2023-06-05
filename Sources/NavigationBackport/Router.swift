@@ -4,15 +4,15 @@ import SwiftUI
 struct Router<Screen, RootView: View>: View {
   let rootView: RootView
 
-  @Binding var screens: [Screen]
+  @Binding var screens: [Route<Screen>]
 
-  init(rootView: RootView, screens: Binding<[Screen]>) {
+  init(rootView: RootView, screens: Binding<[Route<Screen>]>) {
     self.rootView = rootView
     _screens = screens
   }
 
   var pushedScreens: some View {
-    Node(allScreens: $screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
+    Node(allRoutes: $screens, truncateToIndex: { screens = Array(screens.prefix($0)) }, index: 0)
   }
 
   private var isActiveBinding: Binding<Bool> {

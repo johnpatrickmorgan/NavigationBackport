@@ -1,6 +1,10 @@
 import Foundation
 
-public extension Navigator where Screen: NBScreen {
+public extension Navigator {
+  
+  func presentSheet(_ screen: Screen, embedInNavigationView: Bool) {
+    path.presentSheet(screen, embedInNavigationView: embedInNavigationView)
+  }
   /// Pushes a new screen via a push navigation.
   /// - Parameter screen: The screen to push.
   func push(_ screen: Screen) {
@@ -33,11 +37,11 @@ public extension Navigator where Screen: NBScreen {
   /// - Returns: A `Bool` indicating whether a screen was found.
   @discardableResult
   func popTo(where condition: (Screen) -> Bool) -> Bool {
-    path.popTo(where: condition)
+    path.popTo(where: { condition($0.screen) })
   }
 }
 
-public extension Navigator where Screen: NBScreen & Equatable {
+public extension Navigator where Screen: Equatable {
   /// Pops to the topmost (most recently pushed) screen in the stack
   /// equal to the given screen. If no screens are found,
   /// the screens array will be unchanged.
@@ -49,7 +53,7 @@ public extension Navigator where Screen: NBScreen & Equatable {
   }
 }
 
-public extension Navigator where Screen: NBScreen & Identifiable {
+public extension Navigator where Screen: Identifiable {
   /// Pops to the topmost (most recently pushed) identifiable screen in the stack
   /// with the given ID. If no screens are found, the screens array will be unchanged.
   /// - Parameter id: The id of the screen to goBack to.
@@ -67,6 +71,7 @@ public extension Navigator where Screen == AnyHashable {
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
   func popTo<T: Hashable>(_: T.Type) -> Bool {
-    popTo(where: { $0 is T })
+    // TODO: check
+    popTo(where: { $0.base is T })
   }
 }
