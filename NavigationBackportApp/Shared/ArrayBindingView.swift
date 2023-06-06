@@ -19,7 +19,7 @@ struct ArrayBindingView: View {
         Button("Restore", action: restorePath)
           .disabled(savedPath == nil)
       }
-      NBNavigationStack(path: $path) {
+      NBNavigationStack(path: $path, embedInNavigationView: true) {
         HomeView()
           .nbNavigationDestination(for: Screen.self, destination: { screen in
             switch screen {

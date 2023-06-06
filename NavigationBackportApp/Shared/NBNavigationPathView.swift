@@ -13,7 +13,7 @@ struct NBNavigationPathView: View {
         Button("Decode", action: decodePath)
           .disabled(encodedPathData == nil)
       }
-      NBNavigationStack(path: $path) {
+      NBNavigationStack(path: $path, embedInNavigationView: true) {
         HomeView()
           .nbNavigationDestination(for: NumberList.self, destination: { numberList in
             NumberListView(numberList: numberList)

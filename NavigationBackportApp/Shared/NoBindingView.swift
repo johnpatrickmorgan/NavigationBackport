@@ -3,7 +3,7 @@ import SwiftUI
 
 struct NoBindingView: View {
   var body: some View {
-    NBNavigationStack {
+    NBNavigationStack(embedInNavigationView: true) {
       HomeView()
         .nbNavigationDestination(for: NumberList.self, destination: { numberList in
           NumberListView(numberList: numberList)

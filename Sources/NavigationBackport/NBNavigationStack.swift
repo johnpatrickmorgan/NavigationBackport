@@ -4,6 +4,7 @@ import SwiftUI
 @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 /// A replacement for SwiftUI's `NavigationStack` that's available on older OS versions.
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
+  var embedInNavigationView: Bool
   @Binding var externalTypedPath: [Route<Data>]
   @State var internalTypedPath: [Route<Data>] = []
   @StateObject var path = NavigationPathHolder()
@@ -16,13 +17,12 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     pathAppender.append = { [weak path] newElement in
       path?.path.append(newElement)
     }
-    return NavigationWrapper {
-      Router(rootView: root, screens: $path.path)
-    }
-    .environmentObject(path)
-    .environmentObject(pathAppender)
-    .environmentObject(destinationBuilder)
-    .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
+    return Router(rootView: root, screens: $path.path)
+      .modifier(EmbedModifier(embedInNavigationView: embedInNavigationView))
+      .environmentObject(path)
+      .environmentObject(pathAppender)
+      .environmentObject(destinationBuilder)
+      .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
   }
 
   public var body: some View {
@@ -67,25 +67,26 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       }
   }
 
-  public init(path: Binding<[Route<Data>]>?, @ViewBuilder root: () -> Root) {
+  public init(path: Binding<[Route<Data>]>?, embedInNavigationView: Bool, @ViewBuilder root: () -> Root) {
     _externalTypedPath = path ?? .constant([])
     self.root = root()
+    self.embedInNavigationView = embedInNavigationView
     useInternalTypedPath = path == nil
   }
 }
 
 public extension NBNavigationStack where Data == AnyHashable {
-  init(@ViewBuilder root: () -> Root) {
-    self.init(path: nil, root: root)
+  init(embedInNavigationView: Bool, @ViewBuilder root: () -> Root) {
+    self.init(path: nil, embedInNavigationView: embedInNavigationView, root: root)
   }
 }
 
 public extension NBNavigationStack where Data == AnyHashable {
-  init(path: Binding<NBNavigationPath>, @ViewBuilder root: () -> Root) {
+  init(path: Binding<NBNavigationPath>, embedInNavigationView: Bool, @ViewBuilder root: () -> Root) {
     let path = Binding(
       get: { path.wrappedValue.elements },
       set: { path.wrappedValue.elements = $0 }
     )
-    self.init(path: path, root: root)
+    self.init(path: path, embedInNavigationView: embedInNavigationView, root: root)
   }
 }
