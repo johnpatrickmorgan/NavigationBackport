@@ -28,7 +28,7 @@ private struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
       // Push via link
-      NBNavigationLink(value:.sheet(NumberList(range: 0 ..< 10), embedInNavigationView: true), label: { Text("Pick a number") })
+      NBNavigationLink(value: .sheet(NumberList(range: 0 ..< 10), embedInNavigationView: true), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push child class via navigator
@@ -52,12 +52,14 @@ private struct HomeView: View {
 }
 
 private struct NumberListView: View {
+  @EnvironmentObject var navigator: PathNavigator
   let numberList: NumberList
   var body: some View {
     List {
       ForEach(numberList.range, id: \.self) { number in
         NBNavigationLink("\(number)", value: .push(number))
       }
+      Button("Go back", action: { navigator.goBack() })
     }.navigationTitle("List")
   }
 }
@@ -83,26 +85,34 @@ private struct NumberView: View {
         label: { Text("Visualise with sheep") }
       )
       Button("Go back to root") {
-        navigator.popToRoot()
+        navigator.goBackToRoot()
       }
     }.navigationTitle("\(number)")
   }
 }
 
 private struct EmojiView: View {
+  @EnvironmentObject var navigator: PathNavigator
   let visualisation: EmojiVisualisation
 
   var body: some View {
-    Text(visualisation.text)
-      .navigationTitle("Visualise \(visualisation.count)")
+    VStack {
+      Text(visualisation.text)
+        .navigationTitle("Visualise \(visualisation.count)")
+      Button("Go back", action: { navigator.goBack() })
+    }
   }
 }
 
 private struct ClassDestinationView: View {
+  @EnvironmentObject var navigator: PathNavigator
   let destination: ClassDestination
 
   var body: some View {
-    Text(destination.data)
-      .navigationTitle("A ClassDestination")
+    VStack {
+      Text(destination.data)
+        .navigationTitle("A ClassDestination")
+      Button("Go back", action: { navigator.goBack() })
+    }
   }
 }
