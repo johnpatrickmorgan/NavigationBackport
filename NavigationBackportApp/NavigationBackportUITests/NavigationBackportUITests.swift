@@ -44,7 +44,7 @@ final class NavigationBackportUITests: XCTestCase {
     app.buttons["Pick a number"].tap()
     XCTAssertTrue(app.navigationBars["List"].waitForExistence(timeout: navigationTimeout))
 
-    app.navigationBars.buttons.element(boundBy: 0).tap()
+    app.navigationBars["List"].swipeDown(velocity: .fast)
     XCTAssertTrue(app.navigationBars["Home"].waitForExistence(timeout: navigationTimeout))
 
     app.buttons["99 Red balloons"].tap()
