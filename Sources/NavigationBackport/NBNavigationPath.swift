@@ -16,8 +16,8 @@ public struct NBNavigationPath: Equatable {
     self.elements = elements
   }
 
-  public init<S: Sequence>(_ elements: S) where S.Element: Hashable {
-    self.init(elements.map { $0 as AnyHashable })
+  public init<S: Sequence, E: Hashable>(_ elements: S) where S.Element == Route<E> {
+    self.init(elements.map { $0.map { $0 as AnyHashable } })
   }
 
   public mutating func append<V: Hashable>(_ value: Route<V>) {

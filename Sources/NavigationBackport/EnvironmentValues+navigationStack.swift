@@ -1,5 +1,10 @@
 import SwiftUI
 
+public enum UseNavigationStackPolicy {
+  case whenAvailable
+  case never
+}
+
 struct UseNavigationStackPolicyKey: EnvironmentKey {
   static let defaultValue = UseNavigationStackPolicy.never
 }

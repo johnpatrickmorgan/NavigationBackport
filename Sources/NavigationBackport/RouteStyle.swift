@@ -2,7 +2,7 @@ import Foundation
 
 /// The style with which a route is shown, i.e., if the route is pushed, presented
 /// as a sheet or presented as a full-screen cover.
-public enum RouteStyle: Hashable {
+public enum RouteStyle: Hashable, Codable {
   case push, sheet(embedInNavigationView: Bool), cover(embedInNavigationView: Bool)
 
   public var isSheet: Bool {
@@ -22,7 +22,7 @@ public enum RouteStyle: Hashable {
       return false
     }
   }
-  
+
   public var isPush: Bool {
     switch self {
     case .push:

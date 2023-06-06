@@ -6,11 +6,16 @@ public extension NBNavigationPath {
     static let encoder = JSONEncoder()
     static let decoder = JSONDecoder()
 
-    var elements: [Codable]
+    var elements: [Route<Codable>]
   }
 
   var codable: CodableRepresentation? {
-    let codableElements = elements.compactMap { $0 as? Codable }
+    let codableElements = elements.compactMap { route -> Route<Codable>? in
+      guard let codableScreen = route.screen as? Codable else {
+        return nil
+      }
+      return Route(screen: codableScreen, style: route.style)
+    }
     guard codableElements.count == elements.count else {
       return nil
     }
@@ -20,7 +25,7 @@ public extension NBNavigationPath {
   init(_ codable: CodableRepresentation) {
     // NOTE: Casting to Any first prevents the compiler from flagging the cast to AnyHashable as one that
     // always fails (which it isn't, thanks to the compiler magic around AnyHashable).
-    self.init(codable.elements.map { ($0 as Any) as! AnyHashable })
+    self.init(codable.elements.map { $0.map { ($0 as Any) as! AnyHashable } })
   }
 }
 
@@ -42,18 +47,19 @@ extension NBNavigationPath.CodableRepresentation: Encodable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.unkeyedContainer()
     for element in elements.reversed() {
-      guard let typeName = _mangledTypeName(type(of: element)) else {
+      guard let typeName = _mangledTypeName(type(of: element.screen)) else {
         throw generalEncodingError(
           "Unable to create '_mangledTypeName' from \(String(describing: type(of: element)))"
         )
       }
+      try container.encode(element.style)
       try container.encode(typeName)
       #if swift(<5.7)
-        let data = try Self.encodeExistential(element)
+        let data = try Self.encodeExistential(element.screen)
         let string = String(decoding: data, as: UTF8.self)
         try container.encode(string)
       #else
-        let string = try String(decoding: Self.encoder.encode(element), as: UTF8.self)
+        let string = try String(decoding: Self.encoder.encode(element.screen), as: UTF8.self)
         try container.encode(string)
       #endif
     }
@@ -65,6 +71,7 @@ extension NBNavigationPath.CodableRepresentation: Decodable {
     var container = try decoder.unkeyedContainer()
     elements = []
     while !container.isAtEnd {
+      let style = try container.decode(RouteStyle.self)
       let typeName = try container.decode(String.self)
       guard let type = _typeByName(typeName) else {
         throw DecodingError.dataCorruptedError(
@@ -91,7 +98,7 @@ extension NBNavigationPath.CodableRepresentation: Decodable {
       #else
         let value = try Self.decoder.decode(codableType, from: data)
       #endif
-      elements.insert(value, at: 0)
+      elements.insert(Route(screen: value, style: style), at: 0)
     }
   }
 }

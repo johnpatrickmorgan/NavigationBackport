@@ -8,17 +8,17 @@ enum Screen: Hashable {
 }
 
 struct ArrayBindingView: View {
-//  @State var savedPath: [Screen]?
+  @State var savedPath: [Route<Screen>]?
   @State var path: [Route<Screen>] = []
 
   var body: some View {
-//    VStack {
-//      HStack {
-//        Button("Save", action: savePath)
-//          .disabled(savedPath == path)
-//        Button("Restore", action: restorePath)
-//          .disabled(savedPath == nil)
-//      }
+    VStack {
+      HStack {
+        Button("Save", action: savePath)
+          .disabled(savedPath == path)
+        Button("Restore", action: restorePath)
+          .disabled(savedPath == nil)
+      }
       NBNavigationStack(path: $path) {
         HomeView()
           .nbNavigationDestination(for: Screen.self, destination: { screen in
@@ -32,17 +32,17 @@ struct ArrayBindingView: View {
             }
           })
       }
-//    }
+    }
   }
 
-//  func savePath() {
-//    savedPath = path
-//  }
-//
-//  func restorePath() {
-//    guard let savedPath = savedPath else { return }
-//    path = savedPath
-//  }
+  func savePath() {
+    savedPath = path
+  }
+
+  func restorePath() {
+    guard let savedPath = savedPath else { return }
+    path = savedPath
+  }
 }
 
 private struct HomeView: View {

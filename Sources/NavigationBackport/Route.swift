@@ -82,18 +82,16 @@ public enum Route<Screen> {
   }
 }
 
-extension Route: Equatable where Screen: Equatable {
-  // TODO: remove?
-  /// Compares two Routes for equality, based on screen equality and equality of presentation styles.
-  /// - Returns: A Bool indicating if the two are equal.
-  public static func == (lhs: Route, rhs: Route) -> Bool {
-    return lhs.style == rhs.style && lhs.screen == rhs.screen
-  }
-}
+extension Route: Equatable where Screen: Equatable {}
+
+extension Route: Codable where Screen: Codable {}
 
 extension Route where Screen: Hashable {
   
   func erased() -> Route<AnyHashable> {
-    self.map { $0 }
+    if let anyHashableSelf = self as? Route<AnyHashable>  {
+      return anyHashableSelf
+    }
+    return self.map { $0 }
   }
 }
