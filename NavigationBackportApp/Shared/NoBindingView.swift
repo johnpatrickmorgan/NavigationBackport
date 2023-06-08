@@ -3,18 +3,18 @@ import SwiftUI
 
 struct NoBindingView: View {
   var body: some View {
-    NBNavigationStack(embedInNavigationView: true) {
+    FlowStack(embedInNavigationView: true) {
       HomeView()
-        .nbNavigationDestination(for: NumberList.self, destination: { numberList in
+        .flowDestination(for: NumberList.self, destination: { numberList in
           NumberListView(numberList: numberList)
         })
-        .nbNavigationDestination(for: Int.self, destination: { number in
+        .flowDestination(for: Int.self, destination: { number in
           NumberView(number: number)
         })
-        .nbNavigationDestination(for: EmojiVisualisation.self, destination: { visualisation in
+        .flowDestination(for: EmojiVisualisation.self, destination: { visualisation in
           EmojiView(visualisation: visualisation)
         })
-        .nbNavigationDestination(for: ClassDestination.self, destination: { destination in
+        .flowDestination(for: ClassDestination.self, destination: { destination in
           ClassDestinationView(destination: destination)
         })
     }
@@ -22,13 +22,13 @@ struct NoBindingView: View {
 }
 
 private struct HomeView: View {
-  @EnvironmentObject var navigator: PathNavigator
+  @EnvironmentObject var navigator: FlowPathNavigator
   @State var isPushing = false
 
   var body: some View {
     VStack(spacing: 8) {
       // Push via link
-      NBNavigationLink(value: .sheet(NumberList(range: 0 ..< 10), embedInNavigationView: true), label: { Text("Pick a number") })
+      FlowLink(value: .sheet(NumberList(range: 0 ..< 10), embedInNavigationView: true), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push child class via navigator
@@ -36,7 +36,7 @@ private struct HomeView: View {
       // Push via Bool binding
       Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
     }.navigationTitle("Home")
-      .nbNavigationDestination(isPresented: $isPushing, style: .push, destination: {
+      .flowDestination(isPresented: $isPushing, style: .push, destination: {
         Text("Local destination")
       })
   }
@@ -52,12 +52,12 @@ private struct HomeView: View {
 }
 
 private struct NumberListView: View {
-  @EnvironmentObject var navigator: PathNavigator
+  @EnvironmentObject var navigator: FlowPathNavigator
   let numberList: NumberList
   var body: some View {
     List {
       ForEach(numberList.range, id: \.self) { number in
-        NBNavigationLink("\(number)", value: .push(number))
+        FlowLink("\(number)", value: .push(number))
       }
       Button("Go back", action: { navigator.goBack() })
     }.navigationTitle("List")
@@ -65,7 +65,7 @@ private struct NumberListView: View {
 }
 
 private struct NumberView: View {
-  @EnvironmentObject var navigator: PathNavigator
+  @EnvironmentObject var navigator: FlowPathNavigator
   @State var number: Int
 
   var body: some View {
@@ -76,11 +76,11 @@ private struct NumberView: View {
         onIncrement: { number += 1 },
         onDecrement: { number -= 1 }
       ).labelsHidden()
-      NBNavigationLink(
+      FlowLink(
         value: .push(number + 1),
         label: { Text("Show next number") }
       )
-      NBNavigationLink(
+      FlowLink(
         value: .sheet(EmojiVisualisation(emoji: "🐑", count: number)),
         label: { Text("Visualise with sheep") }
       )
@@ -92,7 +92,7 @@ private struct NumberView: View {
 }
 
 private struct EmojiView: View {
-  @EnvironmentObject var navigator: PathNavigator
+  @EnvironmentObject var navigator: FlowPathNavigator
   let visualisation: EmojiVisualisation
 
   var body: some View {
@@ -105,7 +105,7 @@ private struct EmojiView: View {
 }
 
 private struct ClassDestinationView: View {
-  @EnvironmentObject var navigator: PathNavigator
+  @EnvironmentObject var navigator: FlowPathNavigator
   let destination: ClassDestination
 
   var body: some View {

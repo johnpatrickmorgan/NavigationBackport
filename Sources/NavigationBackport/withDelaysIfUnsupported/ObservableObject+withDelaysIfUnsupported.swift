@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 public extension ObservableObject {
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages. An async version of this function is also available.
   @_disfavoredOverload
@@ -20,7 +20,7 @@ public extension ObservableObject {
     }
   }
 
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @MainActor
@@ -34,12 +34,12 @@ public extension ObservableObject {
     await withDelaysIfUnsupported(keyPath, from: start, to: end)
   }
 
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages. An async version of this function is also available.
   @_disfavoredOverload
   @MainActor
-  func withDelaysIfUnsupported(_ keyPath: WritableKeyPath<Self, NBNavigationPath>, transform: (inout NBNavigationPath) -> Void, onCompletion: (() -> Void)? = nil) {
+  func withDelaysIfUnsupported(_ keyPath: WritableKeyPath<Self, FlowPath>, transform: (inout FlowPath) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = self[keyPath: keyPath]
     let end = apply(transform, to: start)
 
@@ -52,11 +52,11 @@ public extension ObservableObject {
     }
   }
 
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @MainActor
-  func withDelaysIfUnsupported(_ keyPath: WritableKeyPath<Self, NBNavigationPath>, transform: (inout NBNavigationPath) -> Void) async {
+  func withDelaysIfUnsupported(_ keyPath: WritableKeyPath<Self, FlowPath>, transform: (inout FlowPath) -> Void) async {
     let start = self[keyPath: keyPath]
     let end = apply(transform, to: start)
 

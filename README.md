@@ -2,18 +2,18 @@
 
 This package uses the navigation APIs available in older SwiftUI versions (such as `NavigationView` and `NavigationLink`) to recreate the new `NavigationStack` APIs introduced in WWDC22, so that you can start targeting those APIs on older versions of iOS, tvOS and watchOS. 
  
-✅ `NavigationStack` -> `NBNavigationStack`
+✅ `NavigationStack` -> `FlowStack`
 
-✅ `NavigationLink` -> `NBNavigationLink`
+✅ `NavigationLink` -> `FlowLink`
 
-✅ `NavigationPath` -> `NBNavigationPath`
+✅ `NavigationPath` -> `FlowPath`
 
-✅ `navigationDestination` -> `nbNavigationDestination`
+✅ `navigationDestination` -> `flowDestination`
 
-✅ `NavigationPath.CodableRepresentation` -> `NBNavigationPath.CodableRepresentation`
+✅ `NavigationPath.CodableRepresentation` -> `FlowPath.CodableRepresentation`
 
 
-You can migrate to these APIs now, and when you eventually bump your deployment target to iOS 16, you can remove this library and easily migrate to its SwiftUI equivalent. `NavigationStack`'s full API is replicated, so you can initialise an `NBNavigationStack` with a binding to an `Array`, with a binding to a `NBNavigationPath` binding, or with no binding at all.
+You can migrate to these APIs now, and when you eventually bump your deployment target to iOS 16, you can remove this library and easily migrate to its SwiftUI equivalent. `NavigationStack`'s full API is replicated, so you can initialise an `FlowStack` with a binding to an `Array`, with a binding to a `FlowPath` binding, or with no binding at all.
 
 ## Example
 
@@ -25,18 +25,18 @@ import NavigationBackport
 import SwiftUI
 
 struct ContentView: View {
-  @State var path = NBNavigationPath()
+  @State var path = FlowPath()
 
   var body: some View {
-    NBNavigationStack(path: $path) {
+    FlowStack($path) {
       HomeView()
-        .nbNavigationDestination(for: NumberList.self, destination: { numberList in
+        .flowDestination(for: NumberList.self, destination: { numberList in
           NumberListView(numberList: numberList)
         })
-        .nbNavigationDestination(for: Int.self, destination: { number in
+        .flowDestination(for: Int.self, destination: { number in
           NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
         })
-        .nbNavigationDestination(for: EmojiVisualisation.self, destination: { visualisation in
+        .flowDestination(for: EmojiVisualisation.self, destination: { visualisation in
           EmojiView(visualisation: visualisation)
         })
     }
@@ -46,7 +46,7 @@ struct ContentView: View {
 struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
-      NBNavigationLink(value: NumberList(range: 0 ..< 100), label: { Text("Pick a number") })
+      FlowLink(value: NumberList(range: 0 ..< 100), label: { Text("Pick a number") })
     }.navigationTitle("Home")
   }
 }
@@ -60,7 +60,7 @@ struct NumberListView: View {
   var body: some View {
     List {
       ForEach(numberList.range, id: \.self) { number in
-        NBNavigationLink("\(number)", value: number)
+        FlowLink("\(number)", value: number)
       }
     }.navigationTitle("List")
   }
@@ -73,11 +73,11 @@ struct NumberView: View {
   var body: some View {
     VStack(spacing: 8) {
       Text("\(number)")
-      NBNavigationLink(
+      FlowLink(
         value: number + 1,
         label: { Text("Show next number") }
       )
-      NBNavigationLink(
+      FlowLink(
         value: EmojiVisualisation(emoji: "🐑", count: number),
         label: { Text("Visualise with sheep") }
       )
@@ -113,10 +113,10 @@ As well as replicating the standard features of the new `NavigationStack` APIs, 
 
 ### Navigator
 
-A `Navigator` object is available through the environment, giving access to the current navigation path. The navigator can be accessed via the environment, e.g. for a NBNavigationPath-backed stack:
+A `Navigator` object is available through the environment, giving access to the current navigation path. The navigator can be accessed via the environment, e.g. for a FlowPath-backed stack:
 
 ```swift
-@EnvironmentObject var navigator: PathNavigator
+@EnvironmentObject var navigator: FlowPathNavigator
 ```
 
 Or for a stack backed by an Array, e.g. `[ScreenType]`:
@@ -127,7 +127,7 @@ Or for a stack backed by an Array, e.g. `[ScreenType]`:
 
 ### Navigation functions
 
-Whether interacting with an `Array`, an `NBNavigationPath`, or a `Navigator`, a number of utility functions are available for easier navigation, such as:
+Whether interacting with an `Array`, an `FlowPath`, or a `Navigator`, a number of utility functions are available for easier navigation, such as:
 
 ```swift
 path.push(Profile(name: "John"))
@@ -157,7 +157,7 @@ This library targets iOS/tvOS versions 14 and above, since it uses `StateObject`
 
 ## Using NavigationStack when available
 
-By default, `NavigationView` is used under the hood, even on SwiftUI versions that support `NavigationStack`. If you prefer to use `NavigationStack` when available, apply the following modifier anywhere above the `NBNavigationStack`:
+By default, `NavigationView` is used under the hood, even on SwiftUI versions that support `NavigationStack`. If you prefer to use `NavigationStack` when available, apply the following modifier anywhere above the `FlowStack`:
 
 ```swift
 MyApp()

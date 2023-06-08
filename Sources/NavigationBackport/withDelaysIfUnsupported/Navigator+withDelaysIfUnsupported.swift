@@ -1,7 +1,7 @@
 import Foundation
 
-public extension Navigator {
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+public extension FlowNavigator {
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @_disfavoredOverload
@@ -18,7 +18,7 @@ public extension Navigator {
     }
   }
 
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @MainActor

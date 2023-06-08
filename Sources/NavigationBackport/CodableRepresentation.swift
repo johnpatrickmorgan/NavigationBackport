@@ -1,6 +1,6 @@
 import Foundation
 
-public extension NBNavigationPath {
+public extension FlowPath {
   /// A codable representation of a navigation path.
   struct CodableRepresentation {
     static let encoder = JSONEncoder()
@@ -29,7 +29,7 @@ public extension NBNavigationPath {
   }
 }
 
-extension NBNavigationPath.CodableRepresentation: Encodable {
+extension FlowPath.CodableRepresentation: Encodable {
   fileprivate func generalEncodingError(_ description: String) -> EncodingError {
     let context = EncodingError.Context(codingPath: [], debugDescription: description)
     return EncodingError.invalidValue(elements, context)
@@ -37,7 +37,7 @@ extension NBNavigationPath.CodableRepresentation: Encodable {
 
   fileprivate static func encodeExistential(_ element: Encodable) throws -> Data {
     func encodeOpened<A: Encodable>(_ element: A) throws -> Data {
-      try NBNavigationPath.CodableRepresentation.encoder.encode(element)
+      try FlowPath.CodableRepresentation.encoder.encode(element)
     }
     return try _openExistential(element, do: encodeOpened(_:))
   }
@@ -66,7 +66,7 @@ extension NBNavigationPath.CodableRepresentation: Encodable {
   }
 }
 
-extension NBNavigationPath.CodableRepresentation: Decodable {
+extension FlowPath.CodableRepresentation: Decodable {
   public init(from decoder: Decoder) throws {
     var container = try decoder.unkeyedContainer()
     elements = []
@@ -90,7 +90,7 @@ extension NBNavigationPath.CodableRepresentation: Decodable {
       #if swift(<5.7)
         func decodeExistential(type: Codable.Type) throws -> Codable {
           func decodeOpened<A: Codable>(type _: A.Type) throws -> A {
-            try NBNavigationPath.CodableRepresentation.decoder.decode(A.self, from: data)
+            try FlowPath.CodableRepresentation.decoder.decode(A.self, from: data)
           }
           return try _openExistential(type, do: decodeOpened)
         }
@@ -103,7 +103,7 @@ extension NBNavigationPath.CodableRepresentation: Decodable {
   }
 }
 
-extension NBNavigationPath.CodableRepresentation: Equatable {
+extension FlowPath.CodableRepresentation: Equatable {
   public static func == (lhs: Self, rhs: Self) -> Bool {
     do {
       let encodedLhs = try encodeExistential(lhs)

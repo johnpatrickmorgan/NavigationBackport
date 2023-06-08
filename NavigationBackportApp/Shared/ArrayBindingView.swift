@@ -8,20 +8,20 @@ enum Screen: Hashable {
 }
 
 struct ArrayBindingView: View {
-  @State var savedPath: [Route<Screen>]?
-  @State var path: [Route<Screen>] = []
+  @State var savedRoutes: [Route<Screen>]?
+  @State var routes: [Route<Screen>] = []
 
   var body: some View {
     VStack {
       HStack {
-        Button("Save", action: savePath)
-          .disabled(savedPath == path)
-        Button("Restore", action: restorePath)
-          .disabled(savedPath == nil)
+        Button("Save", action: saveRoutes)
+          .disabled(savedRoutes == routes)
+        Button("Restore", action: restoreRoutes)
+          .disabled(savedRoutes == nil)
       }
-      NBNavigationStack(path: $path, embedInNavigationView: true) {
+      FlowStack($routes, embedInNavigationView: true) {
         HomeView()
-          .nbNavigationDestination(for: Screen.self, destination: { screen in
+          .flowDestination(for: Screen.self, destination: { screen in
             switch screen {
             case .numberList(let numberList):
               NumberListView(numberList: numberList)
@@ -35,30 +35,30 @@ struct ArrayBindingView: View {
     }
   }
 
-  func savePath() {
-    savedPath = path
+  func saveRoutes() {
+    savedRoutes = routes
   }
 
-  func restorePath() {
-    guard let savedPath = savedPath else { return }
-    path = savedPath
+  func restoreRoutes() {
+    guard let savedRoutes = savedRoutes else { return }
+    routes = savedRoutes
   }
 }
 
 private struct HomeView: View {
   @State var isPushing = false
-  @EnvironmentObject var navigator: Navigator<Screen>
+  @EnvironmentObject var navigator: FlowNavigator<Screen>
 
   var body: some View {
     VStack(spacing: 8) {
-      // Push via NBNavigationLink
-      NBNavigationLink(value: .sheet(Screen.numberList(NumberList(range: 0 ..< 10)), embedInNavigationView: true), label: { Text("Pick a number") })
+      // Push via FlowLink
+      FlowLink(value: .sheet(Screen.numberList(NumberList(range: 0 ..< 10)), embedInNavigationView: true), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push via Bool binding
       Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
     }.navigationTitle("Home")
-      .nbNavigationDestination(isPresented: $isPushing, style: .push) {
+      .flowDestination(isPresented: $isPushing, style: .push) {
         Text("Local destination")
       }
   }
@@ -70,12 +70,12 @@ private struct HomeView: View {
 }
 
 private struct NumberListView: View {
-  @EnvironmentObject var navigator: Navigator<Screen>
+  @EnvironmentObject var navigator: FlowNavigator<Screen>
   let numberList: NumberList
   var body: some View {
     List {
       ForEach(numberList.range, id: \.self) { number in
-        NBNavigationLink("\(number)", value: .sheet(Screen.number(number), embedInNavigationView: true))
+        FlowLink("\(number)", value: .sheet(Screen.number(number), embedInNavigationView: true))
       }
       Button("Go back", action: { navigator.goBack() })
     }.navigationTitle("List")
@@ -83,7 +83,7 @@ private struct NumberListView: View {
 }
 
 private struct NumberView: View {
-  @EnvironmentObject var navigator: Navigator<Screen>
+  @EnvironmentObject var navigator: FlowNavigator<Screen>
   @State var number: Int
 
   var body: some View {
@@ -94,11 +94,11 @@ private struct NumberView: View {
         onIncrement: { number += 1 },
         onDecrement: { number -= 1 }
       ).labelsHidden()
-      NBNavigationLink(
+      FlowLink(
         value: .push(Screen.number(number + 1)),
         label: { Text("Show next number") }
       )
-      NBNavigationLink(
+      FlowLink(
         value: .sheet(Screen.visualisation(.init(emoji: "🐑", count: number)), embedInNavigationView: false),
         label: { Text("Visualise with sheep") }
       )
@@ -108,7 +108,7 @@ private struct NumberView: View {
 }
 
 private struct EmojiView: View {
-  @EnvironmentObject var navigator: Navigator<Screen>
+  @EnvironmentObject var navigator: FlowNavigator<Screen>
   let visualisation: EmojiVisualisation
 
   var body: some View {

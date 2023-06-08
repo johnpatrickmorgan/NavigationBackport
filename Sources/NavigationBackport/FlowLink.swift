@@ -1,13 +1,12 @@
 import Foundation
 import SwiftUI
 
-@available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
 /// When value is non-nil, shows the destination associated with its type.
-public struct NBNavigationLink<P: Hashable, Label: View>: View {
+public struct FlowLink<P: Hashable, Label: View>: View {
   var value: Route<P>?
   var label: Label
 
-  @EnvironmentObject var pathAppender: PathAppender
+  @EnvironmentObject var routeAppender: RouteAppender
 
   public init(value: Route<P>?, @ViewBuilder label: () -> Label) {
     self.value = value
@@ -20,19 +19,27 @@ public struct NBNavigationLink<P: Hashable, Label: View>: View {
     Button(
       action: {
         guard let value = value else { return }
-        pathAppender.append?(value.erased())
+        routeAppender.append?(value.erased())
       },
       label: { label }
     )
   }
 }
 
-public extension NBNavigationLink where Label == Text {
+public extension FlowLink where Label == Text {
   init(_ titleKey: LocalizedStringKey, value: Route<P>?) {
     self.init(value: value) { Text(titleKey) }
   }
 
   init<S>(_ title: S, value: Route<P>?) where S: StringProtocol {
     self.init(value: value) { Text(title) }
+  }
+
+  init<S>(_ title: S, value: P?, style: RouteStyle) where S: StringProtocol {
+    self.init(value: value.map { Route(screen: $0, style: style) }) { Text(title) }
+  }
+
+  init(_ titleKey: LocalizedStringKey, value: P?, style: RouteStyle) {
+    self.init(value: value.map { Route(screen: $0, style: style) }) { Text(titleKey) }
   }
 }

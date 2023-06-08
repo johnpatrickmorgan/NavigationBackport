@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 public extension Binding where Value: Collection {
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @_disfavoredOverload
@@ -19,7 +19,7 @@ public extension Binding where Value: Collection {
     }
   }
 
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   func withDelaysIfUnsupported<Screen>(_ transform: (inout [Route<Screen>]) -> Void) async where Value == [Route<Screen>] {
@@ -41,12 +41,12 @@ public extension Binding where Value: Collection {
   }
 }
 
-public extension Binding where Value == NBNavigationPath {
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+public extension Binding where Value == FlowPath {
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @_disfavoredOverload
-  func withDelaysIfUnsupported(_ transform: (inout NBNavigationPath) -> Void, onCompletion: (() -> Void)? = nil) {
+  func withDelaysIfUnsupported(_ transform: (inout FlowPath) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = wrappedValue
     let end = apply(transform, to: start)
 
@@ -59,7 +59,7 @@ public extension Binding where Value == NBNavigationPath {
     }
   }
 
-  /// Any changes can be made to the screens array passed to the transform closure. If those
+  /// Any changes can be made to the routes array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   func withDelaysIfUnsupported(_ transform: (inout Value) -> Void) async {

@@ -5,20 +5,20 @@ final class NavigationBackportUITests: XCTestCase {
     continueAfterFailure = false
   }
 
-  func testNavigationViaPathWithNBNavigationStack() {
-    launchAndRunNavigationTests(tabTitle: "NBNavigationPath", useNavigationStack: false, app: XCUIApplication())
+  func testNavigationViaPathWithFlowStack() {
+    launchAndRunNavigationTests(tabTitle: "FlowPath", useNavigationStack: false, app: XCUIApplication())
   }
 
-  func testNavigationViaArrayWithNBNavigationStack() {
+  func testNavigationViaArrayWithFlowStack() {
     launchAndRunNavigationTests(tabTitle: "ArrayBinding", useNavigationStack: false, app: XCUIApplication())
   }
 
-  func testNavigationViaNoneWithNBNavigationStack() {
+  func testNavigationViaNoneWithFlowStack() {
     launchAndRunNavigationTests(tabTitle: "NoBinding", useNavigationStack: false, app: XCUIApplication())
   }
 
   func testNavigationViaPathWithNavigationStack() {
-    launchAndRunNavigationTests(tabTitle: "NBNavigationPath", useNavigationStack: true, app: XCUIApplication())
+    launchAndRunNavigationTests(tabTitle: "FlowPath", useNavigationStack: true, app: XCUIApplication())
   }
 
   func testNavigationViaArrayWithNavigationStack() {

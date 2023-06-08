@@ -1,6 +1,6 @@
 import Foundation
 
-public extension NBNavigationPath {
+public extension FlowPath {
   /// Pushes a new screen via a push navigation.
   /// - Parameter screen: The screen to push.
   mutating func push(_ screen: AnyHashable) {
@@ -28,7 +28,7 @@ public extension NBNavigationPath {
 
   /// Pops to the topmost (most recently pushed) screen in the stack
   /// that satisfies the given condition. If no screens satisfy the condition,
-  /// the screens array will be unchanged.
+  /// the routes array will be unchanged.
   /// - Parameter condition: The predicate indicating which screen to pop to.
   /// - Returns: A `Bool` indicating whether a screen was found.
   @discardableResult
@@ -37,10 +37,10 @@ public extension NBNavigationPath {
   }
 }
 
-public extension NBNavigationPath {
+public extension FlowPath {
   /// Pops to the topmost (most recently pushed) screen in the stack
   /// equal to the given screen. If no screens are found,
-  /// the screens array will be unchanged.
+  /// the routes array will be unchanged.
   /// - Parameter screen: The predicate indicating which screen to go back to.
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
@@ -50,7 +50,7 @@ public extension NBNavigationPath {
 
   /// Pops to the topmost (most recently pushed) screen in the stack
   /// equal to the given screen. If no screens are found,
-  /// the screens array will be unchanged.
+  /// the routes array will be unchanged.
   /// - Parameter screen: The predicate indicating which screen to go back to.
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
