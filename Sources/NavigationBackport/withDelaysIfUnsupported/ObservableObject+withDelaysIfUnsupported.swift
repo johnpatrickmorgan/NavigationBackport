@@ -43,11 +43,11 @@ public extension ObservableObject {
     let start = self[keyPath: keyPath]
     let end = apply(transform, to: start)
 
-    let didUpdateSynchronously = synchronouslyUpdateIfSupported(keyPath.appending(path: \.elements), from: start.elements, to: end.elements)
+    let didUpdateSynchronously = synchronouslyUpdateIfSupported(keyPath.appending(path: \.routes), from: start.routes, to: end.routes)
     guard !didUpdateSynchronously else { return }
 
     Task { @MainActor in
-      await withDelaysIfUnsupported(keyPath.appending(path: \.elements), from: start.elements, to: end.elements)
+      await withDelaysIfUnsupported(keyPath.appending(path: \.routes), from: start.routes, to: end.routes)
       onCompletion?()
     }
   }
@@ -60,10 +60,10 @@ public extension ObservableObject {
     let start = self[keyPath: keyPath]
     let end = apply(transform, to: start)
 
-    let didUpdateSynchronously = synchronouslyUpdateIfSupported(keyPath.appending(path: \.elements), from: start.elements, to: end.elements)
+    let didUpdateSynchronously = synchronouslyUpdateIfSupported(keyPath.appending(path: \.routes), from: start.routes, to: end.routes)
     guard !didUpdateSynchronously else { return }
 
-    await withDelaysIfUnsupported(keyPath.appending(path: \.elements), from: start.elements, to: end.elements)
+    await withDelaysIfUnsupported(keyPath.appending(path: \.routes), from: start.routes, to: end.routes)
   }
 
   @MainActor
@@ -76,7 +76,7 @@ public extension ObservableObject {
   }
 
   fileprivate func synchronouslyUpdateIfSupported<Screen>(_ keyPath: WritableKeyPath<Self, [Route<Screen>]>, from start: [Route<Screen>], to end: [Route<Screen>]) -> Bool {
-    guard NavigationBackport.canSynchronouslyUpdate(from: start, to: end) else {
+    guard FlowPath.canSynchronouslyUpdate(from: start, to: end) else {
       return false
     }
     // Even though self is known to be a class, the compiler complains that self is immutable

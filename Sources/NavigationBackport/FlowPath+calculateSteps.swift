@@ -1,9 +1,7 @@
 import Foundation
 import SwiftUI
 
-typealias DestinationBuilder<T> = (T) -> AnyView
-
-enum NavigationBackport {
+extension FlowPath {
   /// Calculates the minimal number of steps to update from one routes array to another, within the constraints of SwiftUI.
   /// For a given update to an array of routes, returns the minimum intermediate steps.
   /// required to ensure each update is supported by SwiftUI.
@@ -13,7 +11,7 @@ enum NavigationBackport {
   /// - Returns: A series of state updates from the start to end.
   public static func calculateSteps<Screen>(from start: [Route<Screen>], to end: [Route<Screen>]) -> [[Route<Screen>]] {
     let pairs = Array(zip(start, end))
-    let firstDivergingIndex = pairs.dropFirst()
+    let firstDivergingIndex = pairs
       .firstIndex(where: { $0.style != $1.style }) ?? pairs.endIndex
     let firstDivergingPresentationIndex = start[firstDivergingIndex ..< start.count]
       .firstIndex(where: { $0.isPresented }) ?? start.endIndex

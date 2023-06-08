@@ -83,8 +83,8 @@ public extension FlowStack where Data == AnyHashable {
 public extension FlowStack where Data == AnyHashable {
   init(_ path: Binding<FlowPath>, embedInNavigationView: Bool, @ViewBuilder root: () -> Root) {
     let path = Binding(
-      get: { path.wrappedValue.elements },
-      set: { path.wrappedValue.elements = $0 }
+      get: { path.wrappedValue.routes },
+      set: { path.wrappedValue.routes = $0 }
     )
     self.init(path, embedInNavigationView: embedInNavigationView, root: root)
   }

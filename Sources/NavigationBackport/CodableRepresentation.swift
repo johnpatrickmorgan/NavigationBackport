@@ -10,13 +10,13 @@ public extension FlowPath {
   }
 
   var codable: CodableRepresentation? {
-    let codableElements = elements.compactMap { route -> Route<Codable>? in
+    let codableElements = routes.compactMap { route -> Route<Codable>? in
       guard let codableScreen = route.screen as? Codable else {
         return nil
       }
       return Route(screen: codableScreen, style: route.style)
     }
-    guard codableElements.count == elements.count else {
+    guard codableElements.count == routes.count else {
       return nil
     }
     return CodableRepresentation(elements: codableElements)

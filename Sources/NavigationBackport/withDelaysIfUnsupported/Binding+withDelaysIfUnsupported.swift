@@ -33,7 +33,7 @@ public extension Binding where Value: Collection {
   }
 
   fileprivate func synchronouslyUpdateIfSupported<Screen>(from start: [Route<Screen>], to end: [Route<Screen>]) -> Bool where Value == [Route<Screen>] {
-    guard NavigationBackport.canSynchronouslyUpdate(from: start, to: end) else {
+    guard FlowPath.canSynchronouslyUpdate(from: start, to: end) else {
       return false
     }
     wrappedValue = end
@@ -50,11 +50,11 @@ public extension Binding where Value == FlowPath {
     let start = wrappedValue
     let end = apply(transform, to: start)
 
-    let didUpdateSynchronously = synchronouslyUpdateIfSupported(from: start.elements, to: end.elements)
+    let didUpdateSynchronously = synchronouslyUpdateIfSupported(from: start.routes, to: end.routes)
     guard !didUpdateSynchronously else { return }
 
     Task { @MainActor in
-      await withDelaysIfUnsupported(from: start.elements, to: end.elements, keyPath: \.elements)
+      await withDelaysIfUnsupported(from: start.routes, to: end.routes, keyPath: \.routes)
       onCompletion?()
     }
   }
@@ -66,17 +66,17 @@ public extension Binding where Value == FlowPath {
     let start = wrappedValue
     let end = apply(transform, to: start)
 
-    let didUpdateSynchronously = synchronouslyUpdateIfSupported(from: start.elements, to: end.elements)
+    let didUpdateSynchronously = synchronouslyUpdateIfSupported(from: start.routes, to: end.routes)
     guard !didUpdateSynchronously else { return }
 
-    await withDelaysIfUnsupported(from: start.elements, to: end.elements, keyPath: \.elements)
+    await withDelaysIfUnsupported(from: start.routes, to: end.routes, keyPath: \.routes)
   }
 
   fileprivate func synchronouslyUpdateIfSupported(from start: [Route<AnyHashable>], to end: [Route<AnyHashable>]) -> Bool {
-    guard NavigationBackport.canSynchronouslyUpdate(from: start, to: end) else {
+    guard FlowPath.canSynchronouslyUpdate(from: start, to: end) else {
       return false
     }
-    wrappedValue.elements = end
+    wrappedValue.routes = end
     return true
   }
 }
@@ -84,7 +84,7 @@ public extension Binding where Value == FlowPath {
 extension Binding {
   @MainActor
   func withDelaysIfUnsupported<Screen>(from start: [Route<Screen>], to end: [Route<Screen>], keyPath: WritableKeyPath<Value, [Route<Screen>]>) async {
-    let steps = NavigationBackport.calculateSteps(from: start, to: end)
+    let steps = FlowPath.calculateSteps(from: start, to: end)
 
     wrappedValue[keyPath: keyPath] = steps.first!
     await scheduleRemainingSteps(steps: Array(steps.dropFirst()), keyPath: keyPath)

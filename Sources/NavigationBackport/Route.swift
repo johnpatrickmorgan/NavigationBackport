@@ -18,12 +18,6 @@ public enum Route<Screen> {
   @available(OSX, unavailable, message: "Not available on OS X.")
   case cover(Screen, embedInNavigationView: Bool)
   
-  /// The root of the stack. The presentation style is irrelevant as it will not be presented.
-  /// - Parameter screen: the screen to be shown.
-  public static func root(_ screen: Screen, embedInNavigationView: Bool = false) -> Route {
-    return .sheet(screen, embedInNavigationView: embedInNavigationView)
-  }
-  
   /// The screen to be shown.
   public var screen: Screen {
     get {

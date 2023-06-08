@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// Embeds a view in a NavigationView or NavigationStack.
 struct EmbedModifier: ViewModifier {
   var embedInNavigationView: Bool
   @Environment(\.useNavigationStack) var useNavigationStack

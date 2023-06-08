@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Modifier for appending a new destination builder.
 struct DestinationBuilderModifier<TypedData>: ViewModifier {
-  let typedDestinationBuilder: DestinationBuilder<TypedData>
+  let typedDestinationBuilder: (TypedData) -> AnyView
 
   @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
 

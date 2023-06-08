@@ -3,27 +3,28 @@ import SwiftUI
 
 /// A type-erased wrapper for an Array of any Hashable types, to be displayed in a `FlowStack`.
 public struct FlowPath: Equatable {
-  var elements: [Route<AnyHashable>]
+  /// The routes array for the FlowPath.
+  public var routes: [Route<AnyHashable>]
 
   /// The number of screens in the path.
-  public var count: Int { elements.count }
+  public var count: Int { routes.count }
 
   /// WHether the path is empty.
-  public var isEmpty: Bool { elements.isEmpty }
+  public var isEmpty: Bool { routes.isEmpty }
 
-  public init(_ elements: [Route<AnyHashable>] = []) {
-    self.elements = elements
+  public init(_ routes: [Route<AnyHashable>] = []) {
+    self.routes = routes
   }
 
-  public init<S: Sequence, E: Hashable>(_ elements: S) where S.Element == Route<E> {
-    self.init(elements.map { $0.map { $0 as AnyHashable } })
+  public init<S: Sequence, E: Hashable>(_ routes: S) where S.Element == Route<E> {
+    self.init(routes.map { $0.map { $0 as AnyHashable } })
   }
 
   public mutating func append<V: Hashable>(_ value: Route<V>) {
-    elements.append(value.erased())
+    routes.append(value.erased())
   }
 
   public mutating func removeLast(_ k: Int = 1) {
-    elements.removeLast(k)
+    routes.removeLast(k)
   }
 }

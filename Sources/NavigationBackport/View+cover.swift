@@ -43,13 +43,3 @@ extension View {
     return modifier(CoverModifier(isActiveBinding: isActive, destination: destination))
   }
 }
-
-/// There are spurious state updates when using the `column` navigation view style, so
-/// the navigation view style is forced to `stack` where possible.
-private var supportedNavigationViewStyle: some NavigationViewStyle {
-  #if os(macOS)
-    .automatic
-  #else
-    .stack
-  #endif
-}

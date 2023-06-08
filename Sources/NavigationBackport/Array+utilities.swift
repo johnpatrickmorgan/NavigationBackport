@@ -3,7 +3,7 @@ import Foundation
 public extension Array where Element: RouteProtocol {
   /// Whether the Array of Routes is able to push new screens. If it is not possible to determine,
   /// `nil` will be returned, e.g. if there is no `NavigationView` in this routes stack but it's possible
-  /// it has been pushed onto a parent coordinator with a `NavigationView`.
+  /// a `NavigationView` has been added outside the FlowStack..
   var canPush: Bool? {
     for route in self.reversed() {
       switch route.style {

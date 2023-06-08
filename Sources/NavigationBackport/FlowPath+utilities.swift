@@ -4,26 +4,26 @@ public extension FlowPath {
   /// Pushes a new screen via a push navigation.
   /// - Parameter screen: The screen to push.
   mutating func push(_ screen: AnyHashable) {
-    elements.push(screen)
+    routes.push(screen)
   }
 
   /// Pops a given number of screens off the stack.
   /// - Parameter count: The number of screens to go back. Defaults to 1.
   mutating func pop(_ count: Int = 1) {
-    elements.pop(count)
+    routes.pop(count)
   }
 
   /// Pops to a given index in the array of screens. The resulting screen count
   /// will be index.
   /// - Parameter index: The index that should become top of the stack.
   mutating func popTo(index: Int) {
-    elements.popTo(index: index)
+    routes.popTo(index: index)
   }
 
   /// Pops to the root screen (index 0). The resulting screen count
   /// will be 1.
   mutating func popToRoot() {
-    elements.popToRoot()
+    routes.popToRoot()
   }
 
   /// Pops to the topmost (most recently pushed) screen in the stack
@@ -33,7 +33,7 @@ public extension FlowPath {
   /// - Returns: A `Bool` indicating whether a screen was found.
   @discardableResult
   mutating func popTo(where condition: (AnyHashable) -> Bool) -> Bool {
-    elements.popTo(where: { condition($0.screen) })
+    routes.popTo(where: { condition($0.screen) })
   }
 }
 
@@ -45,7 +45,7 @@ public extension FlowPath {
   /// - Returns: A `Bool` indicating whether a matching screen was found.
   @discardableResult
   mutating func popTo(_ screen: AnyHashable) -> Bool {
-    return elements.popTo(screen)
+    return routes.popTo(screen)
   }
 
   /// Pops to the topmost (most recently pushed) screen in the stack

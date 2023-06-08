@@ -52,7 +52,7 @@ private struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
       // Push via FlowLink
-      FlowLink(value: .sheet(Screen.numberList(NumberList(range: 0 ..< 10)), embedInNavigationView: true), label: { Text("Pick a number") })
+      FlowLink(value: Screen.numberList(NumberList(range: 0 ..< 10)), style: .sheet(embedInNavigationView: true), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push via Bool binding
@@ -75,7 +75,7 @@ private struct NumberListView: View {
   var body: some View {
     List {
       ForEach(numberList.range, id: \.self) { number in
-        FlowLink("\(number)", value: .sheet(Screen.number(number), embedInNavigationView: true))
+        FlowLink("\(number)", value: Screen.number(number), style: .sheet(embedInNavigationView: true))
       }
       Button("Go back", action: { navigator.goBack() })
     }.navigationTitle("List")
@@ -95,11 +95,13 @@ private struct NumberView: View {
         onDecrement: { number -= 1 }
       ).labelsHidden()
       FlowLink(
-        value: .push(Screen.number(number + 1)),
+        value: Screen.number(number + 1),
+        style: .push,
         label: { Text("Show next number") }
       )
       FlowLink(
-        value: .sheet(Screen.visualisation(.init(emoji: "🐑", count: number)), embedInNavigationView: false),
+        value: Screen.visualisation(.init(emoji: "🐑", count: number)),
+        style: .sheet(embedInNavigationView: false),
         label: { Text("Visualise with sheep") }
       )
       Button("Go back to root", action: { navigator.goBackToRoot() })

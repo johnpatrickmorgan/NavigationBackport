@@ -6,10 +6,25 @@ struct ShowModifier<Destination: View>: ViewModifier {
   var destination: Destination
 
   func body(content: Content) -> some View {
-    content
-      .push(isActive: routeStyle?.isPush == true ? isActiveBinding : .constant(false), destination: destination)
-      .sheet(isActive: routeStyle?.isSheet == true ? isActiveBinding : .constant(false), destination: destination)
-      .cover(isActive: routeStyle?.isCover == true ? isActiveBinding : .constant(false), destination: destination)
+    /// NOTE: On iOS 14.4 and below, a bug prevented multiple sheet/fullScreenCover modifiers being chained
+    /// on the same view, so we conditionally add the sheet/cover modifiers as a workaround. See
+    /// https://developer.apple.com/documentation/ios-ipados-release-notes/ios-ipados-14_5-release-notes
+    if #available(iOS 14.5, *) {
+      content
+        .push(isActive: routeStyle?.isPush == true ? isActiveBinding : .constant(false), destination: destination)
+        .sheet(isActive: routeStyle?.isSheet == true ? isActiveBinding : .constant(false), destination: destination)
+        .cover(isActive: routeStyle?.isCover == true ? isActiveBinding : .constant(false), destination: destination)
+    } else {
+      if routeStyle?.isSheet == true {
+        content
+          .push(isActive: routeStyle?.isPush == true ? isActiveBinding : .constant(false), destination: destination)
+          .sheet(isActive: routeStyle?.isSheet == true ? isActiveBinding : .constant(false), destination: destination)
+      } else {
+        content
+          .push(isActive: routeStyle?.isPush == true ? isActiveBinding : .constant(false), destination: destination)
+          .cover(isActive: routeStyle?.isCover == true ? isActiveBinding : .constant(false), destination: destination)
+      }
+    }
   }
 }
 
