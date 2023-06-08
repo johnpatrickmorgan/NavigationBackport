@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Embeds a view in a NavigationView or NavigationStack.
 struct EmbedModifier: ViewModifier {
-  var embedInNavigationView: Bool
+  var withNavigation: Bool
   @Environment(\.useNavigationStack) var useNavigationStack
 
   func wrapped(content: Content) -> some View {
@@ -17,7 +17,7 @@ struct EmbedModifier: ViewModifier {
   }
 
   func body(content: Content) -> some View {
-    if embedInNavigationView {
+    if withNavigation {
       wrapped(content: content)
     } else {
       content

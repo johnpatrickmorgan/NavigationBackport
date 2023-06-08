@@ -10,7 +10,7 @@ struct SheetModifier<Destination: View>: ViewModifier {
         isPresented: isActiveBinding,
         onDismiss: nil,
         content: {
-          destination // TODO: .environmentObject(Navigator<Screen>(allRoutes))
+          destination
         }
       )
   }

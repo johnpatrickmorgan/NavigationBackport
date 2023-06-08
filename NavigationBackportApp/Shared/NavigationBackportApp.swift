@@ -11,7 +11,7 @@ struct NavigationBackportApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
-        .nbUseNavigationStack(navigationStackPolicy)
+        .useNavigationStack(navigationStackPolicy)
     }
   }
 }

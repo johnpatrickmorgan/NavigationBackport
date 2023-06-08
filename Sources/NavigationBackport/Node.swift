@@ -40,7 +40,7 @@ struct Node<Screen>: View {
     if let route = allRoutes[safe: index] ?? route {
       DestinationBuilderView(data: route.screen)
         .show(isActive: isActiveBinding, routeStyle: nextRouteStyle, destination: next)
-        .modifier(EmbedModifier(embedInNavigationView: route.embedInNavigationView))
+        .modifier(EmbedModifier(withNavigation: route.withNavigation))
         .onAppear { isAppeared = true }
         .onDisappear { isAppeared = false }
     }

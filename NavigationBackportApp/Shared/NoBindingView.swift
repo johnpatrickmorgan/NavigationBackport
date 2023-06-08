@@ -3,7 +3,7 @@ import SwiftUI
 
 struct NoBindingView: View {
   var body: some View {
-    FlowStack(embedInNavigationView: true) {
+    FlowStack(withNavigation: true) {
       HomeView()
         .flowDestination(for: NumberList.self, destination: { numberList in
           NumberListView(numberList: numberList)
@@ -28,7 +28,7 @@ private struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
       // Push via link
-      FlowLink(value: NumberList(range: 0 ..< 10), style: .sheet(embedInNavigationView: true), label: { Text("Pick a number") })
+      FlowLink(value: NumberList(range: 0 ..< 10), style: .sheet(withNavigation: true), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push child class via navigator
@@ -83,7 +83,7 @@ private struct NumberView: View {
       )
       FlowLink(
         value: EmojiVisualisation(emoji: "🐑", count: number),
-        style: .sheet(embedInNavigationView: false),
+        style: .sheet(withNavigation: false),
         label: { Text("Visualise with sheep") }
       )
       Button("Go back to root") {

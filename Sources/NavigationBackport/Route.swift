@@ -9,14 +9,14 @@ public enum Route<Screen> {
   
   /// A sheet presentation.
   /// - Parameter screen: the screen to be shown.
-  /// - Parameter embedInNavigationView: whether the presented screen should be embedded in a `NavigationView`.
-  case sheet(Screen, embedInNavigationView: Bool)
+  /// - Parameter withNavigation: whether the presented screen should be embedded in a `NavigationView`.
+  case sheet(Screen, withNavigation: Bool)
   
   /// A full-screen cover presentation.
   /// - Parameter screen: the screen to be shown.
-  /// - Parameter embedInNavigationView: whether the presented screen should be embedded in a `NavigationView`.
+  /// - Parameter withNavigation: whether the presented screen should be embedded in a `NavigationView`.
   @available(OSX, unavailable, message: "Not available on OS X.")
-  case cover(Screen, embedInNavigationView: Bool)
+  case cover(Screen, withNavigation: Bool)
   
   /// The screen to be shown.
   public var screen: Screen {
@@ -30,24 +30,24 @@ public enum Route<Screen> {
       switch self {
       case .push:
         self = .push(newValue)
-      case .sheet(_, let embedInNavigationView):
-        self = .sheet(newValue, embedInNavigationView: embedInNavigationView)
+      case .sheet(_, let withNavigation):
+        self = .sheet(newValue, withNavigation: withNavigation)
         #if os(macOS)
         #else
-        case .cover(_, let embedInNavigationView):
-          self = .cover(newValue, embedInNavigationView: embedInNavigationView)
+        case .cover(_, let withNavigation):
+          self = .cover(newValue, withNavigation: withNavigation)
       #endif
       }
     }
   }
   
   /// Whether the presented screen should be embedded in a `NavigationView`.
-  public var embedInNavigationView: Bool {
+  public var withNavigation: Bool {
     switch self {
     case .push:
       return false
-    case .sheet(_, let embedInNavigationView), .cover(_, let embedInNavigationView):
-      return embedInNavigationView
+    case .sheet(_, let withNavigation), .cover(_, let withNavigation):
+      return withNavigation
     }
   }
   
@@ -65,12 +65,12 @@ public enum Route<Screen> {
     switch self {
     case .push:
       return .push(transform(screen))
-    case .sheet(_, let embedInNavigationView):
-      return .sheet(transform(screen), embedInNavigationView: embedInNavigationView)
+    case .sheet(_, let withNavigation):
+      return .sheet(transform(screen), withNavigation: withNavigation)
 #if os(macOS)
 #else
-    case .cover(_, let embedInNavigationView):
-      return .cover(transform(screen), embedInNavigationView: embedInNavigationView)
+    case .cover(_, let withNavigation):
+      return .cover(transform(screen), withNavigation: withNavigation)
 #endif
     }
   }

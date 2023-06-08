@@ -3,7 +3,7 @@ import Foundation
 /// The style with which a route is shown, i.e., if the route is pushed, presented
 /// as a sheet or presented as a full-screen cover.
 public enum RouteStyle: Hashable, Codable {
-  case push, sheet(embedInNavigationView: Bool), cover(embedInNavigationView: Bool)
+  case push, sheet(withNavigation: Bool), cover(withNavigation: Bool)
 
   public var isSheet: Bool {
     switch self {
@@ -40,10 +40,10 @@ public extension Route {
     switch self {
     case .push:
       return .push
-    case .sheet(_, let embedInNavigationView):
-      return .sheet(embedInNavigationView: embedInNavigationView)
-    case .cover(_, let embedInNavigationView):
-      return .cover(embedInNavigationView: embedInNavigationView)
+    case .sheet(_, let withNavigation):
+      return .sheet(withNavigation: withNavigation)
+    case .cover(_, let withNavigation):
+      return .cover(withNavigation: withNavigation)
     }
   }
 
@@ -51,10 +51,10 @@ public extension Route {
     switch style {
     case .push:
       self = .push(screen)
-    case .sheet(let embedInNavigationView):
-      self = .sheet(screen, embedInNavigationView: embedInNavigationView)
-    case .cover(let embedInNavigationView):
-      self = .cover(screen, embedInNavigationView: embedInNavigationView)
+    case .sheet(let withNavigation):
+      self = .sheet(screen, withNavigation: withNavigation)
+    case .cover(let withNavigation):
+      self = .cover(screen, withNavigation: withNavigation)
     }
   }
 }

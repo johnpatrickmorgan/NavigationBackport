@@ -3,7 +3,7 @@ import SwiftUI
 
 /// A view that manages state for presenting and pushing screens..
 public struct FlowStack<Root: View, Data: Hashable>: View {
-  var embedInNavigationView: Bool
+  var withNavigation: Bool
   @Binding var externalTypedPath: [Route<Data>]
   @State var internalTypedPath: [Route<Data>] = []
   @StateObject var path = RoutesHolder()
@@ -17,7 +17,7 @@ public struct FlowStack<Root: View, Data: Hashable>: View {
       path?.routes.append(newElement)
     }
     return Router(rootView: root, screens: $path.routes)
-      .modifier(EmbedModifier(embedInNavigationView: embedInNavigationView))
+      .modifier(EmbedModifier(withNavigation: withNavigation))
       .environmentObject(path)
       .environmentObject(routeAppender)
       .environmentObject(destinationBuilder)
@@ -66,26 +66,26 @@ public struct FlowStack<Root: View, Data: Hashable>: View {
       }
   }
 
-  public init(_ routes: Binding<[Route<Data>]>?, embedInNavigationView: Bool, @ViewBuilder root: () -> Root) {
+  public init(_ routes: Binding<[Route<Data>]>?, withNavigation: Bool, @ViewBuilder root: () -> Root) {
     _externalTypedPath = routes ?? .constant([])
     self.root = root()
-    self.embedInNavigationView = embedInNavigationView
+    self.withNavigation = withNavigation
     useInternalTypedPath = routes == nil
   }
 }
 
 public extension FlowStack where Data == AnyHashable {
-  init(embedInNavigationView: Bool, @ViewBuilder root: () -> Root) {
-    self.init(nil, embedInNavigationView: embedInNavigationView, root: root)
+  init(withNavigation: Bool, @ViewBuilder root: () -> Root) {
+    self.init(nil, withNavigation: withNavigation, root: root)
   }
 }
 
 public extension FlowStack where Data == AnyHashable {
-  init(_ path: Binding<FlowPath>, embedInNavigationView: Bool, @ViewBuilder root: () -> Root) {
+  init(_ path: Binding<FlowPath>, withNavigation: Bool, @ViewBuilder root: () -> Root) {
     let path = Binding(
       get: { path.wrappedValue.routes },
       set: { path.wrappedValue.routes = $0 }
     )
-    self.init(path, embedInNavigationView: embedInNavigationView, root: root)
+    self.init(path, withNavigation: withNavigation, root: root)
   }
 }

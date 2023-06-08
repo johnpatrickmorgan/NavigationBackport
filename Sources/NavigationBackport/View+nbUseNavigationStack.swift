@@ -6,7 +6,7 @@ public extension View {
   /// will be used on all versions, even when the API is available.
   /// - Parameter policy: The policy to use
   /// - Returns: A view with the policy set for all child views via a private environment value.
-  func nbUseNavigationStack(_ policy: UseNavigationStackPolicy) -> some View {
+  func useNavigationStack(_ policy: UseNavigationStackPolicy) -> some View {
     environment(\.useNavigationStack, policy)
   }
 }

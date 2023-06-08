@@ -19,7 +19,7 @@ struct ArrayBindingView: View {
         Button("Restore", action: restoreRoutes)
           .disabled(savedRoutes == nil)
       }
-      FlowStack($routes, embedInNavigationView: true) {
+      FlowStack($routes, withNavigation: true) {
         HomeView()
           .flowDestination(for: Screen.self, destination: { screen in
             switch screen {
@@ -52,7 +52,7 @@ private struct HomeView: View {
   var body: some View {
     VStack(spacing: 8) {
       // Push via FlowLink
-      FlowLink(value: Screen.numberList(NumberList(range: 0 ..< 10)), style: .sheet(embedInNavigationView: true), label: { Text("Pick a number") })
+      FlowLink(value: Screen.numberList(NumberList(range: 0 ..< 10)), style: .sheet(withNavigation: true), label: { Text("Pick a number") })
       // Push via navigator
       Button("99 Red balloons", action: show99RedBalloons)
       // Push via Bool binding
@@ -75,7 +75,7 @@ private struct NumberListView: View {
   var body: some View {
     List {
       ForEach(numberList.range, id: \.self) { number in
-        FlowLink("\(number)", value: Screen.number(number), style: .sheet(embedInNavigationView: true))
+        FlowLink("\(number)", value: Screen.number(number), style: .sheet(withNavigation: true))
       }
       Button("Go back", action: { navigator.goBack() })
     }.navigationTitle("List")
@@ -101,7 +101,7 @@ private struct NumberView: View {
       )
       FlowLink(
         value: Screen.visualisation(.init(emoji: "🐑", count: number)),
-        style: .sheet(embedInNavigationView: false),
+        style: .sheet(withNavigation: false),
         label: { Text("Visualise with sheep") }
       )
       Button("Go back to root", action: { navigator.goBackToRoot() })
