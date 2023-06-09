@@ -4,6 +4,10 @@ import Foundation
 /// as a sheet or presented as a full-screen cover.
 public enum RouteStyle: Hashable, Codable {
   case push, sheet(withNavigation: Bool), cover(withNavigation: Bool)
+  
+  public static var sheet = RouteStyle.sheet(withNavigation: false)
+  
+  public static var cover = RouteStyle.cover(withNavigation: false)
 
   public var isSheet: Bool {
     switch self {

@@ -28,7 +28,7 @@ struct LocalDestinationBuilderModifier: ViewModifier {
 
   @StateObject var destinationID = LocalDestinationIDHolder()
   @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
-  @EnvironmentObject var pathHolder: RoutesHolder
+  @EnvironmentObject var routesHolder: RoutesHolder
 
   func body(content: Content) -> some View {
     destinationBuilder.appendLocalBuilder(identifier: destinationID.id, builder)
@@ -36,20 +36,20 @@ struct LocalDestinationBuilderModifier: ViewModifier {
 
     return content
       .environmentObject(destinationBuilder)
-      .onChange(of: pathHolder.routes) { _ in
+      .onChange(of: routesHolder.routes) { _ in
         if isPresented.wrappedValue {
-          if !pathHolder.routes.contains(where: { ($0.screen as? LocalDestinationID) == destinationID.id }) {
+          if !routesHolder.routes.contains(where: { ($0.screen as? LocalDestinationID) == destinationID.id }) {
             isPresented.wrappedValue = false
           }
         }
       }
       .onChange(of: isPresented.wrappedValue) { isPresented in
         if isPresented {
-          pathHolder.routes.append(Route(screen: destinationID.id, style: routeStyle))
+          routesHolder.routes.append(Route(screen: destinationID.id, style: routeStyle))
         } else {
-          let index = pathHolder.routes.lastIndex(where: { ($0.screen as? LocalDestinationID) == destinationID.id })
+          let index = routesHolder.routes.lastIndex(where: { ($0.screen as? LocalDestinationID) == destinationID.id })
           if let index {
-            pathHolder.routes.remove(at: index)
+            routesHolder.routes.remove(at: index)
           }
         }
       }

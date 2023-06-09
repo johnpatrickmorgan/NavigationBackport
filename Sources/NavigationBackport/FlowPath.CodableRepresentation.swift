@@ -1,7 +1,7 @@
 import Foundation
 
 public extension FlowPath {
-  /// A codable representation of a navigation path.
+  /// A codable representation of a FlowPath.
   struct CodableRepresentation {
     static let encoder = JSONEncoder()
     static let decoder = JSONDecoder()

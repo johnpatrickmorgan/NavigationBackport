@@ -6,10 +6,10 @@ public struct FlowPath: Equatable {
   /// The routes array for the FlowPath.
   public var routes: [Route<AnyHashable>]
 
-  /// The number of screens in the path.
+  /// The number of routes in the path.
   public var count: Int { routes.count }
 
-  /// WHether the path is empty.
+  /// Whether the path is empty.
   public var isEmpty: Bool { routes.isEmpty }
 
   public init(_ routes: [Route<AnyHashable>] = []) {

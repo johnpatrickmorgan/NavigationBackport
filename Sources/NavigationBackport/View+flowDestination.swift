@@ -2,16 +2,16 @@ import Foundation
 import SwiftUI
 
 public extension View {
-  func flowDestination<D: Hashable, C: View>(for pathElementType: D.Type, @ViewBuilder destination builder: @escaping (D) -> C) -> some View {
+  func flowDestination<D: Hashable, C: View>(for dataType: D.Type, @ViewBuilder destination builder: @escaping (D) -> C) -> some View {
     return modifier(DestinationBuilderModifier(typedDestinationBuilder: { AnyView(builder($0)) }))
   }
 }
 
 public extension View {
-  /// Associates a destination view with a binding that can be used to push
-  /// the view onto a ``FlowStack``.
+  /// Associates a destination view with a binding that can be used to show
+  /// the view within a ``FlowStack``.
   ///
-  /// In general, favor binding a path to a navigation stack for programmatic
+  /// In general, favor binding a path to a flow stack for programmatic
   /// navigation. Add this view modifer to a view inside a ``FlowStack``
   /// to programmatically push a single view onto the stack. This is useful
   /// for building components that can push an associated view. For example,
@@ -28,7 +28,7 @@ public extension View {
   ///                 showDetails = true
   ///             }
   ///         }
-  ///         .flowDestination(isPresented: $showDetails) {
+  ///         .flowDestination(isPresented: $showDetails, style: .sheet) {
   ///             ColorDetail(color: favoriteColor)
   ///         }
   ///         .nbNavigationTitle("My Favorite Color")

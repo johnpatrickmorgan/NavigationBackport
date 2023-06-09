@@ -101,7 +101,7 @@ private struct NumberView: View {
       )
       FlowLink(
         value: Screen.visualisation(.init(emoji: "🐑", count: number)),
-        style: .sheet(withNavigation: false),
+        style: .sheet,
         label: { Text("Visualise with sheep") }
       )
       Button("Go back to root", action: { navigator.goBackToRoot() })

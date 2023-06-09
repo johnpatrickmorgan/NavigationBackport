@@ -23,7 +23,7 @@ As well as replicating the standard features of the new `NavigationStack` APIs, 
 
 ### FlowNavigator
 
-A `FlowNavigator` object is available through the environment, giving access to the current navigation path. The navigator can be accessed via the environment, e.g. for a FlowPath-backed stack:
+A `FlowNavigator` object is available through the environment, giving access to the current routes array. The navigator can be accessed via the environment, e.g. for a FlowPath-backed stack:
 
 ```swift
 @EnvironmentObject var navigator: FlowPathNavigator
@@ -52,7 +52,7 @@ Whether interacting with an `Array`, a `FlowPath`, or a `FlowNavigator`, a numbe
 
 ### Deep-linking
  
- Before `NavigationStack`, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation hierarchy. `NavigationBackport` works around this limitation: you can make any such path changes, and the library will, behind the scenes, break down the larger update into a series of smaller updates that SwiftUI supports if necessary, with delays in between. For example, the following code that pushes three screens in one state update will push the screens one by one:
+ Before `NavigationStack`, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation hierarchy. `FlowStacks` works around this limitation: you can make any such changes, and the library will, behind the scenes, break down the larger update into a series of smaller updates that SwiftUI supports if necessary, with delays in between. For example, the following code that pushes three screens in one state update will successfully push the screens one by one:
 
 ```swift
   navigator.push(.orders)
