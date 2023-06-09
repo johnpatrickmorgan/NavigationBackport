@@ -1,5 +1,7 @@
 import Foundation
 
+public typealias Routes<T> = [Route<T>]
+
 /// A step in the navigation flow of an app, encompassing a Screen and how it should be shown,
 /// e.g. via a push navigation, a sheet or a full-screen cover.
 public enum Route<Screen> {

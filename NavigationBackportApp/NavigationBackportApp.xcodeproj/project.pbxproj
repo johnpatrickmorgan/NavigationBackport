@@ -21,6 +21,10 @@
 		529673D4286BC48600C01BCF /* NoBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D3286BC48600C01BCF /* NoBindingView.swift */; };
 		529673D5286BC48600C01BCF /* NoBindingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 529673D3286BC48600C01BCF /* NoBindingView.swift */; };
 		52B3F1622A01BE4200EC5EA9 /* NavigationBackportUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B3F1612A01BE4200EC5EA9 /* NavigationBackportUITests.swift */; };
+		52D2A6682A339D3C00714C94 /* NumberVMFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D2A6672A339D3C00714C94 /* NumberVMFlow.swift */; };
+		52D2A6692A339D3C00714C94 /* NumberVMFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D2A6672A339D3C00714C94 /* NumberVMFlow.swift */; };
+		52D2A66B2A33CC1800714C94 /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D2A66A2A33CC1700714C94 /* Deeplink.swift */; };
+		52D2A66C2A33CC1800714C94 /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D2A66A2A33CC1700714C94 /* Deeplink.swift */; };
 		52DD85F82895C984004B5344 /* NavigationBackport in Frameworks */ = {isa = PBXBuildFile; productRef = 52DD85F72895C984004B5344 /* NavigationBackport */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +51,8 @@
 		529673D3286BC48600C01BCF /* NoBindingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoBindingView.swift; sourceTree = "<group>"; };
 		52B3F15F2A01BE4200EC5EA9 /* NavigationBackportUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NavigationBackportUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B3F1612A01BE4200EC5EA9 /* NavigationBackportUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBackportUITests.swift; sourceTree = "<group>"; };
+		52D2A6672A339D3C00714C94 /* NumberVMFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberVMFlow.swift; sourceTree = "<group>"; };
+		52D2A66A2A33CC1700714C94 /* Deeplink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deeplink.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,11 +97,13 @@
 		52925EAE28549A60001B9190 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				52D2A66A2A33CC1700714C94 /* Deeplink.swift */,
 				52925EAF28549A60001B9190 /* NavigationBackportApp.swift */,
 				529673D0286BB50200C01BCF /* ArrayBindingView.swift */,
 				52925EB028549A60001B9190 /* ContentView.swift */,
 				529673D3286BC48600C01BCF /* NoBindingView.swift */,
 				529673CD286BB44400C01BCF /* FlowPathView.swift */,
+				52D2A6672A339D3C00714C94 /* NumberVMFlow.swift */,
 				52925EB128549A62001B9190 /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -280,6 +288,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				529673CE286BB44400C01BCF /* FlowPathView.swift in Sources */,
+				52D2A6682A339D3C00714C94 /* NumberVMFlow.swift in Sources */,
+				52D2A66B2A33CC1800714C94 /* Deeplink.swift in Sources */,
 				529673D1286BB50200C01BCF /* ArrayBindingView.swift in Sources */,
 				529673D4286BC48600C01BCF /* NoBindingView.swift in Sources */,
 				52925EC128549A62001B9190 /* ContentView.swift in Sources */,
@@ -292,6 +302,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				529673CF286BB44400C01BCF /* FlowPathView.swift in Sources */,
+				52D2A6692A339D3C00714C94 /* NumberVMFlow.swift in Sources */,
+				52D2A66C2A33CC1800714C94 /* Deeplink.swift in Sources */,
 				529673D2286BB50200C01BCF /* ArrayBindingView.swift in Sources */,
 				529673D5286BC48600C01BCF /* NoBindingView.swift in Sources */,
 				52925EC228549A62001B9190 /* ContentView.swift in Sources */,
