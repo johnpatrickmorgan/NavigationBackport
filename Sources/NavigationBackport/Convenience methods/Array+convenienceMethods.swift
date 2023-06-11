@@ -77,7 +77,7 @@ public extension Array where Element: RouteProtocol {
 
   /// Goes back to the root screen (index 0). The resulting array's count will be 0.
   mutating func goBackToRoot() {
-    guard count > 1 else { return }
+    guard !isEmpty else { return }
     goBackTo(index: 0)
   }
 

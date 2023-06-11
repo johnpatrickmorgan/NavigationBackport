@@ -106,12 +106,10 @@ struct NumberVMView: View {
       }
       if !navigator.routes.isEmpty {
         Button("Go back", action: { navigator.goBack() })
+        Button("Go back to root", action: {
+          navigator.goBackToRoot()
+        })
       }
-      Button("Go back to root", action: {
-        navigator.withDelaysIfUnsupported {
-          $0.goBackToRoot()
-        }
-      })
     }
     .padding()
     .navigationTitle("\(viewModel.number)")
