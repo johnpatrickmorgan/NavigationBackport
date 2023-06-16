@@ -73,6 +73,10 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
+            argument = "NON_EMPTY_AT_LAUNCH"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "USE_NAVIGATIONSTACK"
             isEnabled = "YES">
          </CommandLineArgument>

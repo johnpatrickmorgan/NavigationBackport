@@ -6,14 +6,14 @@ import SwiftUI
 public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @Binding var externalTypedPath: [Data]
   @State var internalTypedPath: [Data] = []
-  @StateObject var path = NavigationPathHolder()
+  @StateObject var path: NavigationPathHolder
   @StateObject var pathAppender = PathAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   @Environment(\.useNavigationStack) var useNavigationStack
   var root: Root
   var useInternalTypedPath: Bool
 
-  var requiresDelays: Bool {
+  var isUsingNavigationStack: Bool {
     if #available(iOS 16.0, *), useNavigationStack == .whenAvailable {
       return false
     } else {
@@ -53,16 +53,19 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   public var body: some View {
     content
       .onFirstAppear {
-        guard requiresDelays else {
-          path.path = externalTypedPath
+        guard isUsingNavigationStack else {
+          // Path should already be correct thanks to initialiser.
           return
         }
+        // For NavigationView, only initialising with one pushed screen is supported.
+        // Any others will be pushed one after another with delays.
+        path.path = Array(path.path.prefix(1))
         path.withDelaysIfUnsupported(\.path) {
           $0 = externalTypedPath
         }
       }
       .onChange(of: externalTypedPath) { externalTypedPath in
-        guard requiresDelays else {
+        guard isUsingNavigationStack else {
           path.path = externalTypedPath
           return
         }
@@ -71,7 +74,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         }
       }
       .onChange(of: internalTypedPath) { internalTypedPath in
-        guard requiresDelays else {
+        guard isUsingNavigationStack else {
           path.path = internalTypedPath
           return
         }
@@ -107,6 +110,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {
     _externalTypedPath = path ?? .constant([])
     self.root = root()
+    _path = StateObject(wrappedValue: NavigationPathHolder(path: path?.wrappedValue ?? []))
     useInternalTypedPath = path == nil
   }
 }
