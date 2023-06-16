@@ -1,5 +1,7 @@
 import XCTest
 
+let navigationTimeout = 0.8
+
 final class NavigationBackportUITests: XCTestCase {
   override func setUpWithError() throws {
     continueAfterFailure = false
@@ -25,8 +27,36 @@ final class NavigationBackportUITests: XCTestCase {
     launchAndRunNavigationTests(tabTitle: "ArrayBinding", useNavigationStack: true, app: XCUIApplication())
   }
 
-  func testNavigationViaNoneWithNavigationStack() {
-    launchAndRunNavigationTests(tabTitle: "NoBinding", useNavigationStack: true, app: XCUIApplication())
+  func testInitialisationViaArrayWithNavigationStack() {
+    launchAndRunInitialisationTests(tabTitle: "ArrayBinding", useNavigationStack: true, app: XCUIApplication())
+  }
+
+  func testInitialisationViaPathWithNavigationStack() {
+    launchAndRunInitialisationTests(tabTitle: "NBNavigationPath", useNavigationStack: true, app: XCUIApplication())
+  }
+
+  func launchAndRunInitialisationTests(tabTitle: String, useNavigationStack: Bool, app: XCUIApplication) {
+    app.launchArguments = ["NON_EMPTY_AT_LAUNCH"]
+    if useNavigationStack {
+      app.launchArguments.append("USE_NAVIGATIONSTACK")
+    }
+    app.launch()
+
+    XCTAssertTrue(app.tabBars.buttons[tabTitle].waitForExistence(timeout: 3))
+    app.tabBars.buttons[tabTitle].tap()
+    XCTAssertTrue(app.navigationBars["4"].waitForExistence(timeout: navigationTimeout))
+
+    app.navigationBars.buttons.element(boundBy: 0).tap()
+    XCTAssertTrue(app.navigationBars["3"].waitForExistence(timeout: navigationTimeout))
+
+    app.navigationBars.buttons.element(boundBy: 0).tap()
+    XCTAssertTrue(app.navigationBars["2"].waitForExistence(timeout: navigationTimeout))
+
+    app.navigationBars.buttons.element(boundBy: 0).tap()
+    XCTAssertTrue(app.navigationBars["1"].waitForExistence(timeout: navigationTimeout))
+
+    app.navigationBars.buttons.element(boundBy: 0).tap()
+    XCTAssertTrue(app.navigationBars["Home"].waitForExistence(timeout: navigationTimeout))
   }
 
   func launchAndRunNavigationTests(tabTitle: String, useNavigationStack: Bool, app: XCUIApplication) {
@@ -34,8 +64,6 @@ final class NavigationBackportUITests: XCTestCase {
       app.launchArguments = ["USE_NAVIGATIONSTACK"]
     }
     app.launch()
-
-    let navigationTimeout = 0.8
 
     XCTAssertTrue(app.tabBars.buttons[tabTitle].waitForExistence(timeout: 3))
     app.tabBars.buttons[tabTitle].tap()
