@@ -32,11 +32,11 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
             .navigationDestination(for: AnyHashable.self, destination: { destinationBuilder.build($0) })
             .navigationDestination(for: LocalDestinationID.self, destination: { destinationBuilder.build($0) })
         }
-          .environment(\.isWithinNavigationStack, true)
-          .environmentObject(path)
-          .environmentObject(pathAppender)
-          .environmentObject(destinationBuilder)
-          .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
+        .environment(\.isWithinNavigationStack, true)
+        .environmentObject(path)
+        .environmentObject(pathAppender)
+        .environmentObject(destinationBuilder)
+        .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
       )
     }
     return AnyView(
