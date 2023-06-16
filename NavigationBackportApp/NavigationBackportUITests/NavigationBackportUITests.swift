@@ -44,19 +44,22 @@ final class NavigationBackportUITests: XCTestCase {
 
     XCTAssertTrue(app.tabBars.buttons[tabTitle].waitForExistence(timeout: 3))
     app.tabBars.buttons[tabTitle].tap()
-    XCTAssertTrue(app.navigationBars["4"].waitForExistence(timeout: navigationTimeout))
 
-    app.navigationBars.buttons.element(boundBy: 0).tap()
-    XCTAssertTrue(app.navigationBars["3"].waitForExistence(timeout: navigationTimeout))
+    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 14.0, *) {
+      XCTAssertTrue(app.navigationBars["4"].waitForExistence(timeout: navigationTimeout))
 
-    app.navigationBars.buttons.element(boundBy: 0).tap()
-    XCTAssertTrue(app.navigationBars["2"].waitForExistence(timeout: navigationTimeout))
+      app.navigationBars.buttons.element(boundBy: 0).tap()
+      XCTAssertTrue(app.navigationBars["3"].waitForExistence(timeout: navigationTimeout))
 
-    app.navigationBars.buttons.element(boundBy: 0).tap()
-    XCTAssertTrue(app.navigationBars["1"].waitForExistence(timeout: navigationTimeout))
+      app.navigationBars.buttons.element(boundBy: 0).tap()
+      XCTAssertTrue(app.navigationBars["2"].waitForExistence(timeout: navigationTimeout))
 
-    app.navigationBars.buttons.element(boundBy: 0).tap()
-    XCTAssertTrue(app.navigationBars["Home"].waitForExistence(timeout: navigationTimeout))
+      app.navigationBars.buttons.element(boundBy: 0).tap()
+      XCTAssertTrue(app.navigationBars["1"].waitForExistence(timeout: navigationTimeout))
+
+      app.navigationBars.buttons.element(boundBy: 0).tap()
+      XCTAssertTrue(app.navigationBars["Home"].waitForExistence(timeout: navigationTimeout))
+    }
   }
 
   func launchAndRunNavigationTests(tabTitle: String, useNavigationStack: Bool, app: XCUIApplication) {

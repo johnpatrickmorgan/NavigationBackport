@@ -13,8 +13,8 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   var root: Root
   var useInternalTypedPath: Bool
 
-  var isUsingNavigationStack: Bool {
-    if #available(iOS 16.0, *), useNavigationStack == .whenAvailable {
+  var isUsingNavigationView: Bool {
+    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 14.0, *), useNavigationStack == .whenAvailable {
       return false
     } else {
       return true
@@ -33,10 +33,6 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
             .navigationDestination(for: LocalDestinationID.self, destination: { destinationBuilder.build($0) })
         }
         .environment(\.isWithinNavigationStack, true)
-        .environmentObject(path)
-        .environmentObject(pathAppender)
-        .environmentObject(destinationBuilder)
-        .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
       )
     }
     return AnyView(
@@ -45,17 +41,17 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       }
       .navigationViewStyle(supportedNavigationViewStyle)
       .environment(\.isWithinNavigationStack, false)
-      .environmentObject(path)
-      .environmentObject(pathAppender)
-      .environmentObject(destinationBuilder)
-      .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
     )
   }
 
   public var body: some View {
     content
+      .environmentObject(path)
+      .environmentObject(pathAppender)
+      .environmentObject(destinationBuilder)
+      .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
       .onFirstAppear {
-        guard isUsingNavigationStack else {
+        guard isUsingNavigationView else {
           // Path should already be correct thanks to initialiser.
           return
         }
@@ -67,7 +63,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         }
       }
       .onChange(of: externalTypedPath) { externalTypedPath in
-        guard isUsingNavigationStack else {
+        guard isUsingNavigationView else {
           path.path = externalTypedPath
           return
         }
@@ -76,7 +72,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         }
       }
       .onChange(of: internalTypedPath) { internalTypedPath in
-        guard isUsingNavigationStack else {
+        guard isUsingNavigationView else {
           path.path = internalTypedPath
           return
         }
