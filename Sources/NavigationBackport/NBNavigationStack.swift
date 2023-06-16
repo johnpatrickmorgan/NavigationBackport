@@ -25,7 +25,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     pathAppender.append = { [weak path] newElement in
       path?.path.append(newElement)
     }
-    if #available(iOS 16.0, *), useNavigationStack == .whenAvailable {
+    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 14.0, *), useNavigationStack == .whenAvailable {
       return AnyView(
         NavigationStack(path: $path.path) {
           root
@@ -40,9 +40,11 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       )
     }
     return AnyView(
-      NavigationWrapper {
+      NavigationView {
         Router(rootView: root, screens: $path.path)
       }
+      .navigationViewStyle(supportedNavigationViewStyle)
+      .environment(\.isWithinNavigationStack, false)
       .environmentObject(path)
       .environmentObject(pathAppender)
       .environmentObject(destinationBuilder)
@@ -129,4 +131,12 @@ public extension NBNavigationStack where Data == AnyHashable {
     )
     self.init(path: path, root: root)
   }
+}
+
+var supportedNavigationViewStyle: some NavigationViewStyle {
+  #if os(macOS)
+    .automatic
+  #else
+    .stack
+  #endif
 }
