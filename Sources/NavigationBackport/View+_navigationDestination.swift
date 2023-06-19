@@ -6,7 +6,7 @@ struct NavigationLinkModifier<Destination: View>: ViewModifier {
   @Environment(\.isWithinNavigationStack) var isWithinNavigationStack
 
   func body(content: Content) -> some View {
-    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 14.0, *), isWithinNavigationStack {
+    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 16.0, *), isWithinNavigationStack {
       AnyView(
         content
           .navigationDestination(isPresented: $isActiveBinding, destination: { destination })

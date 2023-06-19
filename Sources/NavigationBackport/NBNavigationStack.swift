@@ -14,7 +14,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   var useInternalTypedPath: Bool
 
   var isUsingNavigationView: Bool {
-    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 14.0, *), useNavigationStack == .whenAvailable {
+    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 16.0, *), useNavigationStack == .whenAvailable {
       return false
     } else {
       return true
@@ -25,7 +25,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     pathAppender.append = { [weak path] newElement in
       path?.path.append(newElement)
     }
-    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 14.0, *), useNavigationStack == .whenAvailable {
+    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 16.0, *), useNavigationStack == .whenAvailable {
       return AnyView(
         NavigationStack(path: $path.path) {
           root

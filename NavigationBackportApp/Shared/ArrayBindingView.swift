@@ -87,11 +87,15 @@ private struct NumberView: View {
   var body: some View {
     VStack(spacing: 8) {
       Text("\(number)").font(.title)
-      Stepper(
-        label: { Text("\(number)") },
-        onIncrement: { number += 1 },
-        onDecrement: { number -= 1 }
-      ).labelsHidden()
+      #if os(tvOS)
+        Text("\(number)")
+      #else
+        Stepper(
+          label: { Text("\(number)") },
+          onIncrement: { number += 1 },
+          onDecrement: { number -= 1 }
+        ).labelsHidden()
+      #endif
       NBNavigationLink(
         value: Screen.number(number + 1),
         label: { Text("Show next number") }
