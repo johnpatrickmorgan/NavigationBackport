@@ -1,6 +1,9 @@
 import Foundation
 import SwiftUI
 
+/// The time it takes for a push or pop operation, during which time another push or pop operation would be problematic.
+let navigationDelay = 0.65
+
 public extension Binding where Value: Collection {
   /// Any changes can be made to the screens array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
@@ -97,7 +100,7 @@ extension Binding {
     }
     wrappedValue[keyPath: keyPath] = firstStep
     do {
-      try await Task.sleep(nanoseconds: UInt64(0.65 * 1_000_000_000))
+      try await Task.sleep(nanoseconds: UInt64(navigationDelay * 1_000_000_000))
       await scheduleRemainingSteps(steps: Array(steps.dropFirst()), keyPath: keyPath)
     } catch {}
   }
