@@ -26,19 +26,22 @@ private struct HomeView: View {
   @State var isPushing = false
 
   var body: some View {
-    VStack(spacing: 8) {
-      // Push via link
-      NBNavigationLink(value: NumberList(range: 0 ..< 10), label: { Text("Pick a number") })
-      // Push via navigator
-      Button("99 Red balloons", action: show99RedBalloons)
-      // Push child class via navigator
-      Button("Show Class Destination", action: showClassDestination)
-      // Push via Bool binding
-      Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
-    }.navigationTitle("Home")
-      .nbNavigationDestination(isPresented: $isPushing, destination: {
-        Text("Local destination")
-      })
+    ScrollView {
+      VStack(spacing: 8) {
+        // Push via link
+        NBNavigationLink(value: NumberList(range: 0 ..< 10), label: { Text("Pick a number") })
+        // Push via navigator
+        Button("99 Red balloons", action: show99RedBalloons)
+        // Push child class via navigator
+        Button("Show Class Destination", action: showClassDestination)
+        // Push via Bool binding
+        Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
+      }
+    }
+    .navigationTitle("Home")
+    .nbNavigationDestination(isPresented: $isPushing, destination: {
+      Text("Local destination")
+    })
   }
 
   func show99RedBalloons() {
@@ -67,29 +70,31 @@ private struct NumberView: View {
   @State var number: Int
 
   var body: some View {
-    VStack(spacing: 8) {
-      Text("\(number)").font(.title)
-      #if os(tvOS)
-        Text("\(number)")
-      #else
-        Stepper(
-          label: { Text("\(number)") },
-          onIncrement: { number += 1 },
-          onDecrement: { number -= 1 }
-        ).labelsHidden()
-      #endif
-      NBNavigationLink(
-        value: number + 1,
-        label: { Text("Show next number") }
-      )
-      NBNavigationLink(
-        value: EmojiVisualisation(emoji: "🐑", count: number),
-        label: { Text("Visualise with sheep") }
-      )
-      Button("Go back to root") {
-        navigator.popToRoot()
+    ScrollView {
+      VStack(spacing: 8) {
+        Text("\(number)").font(.title)
+        #if os(tvOS)
+        #else
+          Stepper(
+            label: { Text("\(number)") },
+            onIncrement: { number += 1 },
+            onDecrement: { number -= 1 }
+          ).labelsHidden()
+        #endif
+        NBNavigationLink(
+          value: number + 1,
+          label: { Text("Show next number") }
+        )
+        NBNavigationLink(
+          value: EmojiVisualisation(emoji: "🐑", count: number),
+          label: { Text("Visualise with sheep") }
+        )
+        Button("Go back to root") {
+          navigator.popToRoot()
+        }
       }
-    }.navigationTitle("\(number)")
+    }
+    .navigationTitle("\(number)")
   }
 }
 

@@ -45,7 +45,7 @@ final class NavigationBackportUITests: XCTestCase {
     XCTAssertTrue(app.tabBars.buttons[tabTitle].waitForExistence(timeout: 3))
     app.tabBars.buttons[tabTitle].tap()
 
-    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 7.0, *, tvOS 16.0, *) {
+    if #available(iOS 16.0, *, macOS 13.0, *, watchOS 9.0, *, tvOS 16.0, *) {
       XCTAssertTrue(app.navigationBars["4"].waitForExistence(timeout: navigationTimeout))
     } else {
       XCTAssertTrue(app.navigationBars["4"].waitForExistence(timeout: navigationTimeout * 4))
