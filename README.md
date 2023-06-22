@@ -1,6 +1,6 @@
 # Navigation Backport
 
-This package uses the navigation APIs available in older SwiftUI versions (such as `NavigationView` and `NavigationLink`) to recreate the new `NavigationStack` APIs introduced in WWDC22, so that you can start targeting those APIs on older versions of iOS, tvOS and watchOS. 
+This package uses the navigation APIs available in older SwiftUI versions (such as `NavigationView` and `NavigationLink`) to recreate the new `NavigationStack` APIs introduced in WWDC22, so that you can start targeting those APIs on older versions of iOS, tvOS, macOS and watchOS. When running on an OS version that supports `NavigationStack`, `NavigationStack` will be used under the hood.
  
 ✅ `NavigationStack` -> `NBNavigationStack`
 
@@ -13,7 +13,7 @@ This package uses the navigation APIs available in older SwiftUI versions (such 
 ✅ `NavigationPath.CodableRepresentation` -> `NBNavigationPath.CodableRepresentation`
 
 
-You can migrate to these APIs now, and when you eventually bump your deployment target to iOS 16, you can remove this library and easily migrate to its SwiftUI equivalent. `NavigationStack`'s full API is replicated, so you can initialise an `NBNavigationStack` with a binding to an `Array`, with a binding to a `NBNavigationPath` binding, or with no binding at all.
+You can migrate to these APIs now, and when you eventually bump your deployment target, you can remove this library and easily migrate to its SwiftUI equivalent. `NavigationStack`'s full API is replicated, so you can initialise an `NBNavigationStack` with a binding to an `Array`, with a binding to an `NBNavigationPath` binding, or with no binding at all.
 
 ## Example
 
@@ -34,7 +34,7 @@ struct ContentView: View {
           NumberListView(numberList: numberList)
         })
         .nbNavigationDestination(for: Int.self, destination: { number in
-          NumberView(number: number, goBackToRoot: { path.removeLast(path.count) })
+          NumberView(number: number)
         })
         .nbNavigationDestination(for: EmojiVisualisation.self, destination: { visualisation in
           EmojiView(visualisation: visualisation)
@@ -67,8 +67,9 @@ struct NumberListView: View {
 }
 
 struct NumberView: View {
+  @EnvironmentObject var navigator: PathNavigator
+  
   let number: Int
-  let goBackToRoot: () -> Void
 
   var body: some View {
     VStack(spacing: 8) {
@@ -81,7 +82,7 @@ struct NumberView: View {
         value: EmojiVisualisation(emoji: "🐑", count: number),
         label: { Text("Visualise with sheep") }
       )
-      Button("Go back to root", action: goBackToRoot)
+      Button("Go back to root", action: { navigator.popToRoot() })
     }.navigationTitle("\(number)")
   }
 }
@@ -125,6 +126,8 @@ Or for a stack backed by an Array, e.g. `[ScreenType]`:
 @EnvironmentObject var navigator: Navigator<ScreenType>
 ```
 
+As well as allowing you to inspect the path elements, the navigator can be used to push new screens, pop, pop to a specific screen or pop to the root.
+
 ### Navigation functions
 
 Whether interacting with an `Array`, an `NBNavigationPath`, or a `Navigator`, a number of utility functions are available for easier navigation, such as:
@@ -143,7 +146,7 @@ Note that, if you want to use these methods on an `Array`, ensure the `Array`'s 
 
 ## Deep-linking
  
- Before `NavigationStack`, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation hierarchy. `NavigationBackport` works around this limitation: you can make any such path changes, and the library will, behind the scenes, break down the larger update into a series of smaller updates that SwiftUI supports if necessary, with delays in between. For example, the following code that pushes three screens in one state update will push the screens one by one:
+ Before `NavigationStack`, SwiftUI did not support pushing more than one screen in a single state update, e.g. when deep-linking to a screen multiple layers deep in a navigation hierarchy. `NavigationBackport` works around this limitation: you can make any such path changes, and the library will, behind the scenes, break down the larger update into a series of smaller updates that SwiftUI supports if necessary, with delays in between. For example, the following code that pushes three screens in one state update will push the screens one by one if needed:
 
 ```swift
   path.append(Screen.orders)
@@ -151,17 +154,8 @@ Note that, if you want to use these methods on an `Array`, ensure the `Array`'s 
   path.append(Screen.confirmChanges(orderId: id))
 ```
 
+This only happens when necessary: on versions of SwiftUI that support `NavigationStack`, all three screens will be pushed successfully in one update.
+
 ## Support for iOS/tvOS 13
 
 This library targets iOS/tvOS versions 14 and above, since it uses `StateObject`, which is unavailable on iOS/tvOS 13. However, there is an `ios13` branch, which uses [SwiftUIBackports](https://github.com/shaps80/SwiftUIBackports)' backported StateObject, so that it works on iOS/tvOS 13 too.
-
-## Using NavigationStack when available
-
-By default, `NavigationView` is used under the hood, even on SwiftUI versions that support `NavigationStack`. If you prefer to use `NavigationStack` when available, apply the following modifier anywhere above the `NBNavigationStack`:
-
-```swift
-MyApp()
-  .nbUseNavigationStack(.whenAvailable)
-```
-
-It should not make any discernible difference, but you might find that using `NavigationStack` prevents some spurious warnings being logged by SwiftUI. 
