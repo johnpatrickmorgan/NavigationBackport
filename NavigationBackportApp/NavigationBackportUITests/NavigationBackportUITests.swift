@@ -63,6 +63,7 @@ final class NavigationBackportUITests: XCTestCase {
     if #available(iOS 16.0, *, macOS 13.0, *, watchOS 9.0, *, tvOS 16.0, *), useNavigationStack {
       XCTAssertTrue(app.navigationBars["4"].waitForExistence(timeout: navigationTimeout))
     } else {
+      // When not using a NavigationStack, each screen is pushed one by one.
       XCTAssertTrue(app.navigationBars["4"].waitForExistence(timeout: navigationTimeout * 4))
     }
 
