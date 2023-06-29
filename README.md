@@ -169,3 +169,75 @@ It should not make any discernible difference, but you might find that using `Na
 ## How does it work? 
 
 This [blog post](https://johnpatrickmorgan.github.io/2021/07/03/NStack/) outlines how an array of screens can be translated into a hierarchy of views and `NavigationLink`s. `FlowStacks` uses a similar approach to allow both push navigation and sheet/cover presentation.
+
+## Migrating from earlier versions
+
+Before its API was brought more in line with NavigationStack APIs, previous versions of FlowStacks had two major differences:
+
+- Previously the Router (now the `Flowstack`) handled both state management _and_ building destination views. the latter has now been decoupled into a separate function `flowDestination(...)`. This gives you more control over where you set up flow destinations, but for easy migration, you can keep them in the same place.
+- Previously the root screen was part of the routes array. The root screen is no longer part of the routes array, which might be awkward if your flow required you to swap out the root screen. In those cases, I imagine you will need to either:
+  - Have a root screen that conditionally shows one root or the other, OR
+  - Split the flow into two separate flows, each with its own FlowStack and a parent view that switches between them as needed.
+  
+Here's an example migration:
+
+<details>
+ <summary>Previous API</summary>
+
+```swift
+enum Screen {
+  case home
+  case numberList
+  case numberDetail(Int)
+}
+
+struct AppCoordinator: View {
+  @State var routes: Routes<Screen> = [.root(.home)]
+    
+  var body: some View {
+    Router($routes) { screen, _ in
+      switch screen {
+      case .home:
+        HomeView()
+      case .numberList:
+        NumberListView()
+      case .numberDetail(let number):
+        NumberDetailView(number: number)
+      }
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+ <summary>New API</summary>
+
+```swift
+enum Screen {
+  case numberList
+  case numberDetail(Int)
+}
+
+struct AppCoordinator: View {
+  @State var routes: [Route<Screen>] = []
+    
+  var body: some View {
+    FlowStack($routes) { 
+      HomeView()
+        .flowDestination(for: Screen.self) { screen in
+          switch screen {
+          case .numberList:
+            NumberListView()
+          case .numberDetail(let number):
+            NumberDetailView(number: number)
+        }
+    }
+  }
+}
+```
+
+</details>
+
+
