@@ -3,6 +3,7 @@ import SwiftUI
 
 struct Node<Screen>: View {
   @Binding var allScreens: [Screen]
+  @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
   let truncateToIndex: (Int) -> Void
   let index: Int
   let screen: Screen?
@@ -30,6 +31,7 @@ struct Node<Screen>: View {
 
   var next: some View {
     Node(allScreens: $allScreens, truncateToIndex: truncateToIndex, index: index + 1)
+      .environmentObject(destinationBuilder)
   }
 
   var body: some View {
