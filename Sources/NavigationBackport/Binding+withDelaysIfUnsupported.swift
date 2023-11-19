@@ -9,6 +9,7 @@ public extension Binding where Value: Collection {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @_disfavoredOverload
+  @MainActor
   func withDelaysIfUnsupported<Screen>(_ transform: (inout [Screen]) -> Void, onCompletion: (() -> Void)? = nil) where Value == [Screen] {
     let start = wrappedValue
     let end = apply(transform, to: start)
@@ -25,6 +26,7 @@ public extension Binding where Value: Collection {
   /// Any changes can be made to the screens array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
+  @MainActor
   func withDelaysIfUnsupported<Screen>(_ transform: (inout [Screen]) -> Void) async where Value == [Screen] {
     let start = wrappedValue
     let end = apply(transform, to: start)
@@ -49,6 +51,7 @@ public extension Binding where Value == NBNavigationPath {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @_disfavoredOverload
+  @MainActor
   func withDelaysIfUnsupported(_ transform: (inout NBNavigationPath) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = wrappedValue
     let end = apply(transform, to: start)
@@ -65,6 +68,7 @@ public extension Binding where Value == NBNavigationPath {
   /// Any changes can be made to the screens array passed to the transform closure. If those
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
+  @MainActor
   func withDelaysIfUnsupported(_ transform: (inout Value) -> Void) async {
     let start = wrappedValue
     let end = apply(transform, to: start)

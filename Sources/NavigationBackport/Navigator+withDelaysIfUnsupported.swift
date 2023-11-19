@@ -5,6 +5,7 @@ public extension Navigator {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @_disfavoredOverload
+  @MainActor
   func withDelaysIfUnsupported(transform: (inout [Screen]) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = path
     let end = apply(transform, to: start)
