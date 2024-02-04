@@ -7,6 +7,10 @@ struct Node<Screen>: View {
   let index: Int
   let route: Route<Screen>?
 
+  // NOTE: even though this object is unused, its inclusion avoids a glitch when swiping to dismiss
+  // a sheet that's been presented from a pushed screen.
+  @EnvironmentObject var navigator: FlowNavigator<Screen>
+
   @State var isAppeared = false
 
   init(allRoutes: Binding<[Route<Screen>]>, truncateToIndex: @escaping (Int) -> Void, index: Int) {
@@ -31,7 +35,7 @@ struct Node<Screen>: View {
   var next: some View {
     Node(allRoutes: $allRoutes, truncateToIndex: truncateToIndex, index: index + 1)
   }
-  
+
   var nextRouteStyle: RouteStyle? {
     allRoutes[safe: index + 1]?.style
   }
