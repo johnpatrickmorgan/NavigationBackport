@@ -44,7 +44,7 @@ final class NavigationBackportUITests: XCTestCase {
     app.buttons["Pick a number"].tap()
     XCTAssertTrue(app.navigationBars["List"].waitForExistence(timeout: navigationTimeout))
 
-    app.navigationBars["List"].swipeDown(velocity: .fast)
+    app.navigationBars["List"].swipeSheetDown()
     XCTAssertTrue(app.navigationBars["Home"].waitForExistence(timeout: navigationTimeout))
 
     app.buttons["99 Red balloons"].tap()
@@ -89,5 +89,13 @@ final class NavigationBackportUITests: XCTestCase {
       app.navigationBars.buttons.element(boundBy: 0).tap()
       XCTAssertTrue(app.navigationBars["Home"].waitForExistence(timeout: navigationTimeout))
     }
+  }
+}
+
+extension XCUIElement {
+  func swipeSheetDown() {
+    let start = coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.8))
+    let end = coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 15))
+    start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .fast, thenHoldForDuration: 0.0)
   }
 }
