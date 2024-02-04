@@ -5,6 +5,7 @@ public extension FlowNavigator {
   /// changes are not supported within a single update by SwiftUI, the changes will be
   /// applied in stages.
   @_disfavoredOverload
+  @MainActor
   func withDelaysIfUnsupported(transform: (inout [Route<Screen>]) -> Void, onCompletion: (() -> Void)? = nil) {
     let start = routes
     let end = apply(transform, to: start)
