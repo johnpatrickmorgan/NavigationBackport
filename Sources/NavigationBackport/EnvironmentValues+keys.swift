@@ -13,6 +13,14 @@ struct IsWithinNavigationStackKey: EnvironmentKey {
   static let defaultValue = false
 }
 
+enum FlowStackDataType {
+  case typedArray, flowPath
+}
+
+struct FlowStackDataTypeKey: EnvironmentKey {
+  static let defaultValue: FlowStackDataType? = nil
+}
+
 extension EnvironmentValues {
   var useNavigationStack: UseNavigationStackPolicy {
     get { self[UseNavigationStackPolicyKey.self] }
@@ -22,5 +30,10 @@ extension EnvironmentValues {
   var isWithinNavigationStack: Bool {
     get { self[IsWithinNavigationStackKey.self] }
     set { self[IsWithinNavigationStackKey.self] = newValue }
+  }
+
+  var flowStackDataType: FlowStackDataType? {
+    get { self[FlowStackDataTypeKey.self] }
+    set { self[FlowStackDataTypeKey.self] = newValue }
   }
 }

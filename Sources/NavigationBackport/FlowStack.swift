@@ -4,6 +4,8 @@ import SwiftUI
 /// A view that manages state for presenting and pushing screens..
 public struct FlowStack<Root: View, Data: Hashable>: View {
   var withNavigation: Bool
+  var dataType: FlowStackDataType
+  @Environment(\.flowStackDataType) var parentFlowStackDataType
   @Binding var externalTypedPath: [Route<Data>]
   @State var internalTypedPath: [Route<Data>] = []
   @StateObject var path = RoutesHolder()
@@ -11,6 +13,10 @@ public struct FlowStack<Root: View, Data: Hashable>: View {
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   var root: Root
   var useInternalTypedPath: Bool
+  
+  var deferToParentFlowStack: Bool {
+    parentFlowStackDataType == .flowPath && dataType == .flowPath
+  }
 
   var content: some View {
     routeAppender.append = { [weak path] newElement in
@@ -22,6 +28,7 @@ public struct FlowStack<Root: View, Data: Hashable>: View {
       .environmentObject(routeAppender)
       .environmentObject(destinationBuilder)
       .environmentObject(FlowNavigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
+      .environment(\.flowStackDataType, dataType)
   }
 
   public var body: some View {
@@ -66,30 +73,29 @@ public struct FlowStack<Root: View, Data: Hashable>: View {
       }
   }
 
-  init(routes: Binding<[Route<Data>]>?, withNavigation: Bool, @ViewBuilder root: () -> Root) {
+  init(routes: Binding<[Route<Data>]>?, withNavigation: Bool, dataType: FlowStackDataType, @ViewBuilder root: () -> Root) {
     _externalTypedPath = routes ?? .constant([])
     self.root = root()
     self.withNavigation = withNavigation
+    self.dataType = dataType
     useInternalTypedPath = routes == nil
   }
-  
+
   public init(_ routes: Binding<[Route<Data>]>, withNavigation: Bool, @ViewBuilder root: () -> Root) {
-    self.init(routes: routes, withNavigation: withNavigation, root: root)
+    self.init(routes: routes, withNavigation: withNavigation, dataType: .typedArray, root: root)
   }
 }
 
 public extension FlowStack where Data == AnyHashable {
   init(withNavigation: Bool, @ViewBuilder root: () -> Root) {
-    self.init(routes: nil, withNavigation: withNavigation, root: root)
+    self.init(routes: nil, withNavigation: withNavigation, dataType: .flowPath, root: root)
   }
-}
 
-public extension FlowStack where Data == AnyHashable {
   init(_ path: Binding<FlowPath>, withNavigation: Bool, @ViewBuilder root: () -> Root) {
     let path = Binding(
       get: { path.wrappedValue.routes },
       set: { path.wrappedValue.routes = $0 }
     )
-    self.init(path, withNavigation: withNavigation, root: root)
+    self.init(routes: path, withNavigation: withNavigation, dataType: .flowPath, root: root)
   }
 }
