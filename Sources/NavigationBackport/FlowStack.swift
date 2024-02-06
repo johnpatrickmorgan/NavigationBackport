@@ -66,17 +66,21 @@ public struct FlowStack<Root: View, Data: Hashable>: View {
       }
   }
 
-  public init(_ routes: Binding<[Route<Data>]>?, withNavigation: Bool, @ViewBuilder root: () -> Root) {
+  init(routes: Binding<[Route<Data>]>?, withNavigation: Bool, @ViewBuilder root: () -> Root) {
     _externalTypedPath = routes ?? .constant([])
     self.root = root()
     self.withNavigation = withNavigation
     useInternalTypedPath = routes == nil
   }
+  
+  public init(_ routes: Binding<[Route<Data>]>, withNavigation: Bool, @ViewBuilder root: () -> Root) {
+    self.init(routes: routes, withNavigation: withNavigation, root: root)
+  }
 }
 
 public extension FlowStack where Data == AnyHashable {
   init(withNavigation: Bool, @ViewBuilder root: () -> Root) {
-    self.init(nil, withNavigation: withNavigation, root: root)
+    self.init(routes: nil, withNavigation: withNavigation, root: root)
   }
 }
 
