@@ -7,7 +7,7 @@ public struct NBNavigationLink<P: Hashable, Label: View>: View {
   var value: P?
   var label: Label
 
-  @EnvironmentObject var pathAppender: PathAppender
+  @EnvironmentObject var pathHolder: NavigationPathHolder
 
   public init(value: P?, @ViewBuilder label: () -> Label) {
     self.value = value
@@ -20,7 +20,7 @@ public struct NBNavigationLink<P: Hashable, Label: View>: View {
     Button(
       action: {
         guard let value = value else { return }
-        pathAppender.append?(value)
+        pathHolder.path.append(value)
       },
       label: { label }
     )
