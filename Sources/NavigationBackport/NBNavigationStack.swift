@@ -41,6 +41,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   public var body: some View {
     content
       .environmentObject(path)
+      .environmentObject(Unobserved(object: path))
       .environmentObject(destinationBuilder)
       .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
       .onFirstAppear {
