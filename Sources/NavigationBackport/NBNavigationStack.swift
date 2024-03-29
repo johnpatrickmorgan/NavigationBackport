@@ -7,7 +7,6 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @Binding var externalTypedPath: [Data]
   @State var internalTypedPath: [Data] = []
   @StateObject var path: NavigationPathHolder
-  @StateObject var pathAppender = PathAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   @Environment(\.useNavigationStack) var useNavigationStack
   var root: Root
@@ -21,33 +20,28 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     }
   }
 
+  @ViewBuilder
   var content: some View {
-    pathAppender.append = { [weak path] newElement in
-      path?.path.append(newElement)
-    }
     if #available(iOS 16.0, *, macOS 13.0, *, watchOS 9.0, *, tvOS 16.0, *), useNavigationStack == .whenAvailable {
-      return AnyView(
-        NavigationStack(path: $path.path) {
-          root
-            .navigationDestination(for: AnyHashable.self, destination: { destinationBuilder.build($0) })
-            .navigationDestination(for: LocalDestinationID.self, destination: { destinationBuilder.build($0) })
-        }
-        .environment(\.isWithinNavigationStack, true)
-      )
-    }
-    return AnyView(
+      NavigationStack(path: $path.path) {
+        root
+          .navigationDestination(for: AnyHashable.self, destination: { destinationBuilder.build($0) })
+          .navigationDestination(for: LocalDestinationID.self, destination: { destinationBuilder.build($0) })
+      }
+      .environment(\.isWithinNavigationStack, true)
+    } else {
       NavigationView {
         Router(rootView: root, screens: $path.path)
       }
       .navigationViewStyle(supportedNavigationViewStyle)
       .environment(\.isWithinNavigationStack, false)
-    )
+    }
   }
 
   public var body: some View {
     content
       .environmentObject(path)
-      .environmentObject(pathAppender)
+      .environmentObject(Unobserved(object: path))
       .environmentObject(destinationBuilder)
       .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
       .onFirstAppear {
