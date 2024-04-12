@@ -56,3 +56,52 @@ public extension View {
     )
   }
 }
+
+public extension View {
+  @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
+  /// Associates a destination view with a bound value for use within
+  /// a ``NBNavigationStack``.
+  ///
+  /// Add this view modifer to a view inside a ``NBNavigationStack`` to describe
+  /// the view that the stack displays when presenting a particular kind of data.
+  /// Programmatically update the binding to display or remove the view. For example,
+  /// you can replace the view showing in the detail column of a navigation stack:
+  ///
+  ///     @State private var colorShown: Color?
+  ///     NBNavigationStack {
+  ///         List {
+  ///             Button("Mint") { colorShown = .mint }
+  ///             Button("Pink") { colorShown = .pink }
+  ///             Button("Teal") { colorShown = .teal }
+  ///         }
+  ///         .nbNavigationDestination(item: $colorShown) { color in
+  ///             ColorDetail(color: color)
+  ///         }
+  ///     } detail: {
+  ///         Text("Select a color")
+  ///     }
+  ///
+  /// Do not put a navigation destination modifier inside a "lazy" container,
+  /// like ``List`` or ``LazyVStack``. These containers create child views
+  /// only when needed to render on screen. Add the navigation destination
+  /// modifier outside these containers so that the navigation stack can
+  /// always see the destination.
+  ///
+  ///
+  /// - Parameters:
+  ///   - item: A binding to the data presented, or nil if nothing is currently presented.
+  ///   - destination: A view builder that defines a view to display when item is not nil.
+  func nbNavigationDestination<D: Hashable, C: View>(item: Binding<D?>, @ViewBuilder destination: @escaping (D) -> C) -> some View {
+    nbNavigationDestination(
+      isPresented: Binding(
+        get: { item.wrappedValue != nil },
+        set: { isActive, transaction in
+          if !isActive {
+            item.transaction(transaction).wrappedValue = nil
+          }
+        }
+      ),
+      destination: { item.wrappedValue.map(destination) }
+    )
+  }
+}
