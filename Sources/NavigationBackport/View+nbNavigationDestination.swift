@@ -62,7 +62,7 @@ public extension View {
   /// Associates a destination view with a bound value for use within
   /// a ``NBNavigationStack``.
   ///
-  /// Add this view modifer to a view inside a ``NBNavigationStack`` to describe
+  /// Add this view modifer to a view inside a ``NBNavigationStack`` to describe 
   /// the view that the stack displays when presenting a particular kind of data.
   /// Programmatically update the binding to display or remove the view. For example,
   /// you can replace the view showing in the detail column of a navigation stack:
@@ -85,21 +85,16 @@ public extension View {
   /// modifier outside these containers so that the navigation stack can
   /// always see the destination.
   ///
-  ///
   /// - Parameters:
   ///   - item: A binding to the data presented, or nil if nothing is currently presented.
   ///   - destination: A view builder that defines a view to display when item is not nil.
   func nbNavigationDestination<D: Hashable, C: View>(item: Binding<D?>, @ViewBuilder destination: @escaping (D) -> C) -> some View {
-    nbNavigationDestination(
-      isPresented: Binding(
-        get: { item.wrappedValue != nil },
-        set: { isActive, transaction in
-          if !isActive {
-            item.transaction(transaction).wrappedValue = nil
-          }
-        }
-      ),
-      destination: { item.wrappedValue.map(destination) }
+    let builtDestination = AnyView(item.wrappedValue.map(destination))
+    return modifier(
+      LocalDestinationBuilderForItemModifier(
+        item: item,
+        builder: { builtDestination }
+      )
     )
   }
 }
