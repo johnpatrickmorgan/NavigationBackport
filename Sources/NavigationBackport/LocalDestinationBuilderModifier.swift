@@ -21,8 +21,8 @@ class LocalDestinationIDHolder: ObservableObject {
 }
 
 /// Modifier that appends a local destination builder and ensures the Bool binding is observed and updated.
-struct LocalDestinationBuilderModifier: ViewModifier {
-  let isPresented: Binding<Bool>
+struct LocalDestinationBuilderModifier<Data: Hashable>: ViewModifier {
+  let data: Binding<Data?>
   let builder: () -> AnyView
 
   @StateObject var destinationID = LocalDestinationIDHolder()
@@ -36,14 +36,14 @@ struct LocalDestinationBuilderModifier: ViewModifier {
     return content
       .environmentObject(destinationBuilder)
       .onChange(of: pathHolder.path) { _ in
-        if isPresented.wrappedValue {
+        if data.wrappedValue != nil {
           if !pathHolder.path.contains(where: { ($0 as? LocalDestinationID) == destinationID.id }) {
-            isPresented.wrappedValue = false
+            data.wrappedValue = nil
           }
         }
       }
-      .onChange(of: isPresented.wrappedValue) { isPresented in
-        if isPresented {
+      .onChange(of: data.wrappedValue) { [prevState = data.wrappedValue] data in
+        if data != nil && prevState == nil {
           pathHolder.path.append(destinationID.id)
         } else {
           let index = pathHolder.path.lastIndex(where: { ($0 as? LocalDestinationID) == destinationID.id })

@@ -24,6 +24,7 @@ struct NoBindingView: View {
 private struct HomeView: View {
   @EnvironmentObject var navigator: PathNavigator
   @State var isPushing = false
+  @State var pokemon: String?
 
   var body: some View {
     ScrollView {
@@ -36,12 +37,20 @@ private struct HomeView: View {
         Button("Show Class Destination", action: showClassDestination)
         // Push via Bool binding
         Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
+        // Push via `nbNavigationDestination(item:)`
+        Button("Push local pokemon", action: {
+          pokemon = "Bulbasaur"
+          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { pokemon? = "Ivysaur" }
+          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { pokemon? = "Venusaur" }
+          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) { pokemon = nil }
+        }).disabled(pokemon != nil)
       }
     }
-    .navigationTitle("Home")
     .nbNavigationDestination(isPresented: $isPushing, destination: {
       Text("Local destination")
     })
+    .nbNavigationDestination(item: $pokemon, destination: { pokemon in Text(pokemon) })
+    .navigationTitle("Home")
   }
 
   func show99RedBalloons() {
