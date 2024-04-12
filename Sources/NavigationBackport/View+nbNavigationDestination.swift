@@ -77,8 +77,6 @@ public extension View {
   ///         .nbNavigationDestination(item: $colorShown) { color in
   ///             ColorDetail(color: color)
   ///         }
-  ///     } detail: {
-  ///         Text("Select a color")
   ///     }
   ///
   /// Do not put a navigation destination modifier inside a "lazy" container,
