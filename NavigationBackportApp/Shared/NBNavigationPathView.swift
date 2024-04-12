@@ -50,6 +50,7 @@ struct NBNavigationPathView: View {
 private struct HomeView: View {
   @EnvironmentObject var navigator: PathNavigator
   @State var isPushing = false
+  @State private var colorShown: Color?
 
   var body: some View {
     ScrollView {
@@ -62,11 +63,19 @@ private struct HomeView: View {
         Button("Show Class Destination", action: showClassDestination)
         // Push via Bool binding
         Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
+        // Push via Optional Hashable binding
+        Button("Transition to green screen", action: { colorShown = .green })
+        Button("Transition to blue screen", action: { colorShown = .blue })
+        Button("Transition to pink screen", action: { colorShown = .pink })
+        Button("No Transition", action: { colorShown = nil })
       }
     }
     .nbNavigationDestination(isPresented: $isPushing, destination: {
       Text("Local destination")
     })
+    .nbNavigationDestination(item: $colorShown) { color in
+      color
+    }
     .navigationTitle("Home")
   }
 

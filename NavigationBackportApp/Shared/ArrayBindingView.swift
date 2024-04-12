@@ -47,6 +47,7 @@ struct ArrayBindingView: View {
 
 private struct HomeView: View {
   @State var isPushing = false
+  @State private var colorShown: Color?
   @EnvironmentObject var navigator: Navigator<Screen>
 
   var body: some View {
@@ -58,11 +59,19 @@ private struct HomeView: View {
         Button("99 Red balloons", action: show99RedBalloons)
         // Push via Bool binding
         Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
+        // Push via Optional Hashable binding
+        Button("Transition to green screen", action: { colorShown = .green })
+        Button("Transition to blue screen", action: { colorShown = .blue })
+        Button("Transition to pink screen", action: { colorShown = .pink })
+        Button("No Transition", action: { colorShown = nil })
       }
     }
     .navigationTitle("Home")
     .nbNavigationDestination(isPresented: $isPushing) {
       Text("Local destination")
+    }
+    .nbNavigationDestination(item: $colorShown) { color in
+      color
     }
   }
 
