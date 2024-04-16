@@ -46,9 +46,9 @@ struct ArrayBindingView: View {
 }
 
 private struct HomeView: View {
+  @EnvironmentObject var navigator: Navigator<Screen>
   @State var isPushing = false
   @State private var colorShown: Color?
-  @EnvironmentObject var navigator: Navigator<Screen>
 
   var body: some View {
     ScrollView {
@@ -60,19 +60,21 @@ private struct HomeView: View {
         // Push via Bool binding
         Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
         // Push via Optional Hashable binding
-        Button("Transition to green screen", action: { colorShown = .green })
-        Button("Transition to blue screen", action: { colorShown = .blue })
-        Button("Transition to pink screen", action: { colorShown = .pink })
-        Button("No Transition", action: { colorShown = nil })
+        Button("Push traffic lights", action: {
+          colorShown = .red
+          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { colorShown? = .orange }
+          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { colorShown? = .green }
+          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) { colorShown = nil }
+        })
       }
     }
-    .navigationTitle("Home")
     .nbNavigationDestination(isPresented: $isPushing) {
       Text("Local destination")
     }
     .nbNavigationDestination(item: $colorShown) { color in
       color
     }
+    .navigationTitle("Home")
   }
 
   func show99RedBalloons() {
