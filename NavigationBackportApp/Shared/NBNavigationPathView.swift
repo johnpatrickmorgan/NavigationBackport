@@ -50,7 +50,7 @@ struct NBNavigationPathView: View {
 private struct HomeView: View {
   @EnvironmentObject var navigator: PathNavigator
   @State var isPushing = false
-  @State private var colorShown: Color?
+  @State private var trafficLight: TrafficLight?
 
   var body: some View {
     ScrollView {
@@ -65,18 +65,17 @@ private struct HomeView: View {
         Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
         // Push via Optional Hashable binding
         Button("Push traffic lights", action: {
-          colorShown = .red
-          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { colorShown? = .orange }
-          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) { colorShown? = .green }
-          DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) { colorShown = nil }
+          trafficLight = TrafficLight.allCases.first
         })
       }
     }
-    .nbNavigationDestination(isPresented: $isPushing, destination: {
+    .nbNavigationDestination(isPresented: $isPushing) {
       Text("Local destination")
-    })
-    .nbNavigationDestination(item: $colorShown) { color in
-      color
+    }
+    .nbNavigationDestination(item: $trafficLight) { trafficLight in
+      Text(String(describing: trafficLight))
+        .foregroundColor(trafficLight.color)
+        .onTapGesture { self.trafficLight = trafficLight.next }
     }
     .navigationTitle("Home")
   }
