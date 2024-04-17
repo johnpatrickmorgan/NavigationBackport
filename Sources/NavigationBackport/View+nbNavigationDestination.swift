@@ -62,8 +62,7 @@ public extension View {
   ///
   /// Add this view modifer to a view inside an ``NBNavigationStack`` to describe
   /// the view that the stack displays when presenting a particular kind of data. Programmatically
-  /// update the binding to display or remove the view. For example, you can replace
-  /// the view showing in the detail column of a navigation split view:
+  /// update the binding to display or remove the view. For example:
   ///
   ///     @State private var colorShown: Color?
   ///
