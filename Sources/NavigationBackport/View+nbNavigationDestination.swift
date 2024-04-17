@@ -164,7 +164,3 @@ public extension View {
     )
   }
 }
-
-/// `Void` does not conform to Hashable, so we create a similar type that does. So that we can transform between
-/// a Bool Binding and a VoidHashable binding without losing hashability.
-private struct VoidHashable: Hashable {}
