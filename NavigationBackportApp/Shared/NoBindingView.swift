@@ -24,6 +24,7 @@ struct NoBindingView: View {
 private struct HomeView: View {
   @EnvironmentObject var navigator: PathNavigator
   @State var isPushing = false
+  @State private var trafficLight: TrafficLight?
 
   var body: some View {
     ScrollView {
@@ -36,12 +37,21 @@ private struct HomeView: View {
         Button("Show Class Destination", action: showClassDestination)
         // Push via Bool binding
         Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
+        // Push via Optional Hashable binding
+        Button("Push traffic lights", action: {
+          trafficLight = TrafficLight.allCases.first
+        })
       }
     }
-    .navigationTitle("Home")
-    .nbNavigationDestination(isPresented: $isPushing, destination: {
+    .nbNavigationDestination(isPresented: $isPushing) {
       Text("Local destination")
-    })
+    }
+    .nbNavigationDestination(item: $trafficLight) { trafficLight in
+      Text(String(describing: trafficLight))
+        .foregroundColor(trafficLight.color)
+        .onTapGesture { self.trafficLight = trafficLight.next }
+    }
+    .navigationTitle("Home")
   }
 
   func show99RedBalloons() {

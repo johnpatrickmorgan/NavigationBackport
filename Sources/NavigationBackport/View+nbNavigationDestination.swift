@@ -55,4 +55,57 @@ public extension View {
       )
     )
   }
+
+  @available(iOS, deprecated: 16.0, message: "Use SwiftUI's Navigation API beyond iOS 15")
+  /// Associates a destination view with a bound value for use within a
+  /// navigation stack.
+  ///
+  /// Add this view modifer to a view inside an ``NBNavigationStack`` to describe
+  /// the view that the stack displays when presenting a particular kind of data. Programmatically
+  /// update the binding to display or remove the view. For example:
+  ///
+  ///     @State private var colorShown: Color?
+  ///
+  ///     NBNavigationView {
+  ///         List {
+  ///             Button("Mint") { colorShown = .mint }
+  ///             Button("Pink") { colorShown = .pink }
+  ///             Button("Teal") { colorShown = .teal }
+  ///         }
+  ///         .nbNavigationDestination(item: $colorShown) { color in
+  ///             ColorDetail(color: color)
+  ///         }
+  ///     }
+  ///
+  /// When the person using the app taps on the Mint button, the mint color
+  /// is pushed onto the navigation stack. You can pop the view
+  /// by setting `colorShown` back to `nil`.
+  ///
+  /// You can add more than one navigation destination modifier to the stack
+  /// if it needs to present more than one kind of data.
+  ///
+  /// Do not put a navigation destination modifier inside a "lazy" container,
+  /// like ``List`` or ``LazyVStack``. These containers create child views
+  /// only when needed to render on screen. Add the navigation destination
+  /// modifier outside these containers so that the navigation view can
+  /// always see the destination.
+  ///
+  /// - Parameters:
+  ///   - item: A binding to the data presented, or `nil` if nothing is
+  ///     currently presented.
+  ///   - destination: A view builder that defines a view to display
+  ///     when `item` is not `nil`.
+  func nbNavigationDestination<D: Hashable, C: View>(item: Binding<D?>, @ViewBuilder destination: @escaping (D) -> C) -> some View {
+    nbNavigationDestination(
+      isPresented: Binding(
+        get: { item.wrappedValue != nil },
+        set: { isActive, transaction in
+          if !isActive {
+            item.transaction(transaction).wrappedValue = nil
+          }
+        }
+      ),
+      destination: { ConditionalViewBuilder(data: item, buildView: destination) }
+    )
+  }
 }

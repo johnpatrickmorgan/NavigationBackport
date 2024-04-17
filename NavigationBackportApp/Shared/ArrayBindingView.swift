@@ -46,8 +46,9 @@ struct ArrayBindingView: View {
 }
 
 private struct HomeView: View {
-  @State var isPushing = false
   @EnvironmentObject var navigator: Navigator<Screen>
+  @State var isPushing = false
+  @State private var trafficLight: TrafficLight?
 
   var body: some View {
     ScrollView {
@@ -58,12 +59,21 @@ private struct HomeView: View {
         Button("99 Red balloons", action: show99RedBalloons)
         // Push via Bool binding
         Button("Push local destination", action: { isPushing = true }).disabled(isPushing)
+        // Push via Optional Hashable binding
+        Button("Push traffic lights", action: {
+          trafficLight = TrafficLight.allCases.first
+        })
       }
     }
-    .navigationTitle("Home")
     .nbNavigationDestination(isPresented: $isPushing) {
       Text("Local destination")
     }
+    .nbNavigationDestination(item: $trafficLight) { trafficLight in
+      Text(String(describing: trafficLight))
+        .foregroundColor(trafficLight.color)
+        .onTapGesture { self.trafficLight = trafficLight.next }
+    }
+    .navigationTitle("Home")
   }
 
   func show99RedBalloons() {
