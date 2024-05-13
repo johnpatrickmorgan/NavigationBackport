@@ -9,7 +9,6 @@ public struct FlowStack<Root: View, Data: Hashable>: View {
   @Binding var externalTypedPath: [Route<Data>]
   @State var internalTypedPath: [Route<Data>] = []
   @StateObject var path = RoutesHolder()
-  @StateObject var routeAppender = RouteAppender()
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   var root: Root
   var useInternalTypedPath: Bool
@@ -18,14 +17,12 @@ public struct FlowStack<Root: View, Data: Hashable>: View {
     parentFlowStackDataType == .flowPath && dataType == .flowPath
   }
 
+  @ViewBuilder
   var content: some View {
-    routeAppender.append = { [weak path] newElement in
-      path?.routes.append(newElement)
-    }
-    return Router(rootView: root, screens: $path.routes)
+    Router(rootView: root, screens: $path.routes)
       .modifier(EmbedModifier(withNavigation: withNavigation))
       .environmentObject(path)
-      .environmentObject(routeAppender)
+      .environmentObject(Unobserved(object: path))
       .environmentObject(destinationBuilder)
       .environmentObject(FlowNavigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
       .environment(\.flowStackDataType, dataType)

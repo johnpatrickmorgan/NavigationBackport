@@ -6,7 +6,7 @@ public struct FlowLink<P: Hashable, Label: View>: View {
   var route: Route<P>?
   var label: Label
 
-  @EnvironmentObject var routeAppender: RouteAppender
+  @EnvironmentObject var routesHolder: Unobserved<RoutesHolder>
 
   init(route: Route<P>?, @ViewBuilder label: () -> Label) {
     self.route = route
@@ -19,7 +19,7 @@ public struct FlowLink<P: Hashable, Label: View>: View {
     Button(
       action: {
         guard let route = route else { return }
-        routeAppender.append?(route.erased())
+        routesHolder.object.routes.append(route.erased())
       },
       label: { label }
     )
