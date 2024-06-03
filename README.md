@@ -159,3 +159,7 @@ This only happens when necessary: on versions of SwiftUI that support `Navigatio
 ## Support for iOS/tvOS 13
 
 This library targets iOS/tvOS versions 14 and above, since it uses `StateObject`, which is unavailable on iOS/tvOS 13. However, there is an `ios13` branch, which uses [SwiftUIBackports](https://github.com/shaps80/SwiftUIBackports)' backported StateObject, so that it works on iOS/tvOS 13 too.
+
+## FlowStacks
+
+Want to further upgrade your navigation APIs? [FlowStacks](https://github.com/johnpatrickmorgan/FlowStacks) enhances these familiar APIs to allow you to additionally drive sheet and full-screen cover navigation from a single unified interface. 
