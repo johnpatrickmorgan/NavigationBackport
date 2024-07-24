@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-struct Node<Screen>: View {
+struct Node<Screen: Hashable>: View {
   @Binding var allScreens: [Screen]
   let truncateToIndex: (Int) -> Void
   let index: Int
