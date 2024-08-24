@@ -9,6 +9,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @StateObject var path: NavigationPathHolder
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   @Environment(\.useNavigationStack) var useNavigationStack
+  @Environment(\.scenePhase) var scenePhase
   var root: Root
   var useInternalTypedPath: Bool
 
@@ -61,6 +62,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
           path.path = externalTypedPath
           return
         }
+        guard scenePhase == .active else { return }
         path.withDelaysIfUnsupported(\.path) {
           $0 = externalTypedPath
         }
@@ -70,6 +72,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
           path.path = internalTypedPath
           return
         }
+        guard scenePhase == .active else { return }
         path.withDelaysIfUnsupported(\.path) {
           $0 = internalTypedPath
         }
@@ -95,6 +98,13 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
             }
             fatalError("Cannot add \(type(of: anyHashable.base)) to stack of \(Data.self)")
           }
+        }
+      }
+      .onChange(of: scenePhase) { phase in
+        guard isUsingNavigationView else { return }
+        guard phase == .active else { return }
+        path.withDelaysIfUnsupported(\.path) {
+          $0 = useInternalTypedPath ? internalTypedPath : externalTypedPath
         }
       }
   }
