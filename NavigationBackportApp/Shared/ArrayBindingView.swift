@@ -23,11 +23,11 @@ struct ArrayBindingView: View {
         HomeView()
           .nbNavigationDestination(for: Screen.self, destination: { screen in
             switch screen {
-            case .numberList(let numberList):
+            case let .numberList(numberList):
               NumberListView(numberList: numberList)
-            case .number(let number):
+            case let .number(number):
               NumberView(number: number)
-            case .visualisation(let visualisation):
+            case let .visualisation(visualisation):
               EmojiView(visualisation: visualisation)
             }
           })
@@ -88,6 +88,7 @@ private struct NumberListView: View {
     List {
       ForEach(numberList.range, id: \.self) { number in
         NBNavigationLink("\(number)", value: Screen.number(number))
+          .buttonStyle(.navigationLinkRowStyle)
       }
     }
     .navigationTitle("List")

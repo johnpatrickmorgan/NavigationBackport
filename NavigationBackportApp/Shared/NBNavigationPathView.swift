@@ -96,6 +96,7 @@ private struct NumberListView: View {
     List {
       ForEach(numberList.range, id: \.self) { number in
         NBNavigationLink("\(number)", value: number)
+          .buttonStyle(.navigationLinkRowStyle)
       }
     }.navigationTitle("List")
   }
