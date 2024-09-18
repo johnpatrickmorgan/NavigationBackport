@@ -9,7 +9,10 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @StateObject var path: NavigationPathHolder
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   @Environment(\.useNavigationStack) var useNavigationStack
-  @Environment(\.scenePhase) var scenePhase
+  // NOTE: Using `Environment(\.scenePhase)` doesn't work if the app uses UIKIt lifecycle events (via AppDelegate/SceneDelegate).
+  // We do not need to re-render the view when appIsActive changes, and doing so can cause animation glitches, so it is wrapped
+  // in `NonReactiveState`.
+  @State var appIsActive = NonReactiveState(value: true)
   var root: Root
   var useInternalTypedPath: Bool
 
@@ -62,7 +65,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
           path.path = externalTypedPath
           return
         }
-        guard scenePhase == .active else { return }
+        guard appIsActive.value else { return }
         path.withDelaysIfUnsupported(\.path) {
           $0 = externalTypedPath
         }
@@ -72,7 +75,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
           path.path = internalTypedPath
           return
         }
-        guard scenePhase == .active else { return }
+        guard appIsActive.value else { return }
         path.withDelaysIfUnsupported(\.path) {
           $0 = internalTypedPath
         }
@@ -100,13 +103,29 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
           }
         }
       }
-      .onChange(of: scenePhase) { phase in
+    #if os(iOS)
+      .onReceive(NotificationCenter.default.publisher(for: didBecomeActive)) { _ in
+        appIsActive.value = true
         guard isUsingNavigationView else { return }
-        guard phase == .active else { return }
         path.withDelaysIfUnsupported(\.path) {
           $0 = useInternalTypedPath ? internalTypedPath : externalTypedPath
         }
       }
+      .onReceive(NotificationCenter.default.publisher(for: willResignActive)) { _ in
+        appIsActive.value = false
+      }
+    #elseif os(tvOS)
+      .onReceive(NotificationCenter.default.publisher(for: didBecomeActive)) { _ in
+        appIsActive.value = true
+        guard isUsingNavigationView else { return }
+        path.withDelaysIfUnsupported(\.path) {
+          $0 = useInternalTypedPath ? internalTypedPath : externalTypedPath
+        }
+      }
+      .onReceive(NotificationCenter.default.publisher(for: willResignActive)) { _ in
+        appIsActive.value = false
+      }
+    #endif
   }
 
   public init(path: Binding<[Data]>?, @ViewBuilder root: () -> Root) {
@@ -140,3 +159,11 @@ var supportedNavigationViewStyle: some NavigationViewStyle {
     .stack
   #endif
 }
+
+#if os(iOS)
+  private let didBecomeActive = UIApplication.didBecomeActiveNotification
+  private let willResignActive = UIApplication.willResignActiveNotification
+#elseif os(tvOS)
+  private let didBecomeActive = UIApplication.didBecomeActiveNotification
+  private let willResignActive = UIApplication.willResignActiveNotification
+#endif
