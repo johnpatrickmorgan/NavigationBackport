@@ -9,6 +9,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @StateObject var path: NavigationPathHolder
   @StateObject var destinationBuilder = DestinationBuilderHolder()
   @Environment(\.useNavigationStack) var useNavigationStack
+  @Environment(\.useNavigator) var useNavigator
   // NOTE: Using `Environment(\.scenePhase)` doesn't work if the app uses UIKIt lifecycle events (via AppDelegate/SceneDelegate).
   // We do not need to re-render the view when appIsActive changes, and doing so can cause animation glitches, so it is wrapped
   // in `NonReactiveState`.
@@ -47,7 +48,10 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       .environmentObject(path)
       .environmentObject(Unobserved(object: path))
       .environmentObject(destinationBuilder)
-      .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
+      .if(useNavigator) { content in
+          content
+              .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
+      }
       .onFirstAppear {
         guard isUsingNavigationView else {
           // Path should already be correct thanks to initialiser.

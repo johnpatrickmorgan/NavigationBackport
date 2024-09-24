@@ -1,5 +1,9 @@
 import SwiftUI
 
+struct UseNavigatorKey: EnvironmentKey {
+  static let defaultValue = true
+}
+
 struct UseNavigationStackPolicyKey: EnvironmentKey {
   static let defaultValue = UseNavigationStackPolicy.whenAvailable
 }
@@ -9,6 +13,11 @@ struct IsWithinNavigationStackKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
+  var useNavigator: Bool {
+    get { self[UseNavigatorKey.self] }
+    set { self[UseNavigatorKey.self] = newValue }
+  }
+
   var useNavigationStack: UseNavigationStackPolicy {
     get { self[UseNavigationStackPolicyKey.self] }
     set { self[UseNavigationStackPolicyKey.self] = newValue }
