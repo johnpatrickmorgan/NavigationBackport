@@ -51,12 +51,8 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       .environmentObject(navigator)
       .onFirstAppear {
         if useInternalTypedPath {
-          // In this case, we know Data == AnyHashable, but we can only access
-          // the StateObject once the view has been added to the view tree.
-          navigator.pathBinding = Binding(
-            get: { path.path.map { $0 as! Data } },
-            set: { path.path = $0.map { $0 } }
-          )
+          // We can only access the StateObject once the view has been added to the view tree.
+          navigator.pathBinding = $internalTypedPath
         }
       }
       .onFirstAppear {
