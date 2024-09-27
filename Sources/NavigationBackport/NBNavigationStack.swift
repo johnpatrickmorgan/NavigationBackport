@@ -8,6 +8,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @State var internalTypedPath: [Data] = []
   @StateObject var path: NavigationPathHolder
   @StateObject var destinationBuilder = DestinationBuilderHolder()
+  @StateObject var navigator: Navigator<Data> = .init(.constant([]))
   @Environment(\.useNavigationStack) var useNavigationStack
   // NOTE: Using `Environment(\.scenePhase)` doesn't work if the app uses UIKIt lifecycle events (via AppDelegate/SceneDelegate).
   // We do not need to re-render the view when appIsActive changes, and doing so can cause animation glitches, so it is wrapped
@@ -47,7 +48,17 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       .environmentObject(path)
       .environmentObject(Unobserved(object: path))
       .environmentObject(destinationBuilder)
-      .environmentObject(Navigator(useInternalTypedPath ? $internalTypedPath : $externalTypedPath))
+      .environmentObject(navigator)
+      .onFirstAppear {
+        if useInternalTypedPath {
+          // In this case, we know Data == AnyHashable, but we can only access
+          // the StateObject once the view has been added to the view tree.
+          navigator.pathBinding = Binding(
+            get: { path.path.map { $0 as! Data } },
+            set: { path.path = $0.map { $0 } }
+          )
+        }
+      }
       .onFirstAppear {
         guard isUsingNavigationView else {
           // Path should already be correct thanks to initialiser.
@@ -133,6 +144,9 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
     self.root = root()
     _path = StateObject(wrappedValue: NavigationPathHolder(path: path?.wrappedValue ?? []))
     useInternalTypedPath = path == nil
+
+    let navigator = useInternalTypedPath ? Navigator(.constant([])) : Navigator($externalTypedPath)
+    _navigator = StateObject(wrappedValue: navigator)
   }
 }
 
@@ -146,7 +160,7 @@ public extension NBNavigationStack where Data == AnyHashable {
   init(path: Binding<NBNavigationPath>, @ViewBuilder root: () -> Root) {
     let path = Binding(
       get: { path.wrappedValue.elements },
-      set: { path.wrappedValue.elements = $0 }
+      set: { path.transaction($1).wrappedValue.elements = $0 }
     )
     self.init(path: path, root: root)
   }
