@@ -28,10 +28,11 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
   @ViewBuilder
   var content: some View {
     if #available(iOS 16.0, *, macOS 13.0, *, watchOS 9.0, *, tvOS 16.0, *), useNavigationStack == .whenAvailable {
-      NavigationStack(path: $path.path) {
+      NavigationStack(path: useInternalTypedPath ? $internalTypedPath : $externalTypedPath) {
         root
-          .navigationDestination(for: AnyHashable.self, destination: { DestinationBuilderView(data: $0) })
           .navigationDestination(for: LocalDestinationID.self, destination: { DestinationBuilderView(data: $0) })
+          .navigationDestination(for: Data.self, destination: { DestinationBuilderView(data: $0) })
+          .navigationDestination(for: AnyHashable.self, destination: { DestinationBuilderView(data: $0) })
       }
       .environment(\.isWithinNavigationStack, true)
     } else {
@@ -68,6 +69,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         }
       }
       .onChange(of: externalTypedPath) { externalTypedPath in
+        guard path.path != externalTypedPath.map({ $0 }) else { return }
         guard isUsingNavigationView else {
           path.path = externalTypedPath
           return
@@ -78,6 +80,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         }
       }
       .onChange(of: internalTypedPath) { internalTypedPath in
+        guard path.path != internalTypedPath.map({ $0 }) else { return }
         guard isUsingNavigationView else {
           path.path = internalTypedPath
           return
