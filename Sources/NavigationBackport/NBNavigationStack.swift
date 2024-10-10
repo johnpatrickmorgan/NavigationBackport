@@ -58,7 +58,6 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
       }
       .onFirstAppear {
         guard isUsingNavigationView else {
-          // Path should already be correct thanks to initialiser.
           return
         }
         // For NavigationView, only initialising with one pushed screen is supported.
@@ -69,22 +68,20 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         }
       }
       .onChange(of: externalTypedPath) { externalTypedPath in
-        guard path.path != externalTypedPath.map({ $0 }) else { return }
         guard isUsingNavigationView else {
-          path.path = externalTypedPath
           return
         }
+        guard path.path != externalTypedPath.map({ $0 }) else { return }
         guard appIsActive.value else { return }
         path.withDelaysIfUnsupported(\.path) {
           $0 = externalTypedPath
         }
       }
       .onChange(of: internalTypedPath) { internalTypedPath in
-        guard path.path != internalTypedPath.map({ $0 }) else { return }
         guard isUsingNavigationView else {
-          path.path = internalTypedPath
           return
         }
+        guard path.path != internalTypedPath.map({ $0 }) else { return }
         guard appIsActive.value else { return }
         path.withDelaysIfUnsupported(\.path) {
           $0 = internalTypedPath
