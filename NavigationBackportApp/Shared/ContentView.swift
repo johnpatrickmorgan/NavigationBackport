@@ -45,6 +45,8 @@ struct ContentView: View {
         .tabItem { Text("NBNavigationPath") }
       ArrayBindingView()
         .tabItem { Text("ArrayBinding") }
+      LeakTestView()
+        .tabItem { Text("LeakTest") }
     }
   }
 }

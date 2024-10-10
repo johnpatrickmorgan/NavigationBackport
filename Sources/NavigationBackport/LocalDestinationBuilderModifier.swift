@@ -28,29 +28,39 @@ struct LocalDestinationBuilderModifier: ViewModifier {
   @StateObject var destinationID = LocalDestinationIDHolder()
   @EnvironmentObject var destinationBuilder: DestinationBuilderHolder
   @EnvironmentObject var pathHolder: NavigationPathHolder
+  @Environment(\.isWithinNavigationStack) var isWithinNavigationStack
 
   func body(content: Content) -> some View {
-    destinationBuilder.appendLocalBuilder(identifier: destinationID.id, builder)
-    destinationID.destinationBuilder = destinationBuilder
-
-    return content
-      .environmentObject(destinationBuilder)
-      .onChange(of: pathHolder.path) { _ in
-        if isPresented.wrappedValue {
-          if !pathHolder.path.contains(where: { ($0 as? LocalDestinationID) == destinationID.id }) {
-            isPresented.wrappedValue = false
+    if isWithinNavigationStack {
+      if #available(iOS 16.0, *, macOS 13.0, *, watchOS 9.0, *, tvOS 16.0, *)  {
+        return content.navigationDestination(isPresented: isPresented, destination: builder)
+      } else {
+        fatalError("isWithinNavigationStack shouldn't ever be true on platforms that don't support it")
+      }
+    } else {
+      
+      destinationBuilder.appendLocalBuilder(identifier: destinationID.id, builder)
+      destinationID.destinationBuilder = destinationBuilder
+      
+      return content
+        .environmentObject(destinationBuilder)
+        .onChange(of: pathHolder.path) { _ in
+          if isPresented.wrappedValue {
+            if !pathHolder.path.contains(where: { ($0 as? LocalDestinationID) == destinationID.id }) {
+              isPresented.wrappedValue = false
+            }
           }
         }
-      }
-      .onChange(of: isPresented.wrappedValue) { isPresented in
-        if isPresented {
-          pathHolder.path.append(destinationID.id)
-        } else {
-          let index = pathHolder.path.lastIndex(where: { ($0 as? LocalDestinationID) == destinationID.id })
-          if let index {
-            pathHolder.path.remove(at: index)
+        .onChange(of: isPresented.wrappedValue) { isPresented in
+          if isPresented {
+            pathHolder.path.append(destinationID.id)
+          } else {
+            let index = pathHolder.path.lastIndex(where: { ($0 as? LocalDestinationID) == destinationID.id })
+            if let index {
+              pathHolder.path.remove(at: index)
+            }
           }
         }
-      }
+    }
   }
 }

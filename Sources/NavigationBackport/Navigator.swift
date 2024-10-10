@@ -7,7 +7,7 @@ public typealias PathNavigator = Navigator<AnyHashable>
 /// Supports push and pop operations when `Screen` conforms to `NBScreen`.
 @MainActor
 public class Navigator<Screen>: ObservableObject {
-  let pathBinding: Binding<[Screen]>
+  var pathBinding: Binding<[Screen]>
 
   /// The current navigation path.
   public var path: [Screen] {

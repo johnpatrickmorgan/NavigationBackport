@@ -28,6 +28,10 @@ final class InitialisationUITests: XCTestCase {
   func launchAndRunInitialisationTests(tabTitle: String, useNavigationStack: Bool, app: XCUIApplication) {
     if #available(iOS 16.0, *, macOS 13.0, *, watchOS 9.0, *, tvOS 16.0, *) {
       // Can test with and without NavigationStack
+      if #available(iOS 18.0, *) {
+        // Can only test with NavigationStack
+        return
+      }
     } else if useNavigationStack {
       // Can only test without NavigationStack
       return
