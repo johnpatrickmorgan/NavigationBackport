@@ -163,3 +163,7 @@ This library targets iOS/tvOS versions 14 and above, since it uses `StateObject`
 ## FlowStacks
 
 Want to further upgrade your navigation APIs? [FlowStacks](https://github.com/johnpatrickmorgan/FlowStacks) enhances these familiar APIs to allow you to additionally drive sheet and full-screen cover navigation from a single unified interface. 
+
+-------
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T114GWOT)
