@@ -9,6 +9,22 @@ struct MainView: View {
   }
 
   var body: some View {
-    Text("Main")
+    VStack {
+      Text("Main")
+      Text("Count: \(MainViewModel.count)")
+    }
+    .navigationTitle("Main")
+  }
+}
+
+final class MainViewModel: ObservableObject {
+  static var count = 0
+
+  init() {
+    Self.count += 1
+  }
+
+  deinit {
+    Self.count -= 1
   }
 }
