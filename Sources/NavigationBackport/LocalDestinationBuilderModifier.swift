@@ -11,6 +11,10 @@ class LocalDestinationIDHolder: ObservableObject {
   let id = LocalDestinationID(rawValue: UUID())
   weak var destinationBuilder: DestinationBuilderHolder?
 
+  func setDestinationBuilder(_ builder: DestinationBuilderHolder) {
+    destinationBuilder = builder
+  }
+
   deinit {
     // On iOS 15, there are some extraneous re-renders after LocalDestinationBuilderModifier is removed from
     // the view tree. Dispatching async allows those re-renders to succeed before removing the local builder.
@@ -32,17 +36,16 @@ struct LocalDestinationBuilderModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     if isWithinNavigationStack {
-      if #available(iOS 16.0, *, macOS 13.0, *, watchOS 9.0, *, tvOS 16.0, *)  {
-        return content.navigationDestination(isPresented: isPresented, destination: builder)
+      if #available(iOS 16.0, *, macOS 13.0, *, watchOS 9.0, *, tvOS 16.0, *) {
+        content.navigationDestination(isPresented: isPresented, destination: builder)
       } else {
         fatalError("isWithinNavigationStack shouldn't ever be true on platforms that don't support it")
       }
     } else {
-      
-      destinationBuilder.appendLocalBuilder(identifier: destinationID.id, builder)
-      destinationID.destinationBuilder = destinationBuilder
-      
-      return content
+      let _ = destinationBuilder.appendLocalBuilder(identifier: destinationID.id, builder)
+      let _ = destinationID.setDestinationBuilder(destinationBuilder)
+
+      content
         .environmentObject(destinationBuilder)
         .onChange(of: pathHolder.path) { _ in
           if isPresented.wrappedValue {
