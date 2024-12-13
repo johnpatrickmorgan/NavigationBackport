@@ -32,7 +32,7 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         root
           .navigationDestination(for: LocalDestinationID.self, destination: { DestinationBuilderView(data: $0) })
           .navigationDestination(for: Data.self, destination: { DestinationBuilderView(data: $0) })
-          .navigationDestination(for: AnyHashable.self, destination: { DestinationBuilderView(data: $0) })
+          .anyHashableNavigationDestination(for: Data.self, destination: { DestinationBuilderView(data: $0) })
       }
       .environment(\.isWithinNavigationStack, true)
     } else {
@@ -177,3 +177,21 @@ var supportedNavigationViewStyle: some NavigationViewStyle {
   private let didBecomeActive = UIApplication.didBecomeActiveNotification
   private let willResignActive = UIApplication.willResignActiveNotification
 #endif
+
+@available(iOS 16.0, *)
+extension View {
+  @ViewBuilder
+  func anyHashableNavigationDestination<D, C>(
+    for data: D.Type,
+    @ViewBuilder destination: @escaping (D) -> C
+  ) -> some View where D: Hashable, C: View {
+    if ObjectIdentifier(D.self) == ObjectIdentifier(AnyHashable.self) {
+      // No need to add AnyHashable navigation destination as it's already been added as the Data
+      // navigation destination.
+      self
+    } else {
+      // Including this ensures that `PathNavigator` can always be used.
+      navigationDestination(for: AnyHashable.self, destination: { DestinationBuilderView(data: $0) })
+    }
+  }
+}
