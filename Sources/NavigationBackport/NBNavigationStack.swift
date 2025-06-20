@@ -68,9 +68,6 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         }
       }
       .onChange(of: externalTypedPath) { externalTypedPath in
-        guard isUsingNavigationView else {
-          return
-        }
         guard path.path != externalTypedPath.map({ $0 }) else { return }
         guard appIsActive.value else { return }
         path.withDelaysIfUnsupported(\.path) {
@@ -78,9 +75,6 @@ public struct NBNavigationStack<Root: View, Data: Hashable>: View {
         }
       }
       .onChange(of: internalTypedPath) { internalTypedPath in
-        guard isUsingNavigationView else {
-          return
-        }
         guard path.path != internalTypedPath.map({ $0 }) else { return }
         guard appIsActive.value else { return }
         path.withDelaysIfUnsupported(\.path) {
