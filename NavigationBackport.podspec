@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                   = "NavigationBackport"
-  spec.version                = "0.11.2"
+  spec.version                = "0.11.5"
   spec.summary                = "Backports NavigationStack for older SwiftUI versions."
   spec.description            = <<-DESC
   This package uses the navigation APIs available in older SwiftUI versions 
