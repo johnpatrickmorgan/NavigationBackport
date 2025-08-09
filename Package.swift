@@ -8,10 +8,8 @@ let package = Package(
     .iOS(.v14), .watchOS(.v7), .macOS(.v11), .tvOS(.v14),
   ],
   products: [
-    .library(
-      name: "NavigationBackport",
-      targets: ["NavigationBackport"]
-    ),
+    .library( name: "NavigationBackport",targets: ["NavigationBackport"]),
+    .library( name: "NavigationBackport-Dynamic", type: .dynamic, targets: ["NavigationBackport"])
   ],
   dependencies: [],
   targets: [

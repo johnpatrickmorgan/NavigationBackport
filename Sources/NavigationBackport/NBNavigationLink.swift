@@ -32,7 +32,7 @@ public extension NBNavigationLink where Label == Text {
     self.init(value: value) { Text(titleKey) }
   }
 
-  init<S>(_ title: S, value: P?) where S: StringProtocol {
+  @_disfavoredOverload init<S>(_ title: S, value: P?) where S: StringProtocol {
     self.init(value: value) { Text(title) }
   }
 }
